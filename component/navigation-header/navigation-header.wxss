@@ -1,0 +1,24 @@
+.navigation-header {
+  position: fixed;
+  /* 关键：用 left/right 代替 width:100%，避免继承父元素 padding 导致偏移 */
+  left: 0;
+  right: 0;
+  width: auto; /* 配合 left:0 和 right:0，实现真正的全屏宽度 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  z-index: 99;
+}
+.navigation {
+  position: fixed;
+  /* 关键：用 left/right 代替 width:100%，避免继承父元素 padding 导致偏移 */
+  left: 0;
+  right: 0;
+  width: auto; /* 配合 left:0 和 right:0，实现真正的全屏宽度 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  z-index: 98;
+}

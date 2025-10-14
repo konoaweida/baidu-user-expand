@@ -1,0 +1,25 @@
+.t-tab-bar {
+  width: 660rpx;
+  height: 130rpx;
+  margin: 0 auto; 
+  /* 若需要固定在页面底部（常见 Tab 栏场景），补充定位（可选但推荐） */
+  position: fixed;
+  --td-tab-bar-color: #98A0A5;
+  --td-tab-bar-active-color: #FFF;
+  --td-tab-bar-active-bg: #7A4FD6;
+  /* --td-tab-bar-hover-color: #7A4FD6; */
+  --td-tab-bar-item-active-color: var(--td-brand-color, #8A9AA5);
+  box-shadow: 0 0 30rpx 10rpx rgba(147, 134, 226, 0.15);
+  border-radius: 65rpx; /* 与高度匹配，形成圆形或椭圆形的光晕 */
+}
+/* 关键：针对 Tab 栏内部的 text 和 view 覆盖全局颜色 */
+.t-tab-bar text,
+.t-tab-bar view {
+  color: var(--td-tab-bar-color); 
+}
+
+/* 如果有激活状态的子元素，单独指定激活色 */
+.t-tab-bar-item__content .t-tab-bar-item__content--checked .t-tab-bar-item__content--tag text,
+.t-tab-bar-item__content .t-tab-bar-item__content--checked .t-tab-bar-item__content--tag view {
+  color: #FFF; 
+}

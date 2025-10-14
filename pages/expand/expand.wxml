@@ -1,0 +1,37 @@
+<!--pages/expand/expand.wxml-->
+<!--pages/expand/expand.wxml-->
+<view class="expand-container">
+  <navigation-header></navigation-header>
+  <!-- Tab 栏占位：高度匹配 Tab 栏总高度（需根据实际调整） -->
+  <view class="tabs-placeholder" style="height: 110rpx; width: 100%;"></view>
+
+  <!-- 顶部固定 Tab 栏 -->
+  <view class="tabs-container">
+    <view 
+      class="tab-item {{currentTab === 'recommend' ? 'active' : ''}} one"
+      bindtap="handleTabClick"
+      data-tab="recommend"
+    >推荐</view>
+    <view 
+      class="tab-item {{currentTab === 'potential' ? 'active' : ''}} two"
+      bindtap="handleTabClick"
+      data-tab="potential"
+    >潜在人脉</view>
+  </view>
+
+  <!-- 内容滚动区域（根据 Tab 切换，保持滚动位置） -->
+  <scroll-view 
+    class="tab-content" 
+    scroll-y
+    scroll-top="{{scrollTop[currentTab]}}"
+    bindscroll="handleScroll"
+    data-tab="{{currentTab}}"
+  >
+    <view class="content-recommend" wx:if="{{currentTab === 'recommend'}}">
+      <!-- 推荐内容区 -->
+    </view>
+    <view class="content-potential" wx:else>
+      <!-- 潜在人脉内容区 -->
+    </view>
+  </scroll-view>
+</view> 

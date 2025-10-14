@@ -1,0 +1,15 @@
+/**app.wxss**/
+view {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #05020B;
+  font-family: "Source Han Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+text {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #05020B;
+  font-family: "Source Han Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}

@@ -1,0 +1,25 @@
+<view class="community-item">
+  <!-- 左边群组头像 -->
+  <image class="avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+
+  <!-- 群组信息 -->
+  <view class="info">
+    <view class="group">
+      <view class="name-wrap">
+        <text class="name">{{item.name}}</text>
+      </view>
+      <view class="badge-wrap" wx:if="{{item.badge}}">
+        <text class="badge">{{item.badge}}</text>
+      </view>
+    </view>
+    <view class="details">
+      <!-- 右边成员头像叠加 -->
+      <view class="users">
+          <block wx:for="{{item.users}}" wx:key="item">
+            <image class="user-avatar" src="{{item.url}}"></image>
+          </block>
+      </view>
+      <text class="members">{{item.members}} people</text>
+    </view>
+  </view>
+</view>

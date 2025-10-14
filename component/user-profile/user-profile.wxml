@@ -1,0 +1,40 @@
+<view class="user-profile-root">
+  <!-- 背景图容器 -->
+  <view class="user-background">
+    <image                                  
+      class="bg-image" 
+      src="/assets/image/微信图片_20250906204507_794_8.jpg" 
+      mode="aspectFill"
+      alt="用户背景图"
+    />
+  </view>
+
+  <!-- 用户信息容器 -->
+  <view class="user-layout">
+    <view class="user-info">
+      <!-- 用户头部信息 -->
+      <view class="user-header">
+        <!-- 用户头像 -->
+        <view class="user-avatar">
+          <image 
+            class="avatar-image" 
+            src="/assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg" 
+            mode="aspectFill"
+            alt="用户头像"
+          />
+        </view>
+        <!-- 人脉cp -->
+        <view class="user-cp">150人脉cp链</view>
+        <!-- 用户名称 -->
+        <view class="user-nameip">
+          <view class="user-name">我是名称</view>
+          <view class="user-ip">我是ip</view>
+        </view>
+        <view class="user-relationship">建立关系</view>
+      </view>
+      <!-- 用户描述 -->
+      <view class="user-desc">文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍</view>
+    </view>
+  </view>
+</view>
+<!-- 组件内部不含 scroll-view，页面层负责整个页面滚动 -->

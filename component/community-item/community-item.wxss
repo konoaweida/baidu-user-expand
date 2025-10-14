@@ -1,0 +1,71 @@
+.community-item {
+  display: flex;
+  height: 160rpx;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+}
+
+.info {
+  flex: 1;
+  margin: 45rpx 0 20rpx 40rpx;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+  gap: 10rpx; 
+}
+
+.name {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.badge-wrap {
+  width: 36rpx;
+  height: 36rpx;
+  background: #9386E2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5rpx;
+}
+
+.badge {
+  color: #fff;
+  font-size: 22rpx;
+  line-height: 1;
+}
+
+.details {
+  display: flex;
+  margin-left: 8rpx;
+}
+
+.users {
+  display: flex;
+}
+
+.user-avatar {
+  width: 37rpx;
+  height: 37rpx;
+  border-radius: 50%;
+  margin-left: -8rpx; /* 负边距实现头像叠加 */
+  border: 2rpx solid #fff; /* 白色边框区分叠加头像 */
+}
+
+.members {
+  margin-left: 20rpx;
+  font-size: 24rpx;
+  color: #888;
+  text-align: center;
+  align-self: center;
+}

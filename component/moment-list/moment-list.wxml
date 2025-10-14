@@ -1,0 +1,34 @@
+<view class="moment-list-class">
+  <!-- 1. 用户信息区 -->
+  <view class="moment-userinfo" wx:if="{{showUserInfo}}">
+    <view class="userinfo-avatar">
+      <image class="avatar" src="{{avatarUrl || '/assets/image/微信图片_20250906204507_794_8.jpg'}}"></image>
+    </view>
+    <text class="userinfo-nickname">{{nickName || '微信用户'}}</text>
+  </view>
+
+  <!-- 2. 文字简介区 -->
+  <text 
+    class="moment-desc" 
+    wx:if="{{showDesc}}"
+  >{{desc || '文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍'}}</text>
+                            
+  <!-- 关键：新增共同父容器（定位参考） -->
+  <view class="image-container" style="height: {{showImage ? '428rpx' : '96rpx'}}">
+    <!-- 3. 图片区 -->
+    <image 
+      wx:if="{{showImage}}"
+      class="moment-image" 
+      src="{{imageUrl || ''}}" 
+      mode="aspectFill"  
+    ></image>
+    <!-- 按钮容器占位 -->
+    <!-- <view class="action-placeholder" wx:else="{{!showImage}}" style="position: relative;"></view> -->
+    <!-- 4. .moment-actions 容器（现在参考父容器定位） -->
+    <view class="moment-actions">
+      <button class="action-text" bindtap="handleComment">评论</button>
+      <button class="action-text">点赞</button>
+      <button class="action-text" open-type="share">分享</button>
+    </view>
+  </view>
+</view>

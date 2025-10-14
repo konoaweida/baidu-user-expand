@@ -1,0 +1,20 @@
+<t-popup 
+  class="popup"
+  visible="{{visible}}" 
+  bind:visible-change="onVisibleChange" 
+  placement="{{placement}}"
+>
+  <view class="block">
+    <view class="header">
+      <view class="btn btn--cancel" aria-role="button" bindtap="onCancel">
+        {{cancelText}}
+      </view>
+      <view class="title">{{title}}</view>
+      <view class="btn btn--confirm" aria-role="button" bindtap="onConfirm">
+        {{confirmText}}
+      </view>
+    </view>
+    <!-- 内容插槽 -->
+    <slot></slot>
+  </view>
+</t-popup>

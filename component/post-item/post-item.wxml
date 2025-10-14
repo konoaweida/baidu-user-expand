@@ -1,0 +1,28 @@
+<view class="post-item-layout">
+  <view class="post-media">
+    <!-- 图片 -->
+    <image class="item-media" 
+           src="{{postData.mediaUrl || '/assets//image/1028c3c7f8a19900d55630f214fa7c3b.jpg'}}" 
+           wx:if="{{postData.mediaType === 'image'}}"
+           mode="aspectFill" 
+    ></image>
+    
+    <!-- 视频 -->
+    <video class="item-media"
+           src="{{postData.mediaUrl || ''}}" 
+           poster="{{postData.videoPoster || ''}}"
+           controls
+           wx:if="{{postData.mediaType === 'video'}}"
+    ></video>
+  </view>
+  
+  <!-- <view class="post-item-content">
+    <view class="item-title">{{postData.title || '默认标题'}}</view>
+    <view class="post-author">
+      <view class="author-img">
+        <image class="author-avatar" src="{{postData.authorImg || ''}}"></image>
+      </view>
+      <view class="author-label">{{postData.author || '默认作者'}}</view>
+    </view>
+  </view> -->
+</view>

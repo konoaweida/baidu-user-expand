@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/group/group",
+    "pages/logs/logs",
+    "pages/chat/chat",
+    "pages/user/user",
+    "pages/schedule/schedule",
+    "pages/event/event",
+    "pages/chats/charts",
+    "pages/register/register",
+    "pages/expand/expand"
+  ],
+  "usingComponents": {
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "t-tab-bar": "tdesign-miniprogram/tab-bar/tab-bar",
+    "t-tab-bar-item": "tdesign-miniprogram/tab-bar-item/tab-bar-item",
+    "t-navbar": "tdesign-miniprogram/navbar/navbar"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#000000",
+    "selectedColor": "#000000",
+    "backgroundColor": "#000000",
+    "list": [
+      {
+        "pagePath": "pages/expand/expand",
+        "text": "托圈"
+      },
+      {
+        "pagePath": "pages/chat/chat",
+        "text": "聊天"
+      },
+      {
+        "pagePath": "pages/schedule/schedule",
+        "text": "行程"
+      },
+      {
+        "pagePath": "pages/event/event",
+        "text": "事件"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的"
+      }
+    ]
+  },
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "Weixin",
+    "navigationBarBackgroundColor": "#ffffff"
+  },
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

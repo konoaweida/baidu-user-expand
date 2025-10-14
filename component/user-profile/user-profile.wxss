@@ -1,0 +1,76 @@
+/* 背景图容器 */
+.user-background {
+  width: 100%;
+  height: 522rpx;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* 背景图片 */
+.bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 用户信息主容器 */
+.user-layout {
+  width: 100%;
+  background: #fff;
+  position: relative;
+  z-index: 2;
+  margin-top: -166rpx;
+  border-radius: 100rpx 100rpx 0 0;
+}
+
+/* 用户信息区域 */
+.user-info {
+  height: 260rpx;
+  border-top-left-radius: 100rpx;
+  border-top-right-radius: 100rpx;
+}
+
+/* 用户头部区域 */
+.user-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 160rpx;
+  padding: 52rpx 48rpx 0;
+  position: relative;
+}
+
+/* 用户描述 */
+.user-desc {
+  padding: 10rpx 76rpx;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #05020B;
+  text-align: center;
+  font-family: "Source Han Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 头像样式 */
+.user-avatar {
+  position: absolute;
+  top: -86rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 172rpx;
+  height: 172rpx;
+  overflow: hidden;
+  border: 4rpx solid #fff;
+  border-radius: 50%;
+}
+.avatar-image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 人脉cp/名称等简要样式 */
+.user-cp { width: 108rpx; height: 78rpx; background: #cc99c2; margin-left: 22rpx; }
+.user-nameip { flex: 1; margin-top: 26rpx; text-align: center; }
+.user-name { font-size: 32rpx; color: #05020B; }
+.user-ip { font-size: 22rpx; color: #666; }
+.user-relationship { height: 60rpx; white-space: nowrap; flex-shrink: 0; }

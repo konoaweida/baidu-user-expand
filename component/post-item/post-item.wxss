@@ -1,0 +1,62 @@
+/* 根容器：占满父网格单元，外间距由 grid gap 控制 */
+.post-item-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  width: 100%;       /* 占满父单元格 */
+  box-sizing: border-box;
+  /* margin: 0 0 0.5px 0; 保留小底部间距，配合父容器 padding 控制视觉间距 */
+}
+
+/* 媒体区域：明确高度一致，避免留白 */
+.post-media {
+  width: 100%;
+  height: 330rpx; /* 与下面 item-media 保持一致 */
+  overflow: hidden;
+  /* border-radius 可按需保留/移除 */
+}
+
+.item-media {
+  display: block;    /* 避免 inline 元素引起间隙 */
+  width: 100%;
+  height: 330rpx;    /* 与 post-media 一致，消除高度差 */
+  object-fit: cover; /* 覆盖填充，保持比例 */
+}
+
+/* 标题：自动换行，高度随内容变化 */
+.item-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #222;
+  /* 允许标题换行，高度自动 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 可选：最多显示2行 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-author {
+  display: flex;
+  align-items: center;
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #999;
+  font-weight: 300;
+  text-align: center;
+
+}
+.author-img {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 5rpx;
+}
+.author-avatar {
+  width: 100%;
+  height: 100%;
+}
+
+
+

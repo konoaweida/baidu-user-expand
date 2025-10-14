@@ -1,0 +1,31 @@
+<view class="tab-swiper-container">
+  <view class="tab-bar">
+    <block wx:for="{{tabs}}" wx:key="id">
+      <view 
+        class="tab-item {{currentTab === index ? 'active' : ''}}"
+        bindtap="switchTab" 
+        data-index="{{index}}"
+      >
+        {{item.name}}
+      </view>
+    </block>
+  </view>
+
+  <swiper
+    current="{{currentTab}}"
+    bindchange="onSwiperChange"
+    style="height: {{swiperHeight}}px;"
+  >
+    <block wx:for="{{tabs}}" wx:key="id">
+      <swiper-item>
+        <view class="content-scroll" id="tab{{index}}">
+          <slot wx:if="{{index === 0}}" name="tab-content-0"></slot>
+          <slot wx:elif="{{index === 1}}" name="tab-content-1"></slot>
+          <slot wx:elif="{{index === 2}}" name="tab-content-2"></slot>
+          <slot wx:elif="{{index === 3}}" name="tab-content-3"></slot>  
+          <slot wx:elif="{{index === 4}}" name="tab-content-4"></slot>
+        </view>
+      </swiper-item>
+    </block>
+  </swiper>
+</view>
