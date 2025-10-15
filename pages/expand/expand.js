@@ -1,6 +1,6 @@
 const util = require('../../utils/util.js');
 
-function debounce(func, wait) {
+function debounce(func, wait = 100) { 
   let timeout;
   return function () {
     const context = this;
@@ -33,7 +33,8 @@ Page({
 
   onLoad() {
     this.debouncedTabClick = debounce(this._handleTabClick, 300);
-    this.debouncedHandleScroll = debounce(this.handleScroll, 30);
+    // 关键：用防抖包裹handleScroll，确保生效
+    this.debouncedHandleScroll = debounce(this.handleScroll, 100); 
   },
 
   async onReady() {
@@ -121,7 +122,7 @@ Page({
 
             // 成功则跳转
             wx.navigateTo({
-              url: '/pages/recommend-person/recommend-person',
+              url: '/pages/connections/connections',
               success: () => this.setData({ btnLoading: false }),
               fail: () => {
                 wx.showToast({ 
@@ -133,7 +134,7 @@ Page({
                 wx.reportEvent('retry_recommend', { reason: 'navigate_failed' });
               }
             });
-          }, 1500);
+          }, 500);
         },
         fail: () => {
           wx.showToast({
@@ -231,7 +232,13 @@ Page({
 
   handleScroll(e) {
     const tab = e.currentTarget.dataset.tab;
-    this.setData({ [`scrollTop.${tab}`]: e.detail.scrollTop });
+    const top = e.detail.scrollTop;
+    // 优化点：仅当滚动位置变化超过10rpx时才更新（过滤微小滚动，进一步减少setData）
+    if (Math.abs(this.data.scrollTop[tab] - top) > 10) {
+      this.setData({ 
+        [`scrollTop.${tab}`]: top  // 保持“字符串路径”更新，只改单个属性（最优写法）
+      });
+    }
   },
 
   onFilterPanelConfirm(e) {

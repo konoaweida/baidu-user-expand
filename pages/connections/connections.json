@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "navigation-header": "../../component/navigation-header/navigation-header",
+    "user-profile": "../../component/user-profile/user-profile",
+    "post-item": "../../component/post-item/post-item",
+    "tab-swiper": "../../component/tab-swiper/tab-swiper"
+  },
+  "navigationStyle":"custom"
+}

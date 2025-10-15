@@ -1,21 +1,52 @@
 .navigation-header {
   position: fixed;
-  /* 关键：用 left/right 代替 width:100%，避免继承父元素 padding 导致偏移 */
   left: 0;
   right: 0;
-  width: auto; /* 配合 left:0 和 right:0，实现真正的全屏宽度 */
+  width: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
+  background-color: #FEFEFE;
   z-index: 99;
 }
+
+/* 返回按钮样式 */
+.back-btn {
+  position: absolute;
+  left: 24rpx; /* 左侧固定间距 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48rpx;
+  height: 48rpx;
+  opacity: 1;
+}
+.back-icon {
+  width: 48rpx;
+  height: 48rpx;
+  font-size: 48rpx;
+  color: white;
+  opacity: 1;
+}
+
+/* 标题样式 */
+.header-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333; /* 标题颜色可通过父组件自定义 */
+  /* 防止标题过长溢出 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400rpx;
+  opacity: 1;
+}
+
 .navigation {
   position: fixed;
-  /* 关键：用 left/right 代替 width:100%，避免继承父元素 padding 导致偏移 */
   left: 0;
   right: 0;
-  width: auto; /* 配合 left:0 和 right:0，实现真正的全屏宽度 */
+  width: auto;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -147,4 +147,7 @@
   line-height: 100rpx;
   font-size: 28rpx;
   color: #333;
+  /* 新增：开启硬件加速，减少滚动重绘消耗 */
+  transform: translateZ(0);
+  will-change: transform;
 }

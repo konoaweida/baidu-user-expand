@@ -1,0 +1,7 @@
+/* pages/connections/connections.wxss */
+.connections-container .navigation{
+  background-color: transparent;
+}
+.connections-container .navigation-header {
+  background-color: transparent;
+}

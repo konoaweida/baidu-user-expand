@@ -1,35 +1,51 @@
-// 引入工具函数：使用转换后返回 rpx 的函数（关键修改）
+// 引入工具函数
 const { getMenuButtonTopRpx, getMenuButtonHeightRpx } = require('../../utils/util')
 
 Component({
   /**
-   * 组件的属性列表
+   * 组件的属性列表：新增 showPlaceholder 控制占位显隐
    */
   properties: {
-
+    // 是否显示顶部占位（默认需要，值为 true）
+    showPlaceholder: {
+      type: Boolean,
+      value: true // 默认显示占位，不传递参数时也会显示
+    },
+    // 原有属性保留
+    showBackButton: {
+      type: Boolean,
+      value: false
+    },
+    title: {
+      type: String,
+      value: ''
+    },
+    backButtonColor: {
+      type: String,
+      value: '#333'
+    },
+    titleColor: {
+      type: String,
+      value: '#333'
+    }
   },
 
   /**
-   * 组件的初始数据
-   * 此时 menuTop/menuHeight 存储的是 rpx 单位值（关键修改）
+   * 组件的初始数据（不变）
    */
   data: {
     menuTop: 0,
     menuHeight: 0,
+    backSymbol: '<'
   },
 
   /**
-   * 组件生命周期：节点树完成初始化后执行
+   * 组件生命周期（不变）
    */
   attached() {
-    // 调用 rpx 版本函数，获取胶囊按钮的 rpx 尺寸（关键修改）
     const menuTop = getMenuButtonTopRpx()
     const menuHeight = getMenuButtonHeightRpx()
     
-    // console.log('胶囊按钮-顶部距离（rpx）：', menuTop)
-    // console.log('胶囊按钮-高度（rpx）：', menuHeight)
-    
-    // 存入 data，供 WXML 布局使用
     this.setData({
       menuTop,
       menuHeight
@@ -37,9 +53,18 @@ Component({
   },
 
   /**
-   * 组件的方法列表
+   * 组件的方法列表（不变）
    */
   methods: {
-    
+    onBackClick() {
+      wx.navigateBack({
+        delta: 1,
+        fail: () => {
+          // 可选：无法返回时的降级逻辑
+          // wx.switchTab({ url: '/pages/index/index' })
+        }
+      })
+      this.triggerEvent('back', {}, {})
+    }
   }
 })

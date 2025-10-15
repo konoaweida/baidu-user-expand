@@ -24,11 +24,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/expand/expand",
-          "pathName": "pages/expand/expand",
+          "name": "pages/connections/connections",
+          "pathName": "pages/connections/connections",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "pages/expand/expand",
+          "pathName": "pages/expand/expand",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "pages/event/event",

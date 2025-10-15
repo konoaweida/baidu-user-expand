@@ -1,0 +1,10 @@
+<!--pages/connections/connections.wxml-->
+<view class="connections-container">
+  <navigation-header  
+    showPlaceholder="{{false}}"
+    showBackButton="{{true}}"
+    bind:back="onNavBack"
+    ></navigation-header>
+  <user-profile></user-profile>
+  <tab-swiper></tab-swiper>
+</view>

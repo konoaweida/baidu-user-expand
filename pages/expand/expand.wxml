@@ -26,11 +26,12 @@
     class="tab-content" 
     scroll-y="{{true}}"
     scroll-top="{{scrollTop[currentTab]}}"
-    bindscroll="handleScroll"
+    bindscroll="debouncedHandleScroll" 
     data-tab="{{currentTab}}"
     enhanced="{{true}}"  
     bounce="{{true}}"  
-    style="height: calc(100vh - {{navHeaderHeightRpx}}rpx - 110rpx - env(safe-area-inset-bottom));"
+    scroll-with-animation="{{false}}"  
+    style="height: calc(100vh - {{navHeaderHeightRpx}}rpx - 110rpx - env(safe-area-inset-bottom)); overflow-y: auto;"
   >
     <!-- 推荐Tab的正方形容器：简化事件绑定，确保点击能触发 -->
     <view class="content-recommend" wx:if="{{currentTab === 'recommend'}}">
@@ -38,7 +39,7 @@
         class="search-container" 
         bindtap="triggerSearch"
       >
-        <image src="/images/search-loading.gif" class="btn-gif" mode="widthFix"></image>
+        <image src="" class="btn-gif" mode="widthFix"></image>
         <text class="btn-text">正在为您搜寻潜在人脉</text>
       </view>
     </view>
@@ -49,8 +50,8 @@
         <text class="empty-text">无网络连接，请检查网络后重试</text>
       </view>
       <view wx:else>
-        <view wx:for="{{potentialList}}" wx:key="id" class="content-item">
-          潜在人脉{{item.id + 1}}
+        <view wx:for="{{50}}" class="content-item">
+          潜在人脉
         </view>
       </view>
     </view>
