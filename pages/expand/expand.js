@@ -21,101 +21,149 @@ Page({
       recommend: 0,
       potential: 0,
     },
-    // 2. 存储每个Tab的独立筛选状态（根据实际需求定义字段，示例含类型/关键词/地区）
+    // 2. 存储每个Tab的独立筛选状态（根据实际需求定义字段）
     filterStatus: {
-      recommend: {
-        type: '',       // 推荐Tab筛选：类型（如“最新”“最热”）
-        keyword: '',    // 推荐Tab筛选：搜索关键词
-        timeRange: ''   // 推荐Tab筛选：时间范围（如“近7天”）
-      },
-      potential: {
-        type: '',       // 潜在人脉Tab筛选：人脉类型（如“同事”“校友”）
-        area: '',       // 潜在人脉Tab筛选：地区（如“北京”“上海”）
-        company: ''     // 潜在人脉Tab筛选：公司
-      }
+      recommend: { type: '', keyword: '', timeRange: '' },
+      potential: { type: '', area: '', company: '' }
     },
-    // 数据列表与空态标识
-    recommendList: [],
+    // 数据列表与空态标识（潜在人脉保留，推荐页不再用列表）
     potentialList: [],
-    recommendEmpty: false,
     potentialEmpty: false,
-    // 导航栏高度（用于布局）
+    // 新增：推荐页【正方形按钮三态】变量（核心）
+    btnLoading: false,  // 加载中
+    btnError: false,    // 加载失败
+    btnEmpty: false,    // 暂无推荐人
+    isNoNetwork: false, // 区分无网/普通失败
+    // 原有其他状态
     navHeaderHeightRpx: 0,
-    // 可选：筛选面板显示状态（若用自定义筛选组件，需控制显隐）
     showFilterPanel: false
   },
 
   onLoad() {
     // 初始化防抖Tab点击（300ms防重复）
     this.debouncedTabClick = debounce(this._handleTabClick, 300);
-    // 加载默认Tab（推荐）的内容（初始无筛选，传空对象）
-    // 新增：防抖滚动事件（30ms 触发一次，平衡实时性和性能）
-    this.debouncedHandleScroll = debounce(this.handleScroll, 30); 
-    this.loadTabContent('recommend', this.data.filterStatus.recommend);
+    // 新增：防抖滚动事件（30ms 触发一次）
+    this.debouncedHandleScroll = debounce(this.handleScroll, 30);
+    // 推荐页初始不加载，显示按钮（原有 loadTabContent 注释）
   },
 
   // 页面渲染完成后：获取导航栏高度（rpx）
   async onReady() {
     const navHeightRpx = await util.getElementHeight(this, '#navHeader');
-    this.setData({
-      navHeaderHeightRpx: navHeightRpx
-    });
+    this.setData({ navHeaderHeightRpx: navHeightRpx });
     console.log('navigation-header 组件高度（rpx）：', navHeightRpx);
   },
 
-  // -------------------------- Tab切换相关 --------------------------
-  // 对外暴露的Tab点击事件（绑定防抖）
+  // -------------------------- Tab切换相关（完全保留） --------------------------
   handleTabClick(e) {
     const tab = e.currentTarget.dataset.tab;
     this.debouncedTabClick(tab);
   },
 
-  // 防抖后的Tab切换核心逻辑
   _handleTabClick(tab) {
-    const { currentTab, filterStatus, scrollTop } = this.data;
+    const { currentTab, filterStatus } = this.data;
     if (tab === currentTab) return;
 
-    // 1. 切换Tab状态（带回调）
+    // 切换Tab时，重置推荐页状态为初始按钮
+    if (currentTab === 'recommend') {
+      this.setData({ btnLoading: false, btnError: false, btnEmpty: false });
+    }
+
     this.setData({ currentTab: tab }, () => {
-      // 3. 埋点上报
+      // 埋点上报
       wx.reportEvent('click_tab', { tab });
-      // 4. 加载目标Tab的内容
-      this.loadTabContent(tab, filterStatus[tab]);
+      // 潜在人脉页仍加载数据，推荐页不自动加载（靠按钮触发）
+      if (tab === 'potential') this.loadTabContent('potential', filterStatus[tab]);
     });
   },
 
-  // -------------------------- 筛选相关 --------------------------
-  // 打开筛选面板（传递当前Tab的筛选状态）
+  // -------------------------- 新增：推荐页正方形按钮核心逻辑 --------------------------
+  // 触发搜寻（按钮点击/重试点击）
+  triggerSearch() {
+    // 1. 重置状态，进入加载中，上报埋点
+    this.setData({
+      btnLoading: true,
+      btnError: false,
+      btnEmpty: false,
+      isNoNetwork: false
+    });
+    wx.reportEvent('view_recommend_loading'); // 加载埋点
+
+    // 2. 网络判断
+    wx.getNetworkType({
+      success: (res) => {
+        const isNoNetwork = res.networkType === 'none';
+        if (isNoNetwork) {
+          // 无网：切换失败态
+          this.setData({
+            btnLoading: false,
+            btnError: true,
+            isNoNetwork: true
+          });
+          return;
+        }
+
+        // 3. 模拟接口请求（实际替换为 GET /circle/recommend）
+        setTimeout(() => {
+          const mockSuccess = true; // 控制成功/失败：true=成功（跳转）
+          const mockHasData = true; // 控制是否有数据：true=有（跳转），false=空态
+
+          if (!mockSuccess) {
+            // 失败：切换失败态
+            this.setData({ btnLoading: false, btnError: true });
+            return;
+          }
+          if (!mockHasData) {
+            // 空态：切换空态
+            this.setData({ btnLoading: false, btnEmpty: true });
+            return;
+          }
+
+          // 4. 成功：跳转到推荐人页面（唯一跳转场景）
+          wx.navigateTo({
+            url: '/pages/recommend-person/recommend-person', // 替换为实际推荐人页面路径
+            success: () => {
+              // 跳转后重置推荐页状态（返回时显示按钮）
+              this.setData({ btnLoading: false });
+            },
+            fail: () => {
+              // 跳转失败：切换失败态
+              this.setData({ btnLoading: false, btnError: true });
+            }
+          });
+        }, 1500); // 模拟加载耗时
+      },
+      fail: () => {
+        // 网络判断失败：切换失败态
+        this.setData({ btnLoading: false, btnError: true });
+      }
+    });
+  },
+
+  // 重置到初始按钮状态（空态时点击“重新搜寻”）
+  resetToInit() {
+    this.setData({ btnError: false, btnEmpty: false });
+  },
+
+  // -------------------------- 筛选相关（完全保留） --------------------------
   handleFilterClick() {
     const { currentTab, filterStatus } = this.data;
-    // 方式1：用模态框模拟筛选（快速演示，实际可替换为自定义筛选组件）
     wx.showModal({
       title: `${currentTab === 'recommend' ? '推荐' : '潜在人脉'}筛选`,
-      // 显示当前Tab的已有筛选状态（方便用户修改）
       content: this.formatFilterContent(currentTab, filterStatus[currentTab]),
       confirmText: '确认筛选',
       cancelText: '重置筛选',
       success: (res) => {
         if (res.confirm) {
-          // 模拟用户选择的新筛选条件（实际需替换为筛选面板的真实输入）
           const newFilter = this.getMockNewFilter(currentTab);
-          // 更新筛选状态+重置滚动+重新加载数据
           this.updateFilterAndReload(currentTab, newFilter);
         } else if (res.cancel) {
-          // 重置筛选（恢复为空状态）
           this.updateFilterAndReload(currentTab, this.getEmptyFilter(currentTab));
         }
       }
     });
-
-    // 方式2：若用自定义筛选组件，打开面板并传递当前筛选状态（注释模态框后启用）
-    // this.setData({
-    //   showFilterPanel: true,
-    //   currentFilterTab: currentTab // 标记当前筛选的Tab
-    // });
   },
 
-  // 格式化筛选内容（用于模态框显示已有筛选状态）
   formatFilterContent(tab, filter) {
     let content = '当前筛选：\n';
     if (tab === 'recommend') {
@@ -130,7 +178,6 @@ Page({
     return content;
   },
 
-  // 模拟用户选择的新筛选条件（实际项目替换为筛选面板的输入值）
   getMockNewFilter(tab) {
     if (tab === 'recommend') {
       return { type: '最新', keyword: '技术', timeRange: '近7天' };
@@ -139,7 +186,6 @@ Page({
     }
   },
 
-  // 获取空筛选状态（用于重置筛选）
   getEmptyFilter(tab) {
     if (tab === 'recommend') {
       return { type: '', keyword: '', timeRange: '' };
@@ -148,87 +194,58 @@ Page({
     }
   },
 
-  // 更新筛选状态+重置滚动位置+重新加载数据（核心方法）
   updateFilterAndReload(tab, newFilter) {
     this.setData({
-      // 1. 更新当前Tab的筛选状态（保留其他Tab的状态）
       [`filterStatus.${tab}`]: newFilter,
-      // 2. 筛选后数据变化，重置当前Tab的滚动位置到顶部
       [`scrollTop.${tab}`]: 0 
     }, () => {
-      // 3. 状态更新完成后，加载筛选后的数据
-      this.loadTabContent(tab, newFilter);
+      if (tab === 'potential') this.loadTabContent(tab, newFilter);
     });
   },
 
-  // -------------------------- 数据加载相关 --------------------------
-  // 加载Tab内容（支持携带筛选条件，含无网空态处理）
+  // -------------------------- 数据加载相关（仅保留潜在人脉逻辑） --------------------------
   loadTabContent(tab, filterParams) {
     wx.getNetworkType({
       success: (res) => {
         const isNoNetwork = res.networkType === 'none';
         if (isNoNetwork) {
-          // 无网时显示空态
           this.setData({ [`${tab}Empty`]: true });
           return;
         }
 
-        // 模拟接口请求（实际项目替换为真实接口，携带filterParams筛选参数）
         setTimeout(() => {
           let mockData = [];
-          // 根据筛选条件生成不同数据（演示筛选效果）
-          if (tab === 'recommend' && filterParams.type === '最新') {
-            // 推荐Tab-筛选“最新”：返回20条数据
-            mockData = Array.from({ length: 20 }, (_, i) => ({
-              id: i,
-              title: `推荐最新内容-${i}`,
-              filterTag: '最新'
-            }));
-          } else if (tab === 'potential' && filterParams.area === '北京') {
-            // 潜在人脉Tab-筛选“北京”：返回15条数据
+          if (tab === 'potential' && filterParams.area === '北京') {
             mockData = Array.from({ length: 15 }, (_, i) => ({
-              id: i,
-              name: `北京人脉-${i}`,
-              company: filterParams.company || '未知公司'
+              id: i, name: `北京人脉-${i}`, company: filterParams.company || '未知公司'
             }));
           } else {
-            // 默认无筛选：返回10条基础数据
-            mockData = Array.from({ length: 10 }, (_, i) => ({
-              id: i,
-              title: `${tab === 'recommend' ? '推荐' : '人脉'}基础内容-${i}`
-            }));
+            mockData = Array.from({ length: 10 }, (_, i) => ({ id: i }));
           }
 
-          // 更新数据与空态（数据为空时显示空态）
           this.setData({
             [`${tab}List`]: mockData,
             [`${tab}Empty`]: mockData.length === 0
           });
-        }, 500); // 模拟接口延迟
+        }, 500);
       },
     });
   },
 
-  // -------------------------- 滚动位置存储 --------------------------
-  // 监听scroll-view滚动，存储当前Tab的滚动位置
+  // -------------------------- 滚动位置存储（完全保留） --------------------------
   handleScroll(e) {
     const tab = e.currentTarget.dataset.tab;
     const top = e.detail.scrollTop;
-    // console.log(`[${tab}]滚动位置更新：`, top); // 验证是否有日志输出
-    this.setData({
-      [`scrollTop.${tab}`]: top
-    });
+    this.setData({ [`scrollTop.${tab}`]: top });
   },
 
-  // -------------------------- 可选：自定义筛选组件回调（若使用） --------------------------
-  // 自定义筛选面板确认回调（接收面板传递的新筛选条件）
+  // -------------------------- 可选：自定义筛选组件回调（完全保留） --------------------------
   onFilterPanelConfirm(e) {
     const { tab, newFilter } = e.detail;
     this.updateFilterAndReload(tab, newFilter);
     this.setData({ showFilterPanel: false });
   },
 
-  // 自定义筛选面板取消回调
   onFilterPanelCancel() {
     this.setData({ showFilterPanel: false });
   }
