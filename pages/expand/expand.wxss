@@ -1,35 +1,39 @@
 /* pages/expand/expand.wxss */
-/* Tab 栏容器：固定在导航栏下方 */
 .expand-container .navigation-header {
-  width: 750rpx;
-  height: 100%;
   background: #FEFEFE;
 }
-
 .tabs-container {
   position: fixed;
-  top: 178rpx; /* 与导航栏高度一致，紧接导航栏 */
   left: 0;
   right: 0;
-  z-index: 99; /* 保证在内容上方 */
+  z-index: 99;
   display: flex;
-/* 设置flex容器中所有子元素在交叉轴上的对齐方式为底部对齐 */
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: 32rpx 450rpx 24rpx 56rpx;
-  background-color: #FEFEFE; /* 显式背景色，避免透明 */
-  border-bottom: 2rpx solid #f5f5f5; /* 底部分割线（可选） */
+  align-items: flex-end; /* 保持 Tab 项底部对齐 */
+  justify-content: flex-start; /* 改为左对齐，避免 Tab 项被挤压 */
+  /* 关键：左右 padding 改为 56rpx（左）和 32rpx（右，按钮离边界距离） */
+  padding: 32rpx 32rpx 24rpx 56rpx; 
+  /* border-bottom: 2rpx solid #f5f5f5; */
 }
 
-/* 基础样式：所有选项卡共用（高度、颜色、过渡等） */
+/* 2. 新增：筛选按钮样式（固定高度、靠右、视觉样式） */
+.filter-btn {
+  /* 与 Tab 项高度对齐（54rpx），垂直居中 */
+  height: 40rpx;
+  width: 40rpx;
+  margin-top:14rpx;
+  margin-left: auto; 
+  background-color: #4a42d4; /* 按钮背景色，可按需修改 */
+
+}
+
+/* 以下原有样式保持不变（tab-item、激活态等） */
 .tab-item {
   height: 54rpx;
   color: rgba(158, 158, 158, 1);
   position: relative;
-  /* transition: all 0.05s linear; 切换过渡动画 */
   display: flex;
   align-items: center;
-  justify-content: center; /* 文字居中，避免宽度变化导致偏移 */
+  justify-content: center;
   font-size: 28rpx;
   font-weight: 400;
   letter-spacing: 0rpx;
@@ -38,58 +42,40 @@
   text-align: left;
   vertical-align: top;
 }
-
-/* 单独设置未激活状态的宽度（使用 :not(.active) 确保仅未激活时生效） */
-.tab-item.one {
-  width: 72rpx; /* 第一个选项卡未激活宽度 */
-}
-.tab-item.two {
-  width: 144rpx; /* 第二个选项卡未激活宽度（示例值，可按需修改） */
-}
-
-/* 激活态样式：所有选项卡共用（颜色、加粗、下划线） */
+.tab-item.one { width: 74rpx; margin-right: 48rpx;}
+.tab-item.two { width: 146rpx; }
 .tab-item.active {
   font-size: 36rpx;
   font-weight: 700;
-  letter-spacing: 0rpx;
   line-height: 52.12rpx;
   color: rgba(5, 2, 11, 1);
 }
-
-/* 激活态下划线（共用样式） */
 .tab-item.active::after {
   content: '';
   position: absolute;
   left: 50%;
   bottom: -20rpx;
-  transform: translateX(-50%); /* 下划线居中 */
+  transform: translateX(-50%);
   width: 54rpx;
   height: 12rpx;
   border-radius: 4rpx;
   background: rgba(5, 2, 11, 1);
 }
-
-/* 内容滚动容器：高度避开导航栏和 Tab 栏 */
 .tab-content {
-  height: calc(100vh - 282rpx); /* 100vh - 导航栏(100rpx) - Tab栏(80rpx)，需根据实际调整 */
-  box-sizing: border-box; /* 避免 padding 撑大容器 */
+  /* 原有属性保留 */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .content-recommend {
   width: 100%;
-  height: 100%;
+  height: 100%;  
   background: #F8F9FD;
 }
-/* 内容项（模拟列表） */
-.content-item {
-  height: 120rpx;
-  line-height: 120rpx;
-  border-bottom: 1rpx solid #eee;
-}
 
-/* 空态样式 */
-.empty-state {
-  margin-top: 40rpx;
-  text-align: center;
-  color: #999;
+.content-potential {
+  padding-top: 32rpx; 
+  width: 100%;
+  height: auto;  
+  background: #f0e3f3;
 }
