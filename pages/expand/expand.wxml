@@ -39,13 +39,29 @@
     bounce="{{true}}"  
     style="height: calc(100vh - {{navHeaderHeightRpx}}rpx - 110rpx - env(safe-area-inset-bottom));"
   >
+    <!-- 推荐Tab内容：补充空态 -->
     <view class="content-recommend" wx:if="{{currentTab === 'recommend'}}">
-      <!-- 推荐内容区 -->
+      <!-- 无网/空态提示（新增） -->
+      <view class="empty-state" wx:if="{{recommendEmpty}}">
+        <text class="empty-text">无网络连接，请检查网络后重试</text>
+      </view>
+      <!-- 有网时的正常内容（原有，需用wx:else包裹） -->
+      <view wx:else>
+        <view wx:for="{{recommendList}}" wx:key="id" class="content-item">
+        </view>
+      </view>
     </view>
+
+    <!-- 潜在人脉Tab内容：补充空态 -->
     <view class="content-potential" wx:else>
-      <!-- 潜在人脉内容区 -->
-      <view wx:for="{{100}}" wx:key="id">
-        潜在人脉内容区-{{item.id}}
+      <!-- 无网/空态提示（新增） -->
+      <view class="empty-state" wx:if="{{potentialEmpty}}">
+        <text class="empty-text">无网络连接，请检查网络后重试</text>
+      </view>
+      <!-- 有网时的正常内容（原有，需用wx:else包裹） -->
+      <view wx:else>
+        <view wx:for="{{potentialList}}" wx:key="id" class="content-item">
+        </view>
       </view>
     </view>
   </scroll-view>

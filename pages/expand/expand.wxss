@@ -26,7 +26,7 @@
 
 }
 
-/* 以下原有样式保持不变（tab-item、激活态等） */
+/* 基础样式：所有选项卡共用 + 新增文字样式过渡 */
 .tab-item {
   height: 54rpx;
   color: rgba(158, 158, 158, 1);
@@ -38,29 +38,45 @@
   font-weight: 400;
   letter-spacing: 0rpx;
   line-height: 40.54rpx;
-  color: rgba(158, 158, 158, 1);
   text-align: left;
   vertical-align: top;
+  transition: all 0.3s ease
 }
+
+/* 单独设置未激活状态的宽度 */
 .tab-item.one { width: 74rpx; margin-right: 48rpx;}
 .tab-item.two { width: 146rpx; }
+
+/* 激活态样式：新增过渡触发 */
 .tab-item.active {
   font-size: 36rpx;
   font-weight: 700;
   line-height: 52.12rpx;
   color: rgba(5, 2, 11, 1);
+  /* 激活态无需额外过渡属性，依赖 .tab-item 中的 transition */
 }
-.tab-item.active::after {
+
+/* 下划线基础样式（未激活态：隐藏/缩小）+ 过渡 */
+.tab-item::after {
   content: '';
   position: absolute;
   left: 50%;
   bottom: -20rpx;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scaleX(0); /* 未激活：水平缩小到0（隐藏） */
   width: 54rpx;
   height: 12rpx;
   border-radius: 4rpx;
   background: rgba(5, 2, 11, 1);
+  transition: all 0.3s ease;
+  opacity: 0; /* 未激活：透明（双重保险隐藏） */
 }
+
+/* 激活态下划线：显示（缩放+不透明） */
+.tab-item.active::after {
+  transform: translateX(-50%) scaleX(1); /* 激活：水平恢复到1（显示） */
+  opacity: 1; /* 激活：不透明 */
+}
+
 .tab-content {
   /* 原有属性保留 */
   width: 100%;
@@ -77,5 +93,14 @@
   padding-top: 32rpx; 
   width: 100%;
   height: auto;  
-  background: #f0e3f3;
+}
+/* 空态样式（新增） */
+.empty-state {
+  padding-top: 80rpx;
+  text-align: center;
+}
+
+.empty-text {
+  font-size: 24rpx;
+  color: #999;
 }
