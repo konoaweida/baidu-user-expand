@@ -1,6 +1,5 @@
-const util = require('../../utils/util.js'); // 引入工具类
+const util = require('../../utils/util.js');
 
-// 防抖工具函数：避免短时间重复点击
 function debounce(func, wait) {
   let timeout;
   return function () {
@@ -15,46 +14,34 @@ function debounce(func, wait) {
 
 Page({
   data: {
-    currentTab: 'recommend', // 默认激活“推荐”Tab
-    // 1. 存储每个Tab的独立滚动位置（切换时自动恢复）
-    scrollTop: {
-      recommend: 0,
-      potential: 0,
-    },
-    // 2. 存储每个Tab的独立筛选状态（根据实际需求定义字段）
+    currentTab: 'recommend',
+    scrollTop: { recommend: 0, potential: 0 },
     filterStatus: {
       recommend: { type: '', keyword: '', timeRange: '' },
       potential: { type: '', area: '', company: '' }
     },
-    // 数据列表与空态标识（潜在人脉保留，推荐页不再用列表）
+    // 潜在人脉数据保留原逻辑
     potentialList: [],
     potentialEmpty: false,
-    // 新增：推荐页【正方形按钮三态】变量（核心）
-    btnLoading: false,  // 加载中
-    btnError: false,    // 加载失败
-    btnEmpty: false,    // 暂无推荐人
-    isNoNetwork: false, // 区分无网/普通失败
-    // 原有其他状态
+    // 推荐页仅保留2个核心状态（删除btnError/btnEmpty，用Toast替代）
+    btnLoading: false,  // 仅控制“加载中”（容器透明度+禁止重复点击）
+    isNoNetwork: false, // 辅助判断无网场景
+    // 其他状态
     navHeaderHeightRpx: 0,
     showFilterPanel: false
   },
 
   onLoad() {
-    // 初始化防抖Tab点击（300ms防重复）
     this.debouncedTabClick = debounce(this._handleTabClick, 300);
-    // 新增：防抖滚动事件（30ms 触发一次）
     this.debouncedHandleScroll = debounce(this.handleScroll, 30);
-    // 推荐页初始不加载，显示按钮（原有 loadTabContent 注释）
   },
 
-  // 页面渲染完成后：获取导航栏高度（rpx）
   async onReady() {
     const navHeightRpx = await util.getElementHeight(this, '#navHeader');
     this.setData({ navHeaderHeightRpx: navHeightRpx });
-    console.log('navigation-header 组件高度（rpx）：', navHeightRpx);
   },
 
-  // -------------------------- Tab切换相关（完全保留） --------------------------
+  // Tab切换：重置推荐页加载状态
   handleTabClick(e) {
     const tab = e.currentTarget.dataset.tab;
     this.debouncedTabClick(tab);
@@ -64,88 +51,107 @@ Page({
     const { currentTab, filterStatus } = this.data;
     if (tab === currentTab) return;
 
-    // 切换Tab时，重置推荐页状态为初始按钮
+    // 切换Tab时，重置推荐页“加载中”状态（容器恢复正常）
     if (currentTab === 'recommend') {
-      this.setData({ btnLoading: false, btnError: false, btnEmpty: false });
+      this.setData({ btnLoading: false });
     }
 
     this.setData({ currentTab: tab }, () => {
-      // 埋点上报
       wx.reportEvent('click_tab', { tab });
-      // 潜在人脉页仍加载数据，推荐页不自动加载（靠按钮触发）
       if (tab === 'potential') this.loadTabContent('potential', filterStatus[tab]);
     });
   },
 
-  // -------------------------- 新增：推荐页正方形按钮核心逻辑 --------------------------
-  // 触发搜寻（按钮点击/重试点击）
+  // 核心：触发搜寻（点击容器触发，失败/空态用Toast提示）
   triggerSearch() {
-    // 1. 重置状态，进入加载中，上报埋点
-    this.setData({
-      btnLoading: true,
-      btnError: false,
-      btnEmpty: false,
-      isNoNetwork: false
-    });
-    wx.reportEvent('view_recommend_loading'); // 加载埋点
+    // 1. 加载中禁止重复点击
+    console.log('开始触发搜寻');
+    if (this.data.btnLoading) {
+      console.log('加载中，禁止重复点击');
+      return;
+    }
 
-    // 2. 网络判断
-    wx.getNetworkType({
-      success: (res) => {
-        const isNoNetwork = res.networkType === 'none';
-        if (isNoNetwork) {
-          // 无网：切换失败态
-          this.setData({
-            btnLoading: false,
-            btnError: true,
-            isNoNetwork: true
-          });
-          return;
-        }
+    // 2. 进入加载中状态
+    this.setData({ btnLoading: true }, () => {
+      console.log('进入加载中状态');
+      wx.reportEvent('view_recommend_loading');
 
-        // 3. 模拟接口请求（实际替换为 GET /circle/recommend）
-        setTimeout(() => {
-          const mockSuccess = true; // 控制成功/失败：true=成功（跳转）
-          const mockHasData = true; // 控制是否有数据：true=有（跳转），false=空态
-
-          if (!mockSuccess) {
-            // 失败：切换失败态
-            this.setData({ btnLoading: false, btnError: true });
-            return;
-          }
-          if (!mockHasData) {
-            // 空态：切换空态
-            this.setData({ btnLoading: false, btnEmpty: true });
+      // 3. 网络判断
+      wx.getNetworkType({
+        success: (res) => {
+          console.log('网络类型检测结果：', res.networkType);
+          if (res.networkType === 'none') {
+            wx.showToast({
+              title: '无网络连接，请检查网络',
+              icon: 'none',
+              duration: 2000
+            });
+            this.setData({ btnLoading: false });
+            wx.reportEvent('retry_recommend', { reason: 'no_network' });
             return;
           }
 
-          // 4. 成功：跳转到推荐人页面（唯一跳转场景）
-          wx.navigateTo({
-            url: '/pages/recommend-person/recommend-person', // 替换为实际推荐人页面路径
-            success: () => {
-              // 跳转后重置推荐页状态（返回时显示按钮）
+          // 4. 模拟接口请求
+          setTimeout(() => {
+            console.log('模拟接口请求完成');
+            const mockSuccess = true  // 测试用
+            const mockHasData = true;  // 测试用
+
+            if (!mockSuccess) {
+              wx.showToast({
+                title: '搜寻失败，请重试',
+                icon: 'none',
+                duration: 2000
+              });
               this.setData({ btnLoading: false });
-            },
-            fail: () => {
-              // 跳转失败：切换失败态
-              this.setData({ btnLoading: false, btnError: true });
+              wx.reportEvent('retry_recommend', { reason: 'request_failed' });
+              return;
             }
+
+            if (!mockHasData) {
+              wx.showToast({
+                title: '暂无匹配的潜在人脉',
+                icon: 'none',
+                duration: 2000
+              });
+              this.setData({ btnLoading: false });
+              wx.reportEvent('retry_recommend', { reason: 'no_data' });
+              return;
+            }
+
+            // 成功则跳转
+            wx.navigateTo({
+              url: '/pages/recommend-person/recommend-person',
+              success: () => this.setData({ btnLoading: false }),
+              fail: () => {
+                wx.showToast({ 
+                  title: '跳转失败，请重试', 
+                  icon: 'none', 
+                  duration: 2000 
+                });
+                this.setData({ btnLoading: false });
+                wx.reportEvent('retry_recommend', { reason: 'navigate_failed' });
+              }
+            });
+          }, 1500);
+        },
+        fail: () => {
+          wx.showToast({
+            title: '网络异常，请重试',
+            icon: 'none',
+            duration: 2000
           });
-        }, 1500); // 模拟加载耗时
-      },
-      fail: () => {
-        // 网络判断失败：切换失败态
-        this.setData({ btnLoading: false, btnError: true });
-      }
+          this.setData({ btnLoading: false });
+          wx.reportEvent('retry_recommend', { reason: 'network_error' });
+        }
+      });
     });
   },
 
-  // 重置到初始按钮状态（空态时点击“重新搜寻”）
-  resetToInit() {
-    this.setData({ btnError: false, btnEmpty: false });
-  },
+  // 空事件：加载中禁止点击
+  noop() {},
 
-  // -------------------------- 筛选相关（完全保留） --------------------------
+  // 以下筛选、潜在人脉加载等逻辑完全保留不变
   handleFilterClick() {
     const { currentTab, filterStatus } = this.data;
     wx.showModal({
@@ -167,31 +173,23 @@ Page({
   formatFilterContent(tab, filter) {
     let content = '当前筛选：\n';
     if (tab === 'recommend') {
-      content += `类型：${filter.type || '无'}\n`;
-      content += `关键词：${filter.keyword || '无'}\n`;
-      content += `时间范围：${filter.timeRange || '无'}`;
+      content += `类型：${filter.type || '无'}\n关键词：${filter.keyword || '无'}\n时间范围：${filter.timeRange || '无'}`;
     } else {
-      content += `人脉类型：${filter.type || '无'}\n`;
-      content += `地区：${filter.area || '无'}\n`;
-      content += `公司：${filter.company || '无'}`;
+      content += `人脉类型：${filter.type || '无'}\n地区：${filter.area || '无'}\n公司：${filter.company || '无'}`;
     }
     return content;
   },
 
   getMockNewFilter(tab) {
-    if (tab === 'recommend') {
-      return { type: '最新', keyword: '技术', timeRange: '近7天' };
-    } else {
-      return { type: '同事', area: '北京', company: '某科技公司' };
-    }
+    return tab === 'recommend' 
+      ? { type: '最新', keyword: '技术', timeRange: '近7天' }
+      : { type: '同事', area: '北京', company: '某科技公司' };
   },
 
   getEmptyFilter(tab) {
-    if (tab === 'recommend') {
-      return { type: '', keyword: '', timeRange: '' };
-    } else {
-      return { type: '', area: '', company: '' };
-    }
+    return tab === 'recommend' 
+      ? { type: '', keyword: '', timeRange: '' }
+      : { type: '', area: '', company: '' };
   },
 
   updateFilterAndReload(tab, newFilter) {
@@ -203,7 +201,6 @@ Page({
     });
   },
 
-  // -------------------------- 数据加载相关（仅保留潜在人脉逻辑） --------------------------
   loadTabContent(tab, filterParams) {
     wx.getNetworkType({
       success: (res) => {
@@ -232,14 +229,11 @@ Page({
     });
   },
 
-  // -------------------------- 滚动位置存储（完全保留） --------------------------
   handleScroll(e) {
     const tab = e.currentTarget.dataset.tab;
-    const top = e.detail.scrollTop;
-    this.setData({ [`scrollTop.${tab}`]: top });
+    this.setData({ [`scrollTop.${tab}`]: e.detail.scrollTop });
   },
 
-  // -------------------------- 可选：自定义筛选组件回调（完全保留） --------------------------
   onFilterPanelConfirm(e) {
     const { tab, newFilter } = e.detail;
     this.updateFilterAndReload(tab, newFilter);

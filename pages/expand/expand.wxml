@@ -1,11 +1,9 @@
 <view class="expand-container">
   <navigation-header id="navHeader"></navigation-header>
-  <!-- Tab 栏占位：高度匹配 Tab 栏总高度（需根据实际调整） -->
   <view class="tabs-placeholder" style="height: 110rpx; width: 100%;"></view>
 
-  <!-- 顶部固定 Tab 栏 -->
+  <!-- 顶部Tab栏 -->
   <view class="tabs-container" style="top: {{navHeaderHeightRpx}}rpx;">
-    <!-- 原有两个 Tab 项 -->
     <view 
       class="tab-item {{currentTab === 'recommend' ? 'active' : ''}} one"
       bindtap="handleTabClick"
@@ -16,18 +14,14 @@
       bindtap="handleTabClick"
       data-tab="potential"
     >潜在人脉</view>
-
-    <!-- 新增：筛选按钮（仅 potential tab 显示，靠右） -->
     <view 
       class="filter-btn"
       wx:if="{{currentTab === 'potential'}}"
       bindtap="handleFilterClick"  
-    >
-      
-    </view>
+    ></view>
   </view>
 
-  <!-- 内容滚动区域（根据 Tab 切换，保持滚动位置） -->
+  <!-- 内容滚动区域 -->
   <scroll-view 
     class="tab-content" 
     scroll-y="{{true}}"
@@ -38,44 +32,25 @@
     bounce="{{true}}"  
     style="height: calc(100vh - {{navHeaderHeightRpx}}rpx - 110rpx - env(safe-area-inset-bottom));"
   >
-    <!-- 推荐Tab内容：替换为【正方形按钮+三态】（核心修改区） -->
+    <!-- 推荐Tab的正方形容器：简化事件绑定，确保点击能触发 -->
     <view class="content-recommend" wx:if="{{currentTab === 'recommend'}}">
-      <!-- 1. 初始态：正方形动图按钮（可点击） -->
-      <view class="search-btn" bindtap="triggerSearch" wx:if="{{!btnLoading && !btnError && !btnEmpty}}">
-        <!-- 正方形动图（替换为项目实际动图路径） -->
-        <image src="/images/search-animation.gif" class="btn-gif" mode="widthFix"></image>
-        <!-- 按钮文案 -->
-        <text class="btn-text">正在为您搜寻潜在人脉…</text>
-      </view>
-
-      <!-- 2. 加载中：正方形加载动图（不可点击） -->
-      <view class="search-loading" wx:elif="{{btnLoading}}">
-        <image src="/images/loading-gif.gif" class="btn-gif" mode="widthFix"></image>
-        <text class="loading-text">正在匹配最优人脉…</text>
-      </view>
-
-      <!-- 3. 加载失败：显示重试（复用原有 empty-state 结构，仅改内容） -->
-      <view class="empty-state" wx:elif="{{btnError}}">
-        <text class="empty-text">{{isNoNetwork ? '无网络连接，请检查网络' : '搜寻失败，请重试'}}</text>
-        <button class="retry-btn" bindtap="triggerSearch">重试</button>
-      </view>
-
-      <!-- 4. 空态：暂无推荐人（复用原有 empty-state 结构） -->
-      <view class="empty-state" wx:else="{{btnEmpty}}">
-        <text class="empty-text">暂无匹配的潜在人脉</text>
-        <button class="retry-btn" bindtap="resetToInit">重新搜寻</button>
+      <view 
+        class="search-container" 
+        bindtap="triggerSearch"
+      >
+        <image src="/images/search-loading.gif" class="btn-gif" mode="widthFix"></image>
+        <text class="btn-text">正在为您搜寻潜在人脉</text>
       </view>
     </view>
 
-    <!-- 潜在人脉Tab内容：完全保留原有逻辑 -->
+    <!-- 潜在人脉Tab：保留原空态提示（用户未要求修改） -->
     <view class="content-potential" wx:else>
-      <!-- 无网/空态提示（新增） -->
       <view class="empty-state" wx:if="{{potentialEmpty}}">
         <text class="empty-text">无网络连接，请检查网络后重试</text>
       </view>
-      <!-- 有网时的正常内容（原有，需用wx:else包裹） -->
       <view wx:else>
         <view wx:for="{{potentialList}}" wx:key="id" class="content-item">
+          潜在人脉{{item.id + 1}}
         </view>
       </view>
     </view>
