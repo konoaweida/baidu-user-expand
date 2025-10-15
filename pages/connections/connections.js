@@ -5,7 +5,11 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    tabs: [
+      { id: 'cp', name: 'CP链' },
+      { id: 'dynamic', name: '动态' }
+    ],
+    currentTab: 0
   },
   onNavBack() {
     console.log('用户点击了返回按钮');
@@ -66,5 +70,13 @@ Page({
    */
   onShareAppMessage() {
 
+  },
+  onTabChange(e) {
+    const index = e.detail && e.detail.index;
+    if (typeof index === 'number') {
+      this.setData({ currentTab: index });
+      console.log('已切换到选项卡：', index, this.data.tabs[index] && this.data.tabs[index].name);
+      // 可在此根据 index 加载对应数据
+    }
   }
 })

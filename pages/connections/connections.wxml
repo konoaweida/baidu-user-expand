@@ -6,5 +6,21 @@
     bind:back="onNavBack"
     ></navigation-header>
   <user-profile></user-profile>
-  <tab-swiper></tab-swiper>
+  <tab-swiper tabs="{{tabs}}" currentTab="{{currentTab}}" bind:tabchange="onTabChange">
+    <!-- cp链（第一个选项卡） -->
+    <view slot="tab-content-0" class="tab-panel">
+      <!-- 在此处放置 cp 链 列表或子组件 -->
+      <view class="placeholder">
+        <text>CP 链 列表示例内容</text>
+      </view>
+    </view>
+
+    <!-- 动态（第二个选项卡） -->
+    <view slot="tab-content-1" class="tab-panel">
+      <!-- 在此处放置 动态 流 或子组件 -->
+      <view class="placeholder">
+        <text>动态 列表示例内容</text>
+      </view>
+    </view>
+  </tab-swiper>
 </view>

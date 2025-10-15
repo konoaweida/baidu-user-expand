@@ -151,3 +151,79 @@
   transform: translateZ(0);
   will-change: transform;
 }
+/* 顶部推荐人卡片样式（独立类名，不影响原有样式） */
+.top-cards-container {
+  width: 100%;
+  margin-bottom: 20rpx;
+  padding: 0 16rpx;
+  box-sizing: border-box;
+}
+
+.cards-scroll {
+  display: flex;
+  width: 100%;
+}
+
+.card-item {
+  width: 240rpx;
+  margin-right: 16rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0; /* 防止卡片被压缩 */
+  padding: 16rpx; /* 原card-inner的内边距，现在合并到card-item */
+}
+
+.card-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-bottom: 12rpx;
+  display: block;
+}
+
+.card-name {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333;
+  display: block;
+  margin-bottom: 6rpx;
+}
+
+.card-summary {
+  font-size: 22rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 6rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-mutual {
+  font-size: 20rpx;
+  color: #999;
+}
+
+.card-close {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  width: 28rpx;
+  height: 28rpx;
+  line-height: 28rpx;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  font-size: 24rpx;
+  color: #333;
+  cursor: pointer;
+}
+
+/* 原有列表容器（仅调整间距，不修改item样式） */
+.potential-list {
+  padding: 0 16rpx;
+  box-sizing: border-box;
+}

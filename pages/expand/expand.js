@@ -28,7 +28,9 @@ Page({
     isNoNetwork: false, // 辅助判断无网场景
     // 其他状态
     navHeaderHeightRpx: 0,
-    showFilterPanel: false
+    showFilterPanel: false,
+    topCandidates: [], // 顶部推荐人卡片数据
+    dismissedCardIds: [] // 已移除卡片ID（会话级）
   },
 
   onLoad() {
@@ -40,6 +42,7 @@ Page({
   async onReady() {
     const navHeightRpx = await util.getElementHeight(this, '#navHeader');
     this.setData({ navHeaderHeightRpx: navHeightRpx });
+    this.loadTopCandidates(); // 加载推荐人卡片
   },
 
   // Tab切换：重置推荐页加载状态
@@ -249,5 +252,45 @@ Page({
 
   onFilterPanelCancel() {
     this.setData({ showFilterPanel: false });
-  }
+  },
+  // 加载顶部推荐人数据（接口拉取，失败不影响下方列表）
+  loadTopCandidates() {
+    wx.getNetworkType({
+      success: (res) => {
+        if (res.networkType === 'none') return; // 无网不提示，不影响列表
+        // 模拟接口数据（实际替换为 GET /circle/potential/top）
+        const mockData = [
+          { id: 1, avatar: 'https://via.placeholder.com/80', name: '宋子彤', summary: '6位共同同学', mutualCount: 6 },
+          { id: 2, avatar: 'https://via.placeholder.com/80', name: '李浩然', summary: '5位共同同事', mutualCount: 5 },
+          { id: 3, avatar: 'https://via.placeholder.com/80', name: '张思语', summary: '4位共同朋友', mutualCount: 4 },
+        ];
+        // 过滤已移除卡片，确保移除后不再出现
+        const filteredData = mockData.filter(item => !this.data.dismissedCardIds.includes(item.id));
+        this.setData({ topCandidates: filteredData });
+        wx.reportEvent('view_top_candidates'); // 埋点：查看推荐人
+      },
+      fail: () => {
+        // 拉取失败不影响下方列表，仅轻提示
+        wx.showToast({ title: '推荐人加载失败', icon: 'none', duration: 1500 });
+      }
+    });
+  },
+  // 移除推荐人卡片（即时消失，会话级不显示）
+  handleDismissCard(e) {
+    const cardId = e.currentTarget.dataset.id;
+    const { topCandidates, dismissedCardIds } = this.data;
+    // 过滤当前卡片，更新数据
+    this.setData({
+      topCandidates: topCandidates.filter(item => item.id !== cardId),
+      dismissedCardIds: [...dismissedCardIds, cardId]
+    });
+    wx.reportEvent('dismiss_top_card', { id: cardId }); // 埋点：移除卡片
+  },
+
+  // 点击卡片进入详情页
+  handleCardClick(e) {
+    const cardId = e.currentTarget.dataset.id;
+    wx.navigateTo({ url: `/pages/card-detail/card-detail?id=${cardId}` }); // 替换为真实详情页路径
+    wx.reportEvent('click_top_card', { id: cardId }); // 埋点：点击卡片
+  },
 });
