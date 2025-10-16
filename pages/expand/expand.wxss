@@ -121,7 +121,6 @@
 
 /* 潜在人脉页：保留原样式 */
 .content-potential {
-  padding-top: 32rpx; 
   width: 100%;
   height: auto;  
 }
@@ -154,57 +153,69 @@
 /* 顶部推荐人卡片样式（独立类名，不影响原有样式） */
 .top-cards-container {
   width: 100%;
-  margin-bottom: 20rpx;
-  padding: 0 16rpx;
+  height: 332rpx;
+  padding: 32rpx 9rpx;
   box-sizing: border-box;
 }
 
 .cards-scroll {
   display: flex;
   width: 100%;
+  height: 100%;
 }
 
 .card-item {
-  width: 240rpx;
-  margin-right: 16rpx;
+  width: 222rpx;
+  height: 100%;
   background: #fff;
-  border-radius: 16rpx;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
   overflow: hidden;
   position: relative;
   flex-shrink: 0; /* 防止卡片被压缩 */
-  padding: 16rpx; /* 原card-inner的内边距，现在合并到card-item */
+  margin: 0 11rpx;
+  border: 2rpx solid rgba(230, 230, 230, 1);
+  border-radius: 16rpx;
 }
 
 .card-avatar {
-  width: 80rpx;
-  height: 80rpx;
+  width: 104rpx;
+  height: 104rpx;
   border-radius: 50%;
-  margin-bottom: 12rpx;
+  margin: 59rpx auto 0;
   display: block;
 }
 
 .card-name {
-  font-size: 26rpx;
-  font-weight: 500;
-  color: #333;
   display: block;
+  width: 79.92rpx;
+  height: 37.69rpx;
+  margin: auto;
+  font-size: 24rpx;
+  font-weight: 700;
+  letter-spacing: 0rpx;
+  line-height: 34.76rpx;
+  color: rgba(5, 2, 11, 1);
+  text-align: left;
+  vertical-align: top;
   margin-bottom: 6rpx;
 }
 
 .card-summary {
-  font-size: 22rpx;
-  color: #666;
   display: block;
+  margin-left: 44rpx;
+  width: 148.74rpx;
+  height: 37.69rpx;
+  font-size: 24rpx;
+  font-weight: 400;
+  letter-spacing: 0rpx;
+  line-height: 34.76rpx;
+  color: rgba(158, 158, 158, 1);
+  text-align: left;
+  vertical-align: top;
   margin-bottom: 6rpx;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.card-mutual {
-  font-size: 20rpx;
-  color: #999;
 }
 
 .card-close {

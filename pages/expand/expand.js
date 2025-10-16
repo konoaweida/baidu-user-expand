@@ -260,9 +260,12 @@ Page({
         if (res.networkType === 'none') return; // 无网不提示，不影响列表
         // 模拟接口数据（实际替换为 GET /circle/potential/top）
         const mockData = [
-          { id: 1, avatar: 'https://via.placeholder.com/80', name: '宋子彤', summary: '6位共同同学', mutualCount: 6 },
-          { id: 2, avatar: 'https://via.placeholder.com/80', name: '李浩然', summary: '5位共同同事', mutualCount: 5 },
-          { id: 3, avatar: 'https://via.placeholder.com/80', name: '张思语', summary: '4位共同朋友', mutualCount: 4 },
+          { id: 1, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '宋子彤', summary: '6位共同同学', mutualCount: 6 },
+          { id: 2, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '李浩然', summary: '5位共同同事', mutualCount: 5 },
+          { id: 3, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思语', summary: '4位共同朋友', mutualCount: 4 },
+          { id: 4, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思文', summary: '4位共同朋友', mutualCount: 4 },
+          { id: 5, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思数', summary: '4位共同朋友', mutualCount: 4 },
+          { id: 6, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
         ];
         // 过滤已移除卡片，确保移除后不再出现
         const filteredData = mockData.filter(item => !this.data.dismissedCardIds.includes(item.id));
