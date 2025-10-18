@@ -20,32 +20,59 @@ Page({
       recommend: { type: '', keyword: '', timeRange: '' },
       potential: { type: '', area: '', company: '' }
     },
-    // 潜在人脉数据保留原逻辑
     potentialList: [],
-    potentialEmpty: false,
-    // 推荐页仅保留2个核心状态（删除btnError/btnEmpty，用Toast替代）
-    btnLoading: false,  // 仅控制“加载中”（容器透明度+禁止重复点击）
-    isNoNetwork: false, // 辅助判断无网场景
-    // 其他状态
+    btnLoading: false,
+    isNoNetwork: false,
     navHeaderHeightRpx: 0,
     showFilterPanel: false,
-    topCandidates: [], // 顶部推荐人卡片数据
-    dismissedCardIds: [] // 已移除卡片ID（会话级）
+    topCandidates: [
+          { id: 1, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '宋子彤', summary: '6位共同同学', mutualCount: 6 },
+          { id: 2, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '李浩然', summary: '5位共同同事', mutualCount: 5 },
+          { id: 3, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思语', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 4, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思文', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 5, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思数', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 6, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 7, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 8, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 9, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 10, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 11, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 12, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 13, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 14, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 15, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 16, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 17, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 18, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 19, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+          // { id: 20, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
+
+    ],
+    dismissedCardIds: []
   },
 
   onLoad() {
+    this.checkNetworkStatus();
     this.debouncedTabClick = debounce(this._handleTabClick, 300);
-    // 关键：用防抖包裹handleScroll，确保生效
-    this.debouncedHandleScroll = debounce(this.handleScroll, 100); 
+    this.scrollCache = {}; // ✅ 新增缓存对象（替代 scrollTop 实时更新）
   },
 
   async onReady() {
     const navHeightRpx = await util.getElementHeight(this, '#navHeader');
     this.setData({ navHeaderHeightRpx: navHeightRpx });
-    this.loadTopCandidates(); // 加载推荐人卡片
+    this.loadTopCandidates();
+    this.checkNetworkStatus();
   },
 
-  // Tab切换：重置推荐页加载状态
+  // ✅ 统一的网络检查
+  checkNetworkStatus() {
+    wx.getNetworkType({
+      success: (res) => this.setData({ isNoNetwork: res.networkType === 'none' }),
+      fail: () => this.setData({ isNoNetwork: true })
+    });
+  },
+
+  // Tab 切换
   handleTabClick(e) {
     const tab = e.currentTarget.dataset.tab;
     this.debouncedTabClick(tab);
@@ -55,9 +82,13 @@ Page({
     const { currentTab, filterStatus } = this.data;
     if (tab === currentTab) return;
 
-    // 切换Tab时，重置推荐页“加载中”状态（容器恢复正常）
     if (currentTab === 'recommend') {
       this.setData({ btnLoading: false });
+    }
+
+    // ✅ 切换时保存旧 tab 的滚动位置
+    if (this.scrollCache[currentTab] !== undefined) {
+      this.setData({ [`scrollTop.${currentTab}`]: this.scrollCache[currentTab] });
     }
 
     this.setData({ currentTab: tab }, () => {
@@ -66,96 +97,86 @@ Page({
     });
   },
 
-  // 核心：触发搜寻（点击容器触发，失败/空态用Toast提示）
+  // ✅ 改进：不在滚动时 setData
+  handleScroll(e) {
+    const tab = e.currentTarget.dataset.tab;
+    const top = e.detail?.scrollTop || 0;
+    this.scrollCache[tab] = top; // 仅缓存，不触发 setData
+  },
+
+  // ✅ 页面隐藏/卸载时统一保存 scrollTop 状态
+  onHide() {
+    this.persistScrollPositions();
+  },
+  onUnload() {
+    this.persistScrollPositions();
+  },
+  persistScrollPositions() {
+    if (Object.keys(this.scrollCache).length > 0) {
+      this.setData({ scrollTop: this.scrollCache });
+    }
+  },
+
+  // 搜寻逻辑
   triggerSearch() {
-    // 1. 加载中禁止重复点击
-    console.log('开始触发搜寻');
-    if (this.data.btnLoading) {
-      console.log('加载中，禁止重复点击');
+    if (this.data.isNoNetwork) {
+      wx.showToast({ title: '无网络连接，请检查网络', icon: 'none' });
       return;
     }
 
-    // 2. 进入加载中状态
-    this.setData({ btnLoading: true }, () => {
-      console.log('进入加载中状态');
-      wx.reportEvent('view_recommend_loading');
+    if (this.data.btnLoading) return;
 
-      // 3. 网络判断
+    this.setData({ btnLoading: true }, () => {
+      wx.reportEvent('view_recommend_loading');
       wx.getNetworkType({
         success: (res) => {
-          console.log('网络类型检测结果：', res.networkType);
-          if (res.networkType === 'none') {
-            wx.showToast({
-              title: '无网络连接，请检查网络',
-              icon: 'none',
-              duration: 2000
-            });
+          const isNoNetwork = res.networkType === 'none';
+          this.setData({ isNoNetwork });
+
+          if (isNoNetwork) {
+            wx.showToast({ title: '无网络连接，请检查网络', icon: 'none' });
             this.setData({ btnLoading: false });
             wx.reportEvent('retry_recommend', { reason: 'no_network' });
             return;
           }
 
-          // 4. 模拟接口请求
           setTimeout(() => {
-            console.log('模拟接口请求完成');
-            const mockSuccess = true  // 测试用
-            const mockHasData = true;  // 测试用
+            const mockSuccess = true;
+            const mockHasData = true;
 
             if (!mockSuccess) {
-              wx.showToast({
-                title: '搜寻失败，请重试',
-                icon: 'none',
-                duration: 2000
-              });
+              wx.showToast({ title: '搜寻失败，请重试', icon: 'none' });
               this.setData({ btnLoading: false });
-              wx.reportEvent('retry_recommend', { reason: 'request_failed' });
               return;
             }
 
             if (!mockHasData) {
-              wx.showToast({
-                title: '暂无匹配的潜在人脉',
-                icon: 'none',
-                duration: 2000
-              });
+              wx.showToast({ title: '暂无匹配的潜在人脉', icon: 'none' });
               this.setData({ btnLoading: false });
-              wx.reportEvent('retry_recommend', { reason: 'no_data' });
               return;
             }
 
-            // 成功则跳转
             wx.navigateTo({
               url: '/pages/connections/connections',
               success: () => this.setData({ btnLoading: false }),
               fail: () => {
-                wx.showToast({ 
-                  title: '跳转失败，请重试', 
-                  icon: 'none', 
-                  duration: 2000 
-                });
+                wx.showToast({ title: '跳转失败，请重试', icon: 'none' });
                 this.setData({ btnLoading: false });
-                wx.reportEvent('retry_recommend', { reason: 'navigate_failed' });
               }
             });
-          }, 500);
+          }, 50);
         },
         fail: () => {
-          wx.showToast({
-            title: '网络异常，请重试',
-            icon: 'none',
-            duration: 2000
-          });
-          this.setData({ btnLoading: false });
-          wx.reportEvent('retry_recommend', { reason: 'network_error' });
+          this.setData({ isNoNetwork: true, btnLoading: false });
+          wx.showToast({ title: '网络异常，请重试', icon: 'none' });
         }
       });
     });
   },
 
-  // 空事件：加载中禁止点击
   noop() {},
 
-  // 以下筛选、潜在人脉加载等逻辑完全保留不变
+  // 筛选逻辑
   handleFilterClick() {
     const { currentTab, filterStatus } = this.data;
     wx.showModal({
@@ -185,13 +206,13 @@ Page({
   },
 
   getMockNewFilter(tab) {
-    return tab === 'recommend' 
+    return tab === 'recommend'
       ? { type: '最新', keyword: '技术', timeRange: '近7天' }
       : { type: '同事', area: '北京', company: '某科技公司' };
   },
 
   getEmptyFilter(tab) {
-    return tab === 'recommend' 
+    return tab === 'recommend'
       ? { type: '', keyword: '', timeRange: '' }
       : { type: '', area: '', company: '' };
   },
@@ -199,18 +220,21 @@ Page({
   updateFilterAndReload(tab, newFilter) {
     this.setData({
       [`filterStatus.${tab}`]: newFilter,
-      [`scrollTop.${tab}`]: 0 
+      [`scrollTop.${tab}`]: 0
     }, () => {
       if (tab === 'potential') this.loadTabContent(tab, newFilter);
     });
   },
 
+  // 加载潜在人脉内容
   loadTabContent(tab, filterParams) {
+    this.checkNetworkStatus();
+    if (this.data.isNoNetwork) return;
+
     wx.getNetworkType({
       success: (res) => {
-        const isNoNetwork = res.networkType === 'none';
-        if (isNoNetwork) {
-          this.setData({ [`${tab}Empty`]: true });
+        if (res.networkType === 'none') {
+          this.setData({ isNoNetwork: true });
           return;
         }
 
@@ -224,76 +248,51 @@ Page({
             mockData = Array.from({ length: 10 }, (_, i) => ({ id: i }));
           }
 
-          this.setData({
-            [`${tab}List`]: mockData,
-            [`${tab}Empty`]: mockData.length === 0
-          });
+          this.setData({ [`${tab}List`]: mockData });
         }, 500);
       },
+      fail: () => this.setData({ isNoNetwork: true })
     });
   },
 
-  handleScroll(e) {
-    const tab = e.currentTarget.dataset.tab;
-    const top = e.detail.scrollTop;
-    // 优化点：仅当滚动位置变化超过10rpx时才更新（过滤微小滚动，进一步减少setData）
-    if (Math.abs(this.data.scrollTop[tab] - top) > 10) {
-      this.setData({ 
-        [`scrollTop.${tab}`]: top  // 保持“字符串路径”更新，只改单个属性（最优写法）
-      });
-    }
-  },
-
-  onFilterPanelConfirm(e) {
-    const { tab, newFilter } = e.detail;
-    this.updateFilterAndReload(tab, newFilter);
-    this.setData({ showFilterPanel: false });
-  },
-
-  onFilterPanelCancel() {
-    this.setData({ showFilterPanel: false });
-  },
-  // 加载顶部推荐人数据（接口拉取，失败不影响下方列表）
+  // 顶部推荐人卡片
   loadTopCandidates() {
     wx.getNetworkType({
       success: (res) => {
-        if (res.networkType === 'none') return; // 无网不提示，不影响列表
-        // 模拟接口数据（实际替换为 GET /circle/potential/top）
-        const mockData = [
-          { id: 1, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '宋子彤', summary: '6位共同同学', mutualCount: 6 },
-          { id: 2, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '李浩然', summary: '5位共同同事', mutualCount: 5 },
-          { id: 3, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思语', summary: '4位共同朋友', mutualCount: 4 },
-          { id: 4, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思文', summary: '4位共同朋友', mutualCount: 4 },
-          { id: 5, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思数', summary: '4位共同朋友', mutualCount: 4 },
-          { id: 6, avatar: '../../assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg', name: '张思学', summary: '4位共同朋友', mutualCount: 4 },
-        ];
-        // 过滤已移除卡片，确保移除后不再出现
-        const filteredData = mockData.filter(item => !this.data.dismissedCardIds.includes(item.id));
-        this.setData({ topCandidates: filteredData });
-        wx.reportEvent('view_top_candidates'); // 埋点：查看推荐人
+        if (res.networkType === 'none') return;
+        wx.request({
+          url: '/circle/potential/top',
+          method: 'GET',
+          success: (res) => {
+            if (res.data?.success) {
+              const mockData = res.data.data;
+              const filteredData = mockData.filter(item => !this.data.dismissedCardIds.includes(item.id));
+              this.setData({ topCandidates: filteredData.slice(0, 10) });
+              wx.reportEvent('view_top_candidates');
+            }
+          },
+          fail: () => console.log("推荐人加载失败")
+        });
       },
-      fail: () => {
-        // 拉取失败不影响下方列表，仅轻提示
-        wx.showToast({ title: '推荐人加载失败', icon: 'none', duration: 1500 });
-      }
+      fail: () => console.log("fail")
     });
   },
-  // 移除推荐人卡片（即时消失，会话级不显示）
+
   handleDismissCard(e) {
     const cardId = e.currentTarget.dataset.id;
     const { topCandidates, dismissedCardIds } = this.data;
-    // 过滤当前卡片，更新数据
     this.setData({
       topCandidates: topCandidates.filter(item => item.id !== cardId),
       dismissedCardIds: [...dismissedCardIds, cardId]
     });
-    wx.reportEvent('dismiss_top_card', { id: cardId }); // 埋点：移除卡片
+    wx.reportEvent('dismiss_top_card', { id: cardId });
   },
 
-  // 点击卡片进入详情页
   handleCardClick(e) {
     const cardId = e.currentTarget.dataset.id;
-    wx.navigateTo({ url: `/pages/card-detail/card-detail?id=${cardId}` }); // 替换为真实详情页路径
-    wx.reportEvent('click_top_card', { id: cardId }); // 埋点：点击卡片
-  },
+    console.log(11111);
+    
+    wx.navigateTo({ url: `/pages/connections/connections?id=${cardId}` });
+    wx.reportEvent('click_top_card', { id: cardId });
+  }
 });

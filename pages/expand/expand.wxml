@@ -26,18 +26,26 @@
     class="tab-content" 
     scroll-y="{{true}}"
     scroll-top="{{scrollTop[currentTab]}}"
-    bindscroll="debouncedHandleScroll" 
     data-tab="{{currentTab}}"
     enhanced="{{true}}"  
-    bounce="{{true}}"  
-    scroll-with-animation="{{false}}"  
+    bounce="{{false}}"  
+    scroll-with-animation="{{true}}"  
+    show-scrollbar="{{false}}"
+    bindscroll="handleScroll"
     style="height: calc(100vh - {{navHeaderHeightRpx}}rpx - 110rpx - env(safe-area-inset-bottom)); overflow-y: auto;"
   >
-    <!-- 推荐Tab的正方形容器：简化事件绑定，确保点击能触发 -->
+    <!-- 推荐Tab：新增无网络提示，与搜寻容器互斥 -->
     <view class="content-recommend" wx:if="{{currentTab === 'recommend'}}">
+      <!-- 无网络提示（wx:if控制，与search-container互斥） -->
+      <view class="empty-state" wx:if="{{isNoNetwork}}">
+        <text class="empty-text">无网络连接，请检查网络后重试</text>
+      </view>
+      
+      <!-- 搜寻容器（有网络时显示，wx:else互斥） -->
       <view 
         class="search-container" 
         bindtap="triggerSearch"
+        wx:else
       >
         <image src="" class="btn-gif" mode="widthFix"></image>
         <text class="btn-text">正在为您搜寻潜在人脉</text>
@@ -46,7 +54,7 @@
 
     <!-- 潜在人脉Tab：保留原空态提示 -->
     <view class="content-potential" wx:else>
-      <view class="empty-state" wx:if="{{potentialEmpty}}">
+      <view class="empty-state" wx:if="{{isNoNetwork}}">
         <text class="empty-text">无网络连接，请检查网络后重试</text>
       </view>
       <view wx:else>
@@ -57,38 +65,47 @@
             scroll-x="true"
             enable-flex="true"
             scroll-with-animation="true"
+            enhanced="false"
             show-scrollbar="false"
           >
-            <!-- 外层替换为block，循环逻辑保留 -->
-            <block 
-              wx:for="{{topCandidates}}" 
-              wx:key="id"
-              data-id="{{item.id}}"
-              bindtap="handleCardClick"
-            >
-              <view class="card-item">
+            <!-- ✅ 修改点：事件绑定从 block 移到 view -->
+            <block wx:for="{{topCandidates}}" wx:key="id">
+              <view 
+                class="card-item" 
+                bindtap="handleCardClick"
+                data-id="{{item.id}}"
+              >
                 <image class="card-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
                 <view class="card-info">
                   <text class="card-name">{{item.name}}</text>
                   <text class="card-summary">{{item.summary}}</text>                
                 </view>
-                <view class="card-close" bindtap="handleDismissCard" data-id="{{item.id}}">×</view>
+                <!-- ✅ 关闭按钮保留 catchtap，不会影响外层点击 -->
+                <view 
+                  class="card-close" 
+                  catchtap="handleDismissCard" 
+                  data-id="{{item.id}}"
+                >×</view>
               </view>
             </block>
           </scroll-view>
         </view>
 
         <!-- 原有潜在人脉列表（保留，与卡片区上下排布） -->
-        <view class="potential-list">
+        <view class="potential-list" wx:if="{{potentialList.length > 0}}">
           <view 
             class="content-item" 
-            wx:for="{{potentialList}}" 
+            wx:for="{{50}}" 
             wx:key="id"
           >
             潜在人脉{{item.name || item.id + 1}}
           </view>
         </view>
+        <!-- 新增：有网络但无数据的提示（与无网络区分） -->
+        <view class="empty-state" wx:if="{{potentialList.length === 0}}">
+          <text class="empty-text">暂无潜在人脉数据</text>
+        </view>
       </view>
     </view>
   </scroll-view>
-</view>       
+</view>
