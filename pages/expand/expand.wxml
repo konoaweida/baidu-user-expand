@@ -34,14 +34,11 @@
     bindscroll="handleScroll"
     style="height: calc(100vh - {{navHeaderHeightRpx}}rpx - 110rpx - env(safe-area-inset-bottom)); overflow-y: auto;"
   >
-    <!-- 推荐Tab：新增无网络提示，与搜寻容器互斥 -->
+    <!-- 推荐Tab内容 -->
     <view class="content-recommend" wx:if="{{currentTab === 'recommend'}}">
-      <!-- 无网络提示（wx:if控制，与search-container互斥） -->
       <view class="empty-state" wx:if="{{isNoNetwork}}">
         <text class="empty-text">无网络连接，请检查网络后重试</text>
       </view>
-      
-      <!-- 搜寻容器（有网络时显示，wx:else互斥） -->
       <view 
         class="search-container" 
         bindtap="triggerSearch"
@@ -52,14 +49,14 @@
       </view>
     </view>
 
-    <!-- 潜在人脉Tab：保留原空态提示 -->
+    <!-- 潜在人脉Tab内容 -->
     <view class="content-potential" wx:else>
       <view class="empty-state" wx:if="{{isNoNetwork}}">
         <text class="empty-text">无网络连接，请检查网络后重试</text>
       </view>
       <view wx:else>
-        <!-- 顶部推荐人卡片滑动区（移入此处，仅当有数据时显示） -->
-        <view class="top-cards-container" wx:if="{{topCandidates.length > 0}}">
+        <!-- 顶部推荐人卡片滑动区（无数据则隐藏） -->
+        <view class="top-cards-container" wx:if="{{displayCandidates.length > 0}}">
           <scroll-view 
             class="cards-scroll"
             scroll-x="true"
@@ -67,9 +64,12 @@
             scroll-with-animation="true"
             enhanced="false"
             show-scrollbar="false"
+            bindscroll="handleCardScroll"
+            bindtouchstart="handleCardTouchStart"
+            bindtouchmove="handleCardTouchMove"
+            bindtouchend="handleCardTouchEnd"
           >
-            <!-- ✅ 修改点：事件绑定从 block 移到 view -->
-            <block wx:for="{{topCandidates}}" wx:key="id">
+            <block wx:for="{{displayCandidates}}" wx:key="id">
               <view 
                 class="card-item" 
                 bindtap="handleCardClick"
@@ -80,7 +80,6 @@
                   <text class="card-name">{{item.name}}</text>
                   <text class="card-summary">{{item.summary}}</text>                
                 </view>
-                <!-- ✅ 关闭按钮保留 catchtap，不会影响外层点击 -->
                 <view 
                   class="card-close" 
                   catchtap="handleDismissCard" 
@@ -91,17 +90,16 @@
           </scroll-view>
         </view>
 
-        <!-- 原有潜在人脉列表（保留，与卡片区上下排布） -->
+        <!-- 下方潜在人脉列表 -->
         <view class="potential-list" wx:if="{{potentialList.length > 0}}">
           <view 
             class="content-item" 
-            wx:for="{{50}}" 
+            wx:for="{{potentialList}}" 
             wx:key="id"
           >
             潜在人脉{{item.name || item.id + 1}}
           </view>
         </view>
-        <!-- 新增：有网络但无数据的提示（与无网络区分） -->
         <view class="empty-state" wx:if="{{potentialList.length === 0}}">
           <text class="empty-text">暂无潜在人脉数据</text>
         </view>
