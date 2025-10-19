@@ -32,7 +32,7 @@
     scroll-with-animation="{{true}}"  
     show-scrollbar="{{false}}"
     bindscroll="handleScroll"
-    style="height: calc(100vh - {{navHeaderHeightRpx}}rpx - 110rpx - env(safe-area-inset-bottom)); overflow-y: auto;"
+    style="height: calc(100vh - {{navHeaderHeightRpx}}rpx - 110rpx - env(safe-area-inset-bottom));"
   >
     <!-- 推荐Tab内容 -->
     <view class="content-recommend" wx:if="{{currentTab === 'recommend'}}">
@@ -96,11 +96,55 @@
             class="content-item" 
             wx:for="{{potentialList}}" 
             wx:key="id"
+            bindtap="handlePotentialItemClick"
+            data-item="{{item}}"
           >
-            潜在人脉{{item.name || item.id + 1}}
+            <view class="potential-item">
+              <!-- 左侧头像 -->
+              <view class="item-avatar">
+                <image 
+                  class="avatar-img" 
+                  src="{{item.avatar || '/assets/images/default-avatar.png'}}" 
+                  mode="aspectFill"
+                />
+              </view>
+              
+              <!-- 中间信息区域 -->
+              <view class="item-info">
+                <view class="info-main">
+                  <text class="item-name">{{item.name || '未知用户'}}</text>
+                  <text class="item-age" wx:if="{{item.age}}">{{item.age}}</text>
+                </view>
+                <view class="info-details">
+                  <text class="connection-level">{{item.level || '2级人脉'}}</text>
+                  <text class="mutual-count" wx:if="{{item.mutualCount > 0}}">{{item.mutualCount}}位共同人脉</text>
+                  <text class="connection-desc">{{item.desc || '暂无关系描述'}}</text>
+                </view>
+              </view>
+              
+              <!-- 右侧组CP按钮 -->
+              <view 
+                class="cp-button {{item.cpEligible === false || item.cpStatus === 'pending' ? 'disabled' : ''}}"
+                catchtap="handleCpButtonClick"
+                data-item="{{item}}"
+              >
+                <text class="cp-button-text">{{item.cpStatus === 'pending' ? '邀请中' : '组CP'}}</text>
+              </view>
+            </view>
           </view>
         </view>
-        <view class="empty-state" wx:if="{{potentialList.length === 0}}">
+        
+        <!-- 加载失败状态 -->
+        <view class="load-error-state" wx:if="{{loadError && potentialList.length === 0}}">
+          <image src="/assets/images/network-error.png" class="error-icon" />
+          <text class="error-text">加载失败，请重试</text>
+          <view class="retry-button" bindtap="handleRetryLoad">
+            <text class="retry-text">重新加载</text>
+          </view>
+        </view>
+        
+        <!-- 无数据状态 -->
+        <view class="empty-state" wx:if="{{potentialList.length === 0 && !loadError}}">
           <text class="empty-text">暂无潜在人脉数据</text>
         </view>
       </view>

@@ -16,7 +16,7 @@
   align-items: flex-end;
   justify-content: flex-start;
   padding: 32rpx 32rpx 24rpx 56rpx;
-  background-color: #fff; /* 增加背景色，避免内容穿透 */
+  background-color: #fff;
 }
 
 .filter-btn {
@@ -138,17 +138,212 @@
   display: block;
 }
 
+.potential-list {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+}
+/* 潜在人脉列表项样式 */
 .content-item {
-  height: 100rpx;
+  width: 750rpx;
+  height: 98rpx;
   background: #fff;
   border-radius: 16rpx;
-  padding: 0 24rpx;
-  margin-bottom: 20rpx;
-  line-height: 100rpx;
-  font-size: 28rpx;
-  color: #333;
+  padding: 0rpx 48rpx 0rpx 48rpx;
+  margin: 30rpx 0;
+  display: flex;
+  align-items: center;
   transform: translateZ(0);
   will-change: transform;
+}
+
+.potential-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* 头像样式 */
+.item-avatar {
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 22rpx;
+  margin-bottom: 6rpx;
+  flex-shrink: 0;
+  border: 2rpx solid #f0f0f0;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+}
+
+/* 信息区域 */
+.item-info {
+  flex: 1;
+  display: flex;
+  width: 436rpx;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.info-main {
+  display: flex;
+  align-items: center;
+  /* margin-bottom: 8rpx; */
+}
+
+.item-name {
+  width: auto;
+  height: 42rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  letter-spacing: 0rpx;
+  line-height: 40.54rpx;
+  color: rgba(5, 2, 11, 1);
+  text-align: left;
+  vertical-align: top;
+  margin: 8rpx 16rpx 6rpx 0;
+}
+
+.item-age {
+  width: auto;
+  height: 36rpx;
+  /** 文本1 */
+  margin: 10rpx 0;
+  font-size: 24rpx;
+  font-weight: 400;
+  letter-spacing: 0rpx;
+  line-height: 34.76rpx;
+  color: rgba(5, 2, 11, 1);
+  text-align: left;
+  vertical-align: top;
+}
+
+.info-details {
+  display: flex;
+  width: 100%;
+  height: 42rpx;
+  align-items: bottom;
+  gap: 15rpx;
+  /* 新增整体省略样式 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.info-details > text{
+  font-size: 28rpx;
+  font-weight: 400;
+  letter-spacing: 0rpx;
+  line-height: 40.54rpx;
+  color: rgba(158, 158, 158, 1);
+  text-align: left;
+  vertical-align: top;
+}
+/* .connection-level {
+  font-size: 24rpx;
+  color: #05020B;
+  font-weight: 500;
+}
+
+.mutual-count {
+  font-size: 24rpx;
+  color: #4a42d4;
+  font-weight: 500;
+}
+
+.connection-level, .mutual-count {
+  flex-shrink: 0; 
+} */
+
+.connection-desc {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.4;
+  flex: 1;
+  min-width: 0; /* 重要：让flex项可以收缩 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 组CP按钮 */
+.cp-button {
+  width: 88rpx;
+  height: 48rpx;
+  border-radius: 8rpx;
+  background: rgba(122, 79, 214, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 6rpx 0;
+  margin-left: 16rpx;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.cp-button:not(.disabled):active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+.cp-button.disabled {
+  background: #ccc !important;
+  opacity: 0.6;
+}
+
+.cp-button-text {
+  width: 100%;
+  height: 36rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  letter-spacing: 0rpx;
+  line-height: 34.76rpx;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+  vertical-align: top;
+}
+
+/* 加载失败状态 */
+.load-error-state {
+  padding: 120rpx 40rpx;
+  text-align: center;
+}
+
+.error-icon {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 32rpx;
+}
+
+.error-text {
+  display: block;
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 48rpx;
+}
+
+.retry-button {
+  width: 200rpx;
+  height: 72rpx;
+  background: #4a42d4;
+  border-radius: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.retry-text {
+  font-size: 28rpx;
+  color: #fff;
+  font-weight: 500;
 }
 
 /* 顶部推荐人卡片样式 */
@@ -156,7 +351,7 @@
   width: 100%;
   height: 332rpx;
   background-color: transparent;
-  padding: 32rpx 20rpx;
+  padding: 32rpx 20rpx 22rpx;
   box-sizing: border-box;
 }
 
@@ -165,11 +360,10 @@
   width: 100%;
   height: 100%;
   scroll-behavior: smooth;
-  scrollbar-width: none; /* Firefox 隐藏滚动条 */
-  -ms-overflow-style: none; /* IE/Edge 隐藏滚动条 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* WebKit 内核隐藏滚动条（微信/Chrome） */
 .cards-scroll::-webkit-scrollbar {
   display: none;
   width: 0;
@@ -183,7 +377,7 @@
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
   overflow: hidden;
   position: relative;
-  flex-shrink: 0; /* 防止卡片被压缩，确保滑动流畅 */
+  flex-shrink: 0;
   margin-right: 23rpx;
   border: 2rpx solid rgba(230, 230, 230, 1);
   border-radius: 16rpx;
@@ -200,15 +394,14 @@
 
 .card-name {
   display: block;
-  width: 79.92rpx;
+  width: auto;
   height: 37.69rpx;
-  margin: auto;
   font-size: 24rpx;
   font-weight: 700;
   letter-spacing: 0rpx;
   line-height: 34.76rpx;
   color: rgba(5, 2, 11, 1);
-  text-align: left;
+  text-align: center;
   vertical-align: top;
   margin-bottom: 6rpx;
 }
@@ -245,7 +438,3 @@
   cursor: pointer;
 }
 
-.potential-list {
-  padding: 0 16rpx;
-  box-sizing: border-box;
-}
