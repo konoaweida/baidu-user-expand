@@ -26,9 +26,16 @@
         {
           "name": "pages/connections/connections",
           "pathName": "pages/connections/connections",
-          "query": "",
+          "query": "id=1",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "pages/connections/connections",
+          "pathName": "pages/connections/connections",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "pages/expand/expand",
