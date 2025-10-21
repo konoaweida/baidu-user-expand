@@ -21,7 +21,7 @@
     ></view>
   </view>
 
-  <!-- 内容滚动区域 -->
+  <!-- 内容滚动区域 - 【修改】添加scroll-view下拉刷新属性 -->
   <scroll-view 
     class="tab-content" 
     scroll-y="{{true}}"
@@ -32,6 +32,10 @@
     scroll-with-animation="{{true}}"  
     show-scrollbar="{{false}}"
     bindscroll="handleScroll"
+    refresher-enabled="{{currentTab === 'potential'}}"
+    refresher-triggered="{{isRefreshingList}}"
+    bindrefresherrefresh="handlePullToRefresh"
+    refresher-background="#F8F9FD"
     style="height: calc(100vh - {{navHeaderHeightRpx}}rpx - 110rpx - env(safe-area-inset-bottom));"
   >
     <!-- 推荐Tab内容 -->
@@ -131,6 +135,12 @@
                 <text class="cp-button-text">{{item.cpStatus === 'pending' ? '邀请中' : '组CP'}}</text>
               </view>
             </view>
+          </view>
+          
+          <!-- 【新增】分页加载状态 -->
+          <view class="load-more-state">
+            <text wx:if="{{isLoading && hasMore}}" class="loading-text">加载中...</text>
+            <text wx:if="{{!hasMore && potentialList.length > 0}}" class="no-more-text">没有更多了</text>
           </view>
         </view>
         

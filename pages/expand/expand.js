@@ -33,33 +33,69 @@ function debounce(func, wait = 100) {
 
 Page({
   data: {
-    currentTab: 'potential',
-    scrollTop: { recommend: 0, potential: 0 },
-    scrollCache: { recommend: 0, potential: 0 },
-    filterStatus: {
-      recommend: { type: '', keyword: '', timeRange: '' },
-      potential: { type: '', area: '', company: '' }
-    },
-    potentialList: [],
-    btnLoading: false,
-    isNoNetwork: false,
-    navHeaderHeightRpx: 0,
-    showFilterPanel: false,
-    topCandidates: [],
-    displayCandidates: [],
-    dismissedCardIds: [],
-    isRefreshing: false,
-    lastScrollLeft: 0,
-    cardTouchStartX: 0,
-    cardScrollMetrics: { scrollLeft: 0, clientWidth: 0, scrollWidth: 0 },
-    isLoadingMoreCards: false,
+    // ========== 标签页相关 ==========
+    currentTab: 'recommend',           // 当前激活的标签页：'recommend' | 'potential'
     
-    // 加载状态相关
-    loadError: false,
-    isLoading: false,
-    page: 1,
-    pageSize: 20,
-    hasMore: true
+    // ========== 滚动位置管理 ==========
+    scrollTop: {                       // 各标签页当前滚动位置，用于scroll-view的scroll-top属性
+      recommend: 0,                    // 推荐页滚动位置
+      potential: 0                     // 潜在人脉页滚动位置
+    },
+    scrollCache: {                     // 滚动位置缓存，用于切换标签时记住位置
+      recommend: 0,                    // 推荐页滚动位置缓存
+      potential: 0                     // 潜在人脉页滚动位置缓存
+    },
+    
+    // ========== 筛选状态 ==========
+    filterStatus: {
+      recommend: {                     // 推荐页筛选条件
+        type: '',                      // 推荐类型筛选
+        keyword: '',                   // 关键词筛选  
+        timeRange: ''                  // 时间范围筛选
+      },
+      potential: {                     // 潜在人脉页筛选条件
+        type: '',                      // 人脉类型筛选
+        area: '',                      // 地区筛选
+        company: ''                    // 公司筛选
+      }
+    },
+    
+    // ========== 数据列表 ==========
+    potentialList: [],                 // 潜在人脉列表数据数组
+    
+    // ========== UI状态控制 ==========
+    btnLoading: false,                 // 推荐页搜索按钮加载状态
+    isNoNetwork: false,                // 网络连接状态：true-无网络，false-有网络
+    navHeaderHeightRpx: 0,             // 导航栏高度(rpx单位)，用于计算布局
+    showFilterPanel: false,            // 筛选面板显示状态
+    
+    // ========== 顶部推荐人卡片系统 ==========
+    topCandidates: [],                 // 所有顶部推荐人卡片数据（完整数据集）
+    displayCandidates: [],             // 当前显示的推荐人卡片数据（过滤后的子集）
+    dismissedCardIds: [],              // 用户已关闭的卡片ID数组，用于过滤不显示
+    
+    // ========== 加载状态控制 ==========
+    isRefreshing: false,               // 顶部卡片刷新状态：true-正在刷新
+    isLoadingMoreCards: false,         // 顶部卡片加载更多状态：true-正在加载
+    
+    // ========== 卡片滚动交互 ==========
+    lastScrollLeft: 0,                 // 卡片区域上一次横向滚动位置，用于计算滚动方向
+    cardTouchStartX: 0,                // 卡片触摸起始X坐标，用于拖拽检测
+    cardScrollMetrics: {               // 卡片滚动区域尺寸信息
+      scrollLeft: 0,                   // 当前横向滚动位置
+      clientWidth: 0,                  // 可视区域宽度
+      scrollWidth: 0                   // 内容总宽度
+    },
+    
+    // ========== 列表加载状态 ==========
+    loadError: false,                  // 列表加载错误状态：true-加载失败
+    isLoading: false,                  // 列表加载中状态：true-正在加载
+    page: 1,                           // 当前页码，用于分页加载
+    pageSize: 20,                      // 每页数据条数
+    hasMore: true,                     // 是否有更多数据：true-还有数据可加载
+    
+    // 【新增】列表下拉刷新状态
+    isRefreshingList: false,           // 列表下拉刷新状态：true-正在刷新
   },
 
   onLoad() {
@@ -98,16 +134,9 @@ Page({
     }
   },
 
-  // 切换到潜在人脉Tab时加载数据
-  onTabShow(tab) {
-    if (tab === 'potential') {
-      if (this.data.topCandidates.length === 0) {
-        this.loadTopCandidates();
-      }
-      if (this.data.potentialList.length === 0) {
-        this.loadPotentialList();
-      }
-    }
+  // 页面隐藏时保存滚动位置
+  onHide() {
+    this.persistScrollPositions();
   },
 
   // 检查网络状态
@@ -138,12 +167,6 @@ Page({
     this.setData({ currentTab: tab }, () => {
       wx.reportEvent('click_tab', { tab });
       
-      this.setData({ [`scrollTop.${tab}`]: -1 }, () => {
-        setTimeout(() => {
-          this.setData({ [`scrollTop.${tab}`]: targetTop });
-        }, 0);
-      });
-
       if (tab === 'potential') {
         if (this.data.topCandidates.length === 0) {
           this.loadTopCandidates();
@@ -155,32 +178,66 @@ Page({
     });
   },
 
-  // 主内容区滚动位置缓存
+  // 主内容区滚动位置缓存 - 【修改】优化滚动加载逻辑
   handleScroll(e) {
     const tab = e.currentTarget.dataset.tab;
     const top = e.detail?.scrollTop || 0;
     this.scrollCache[tab] = top;
     
-    // 滚动加载更多
-    if (tab === 'potential' && this.data.hasMore && !this.data.isLoading) {
+    // 滚动加载更多 - 仅在潜在人脉页且距离底部50px时触发
+    if (tab === 'potential' && this.data.hasMore && !this.data.isLoading && !this.data.isRefreshingList) {
       const scrollHeight = e.detail?.scrollHeight || 0;
       const clientHeight = e.detail?.clientHeight || 0;
       
-      if (scrollHeight - top - clientHeight < 100) {
+      // 【优化】提前50px触发加载，提升用户体验
+      if (scrollHeight - top - clientHeight < 50) {
         this.loadPotentialList();
       }
     }
   },
 
-  // 页面隐藏时保存滚动位置
-  onHide() {
-    this.persistScrollPositions();
-  },
-  
   persistScrollPositions() {
     if (Object.keys(this.scrollCache).length > 0) {
       this.setData({ scrollTop: this.scrollCache });
     }
+  },
+
+  // 【新增】scroll-view下拉刷新处理
+  handlePullToRefresh() {
+    if (this.data.currentTab !== 'potential') {
+      this.setData({ isRefreshingList: false });
+      return;
+    }
+
+    console.log('触发scroll-view下拉刷新');
+    
+    // 埋点：下拉刷新
+    wx.reportEvent('pull_to_refresh');
+    
+    this.setData({ 
+      isRefreshingList: true
+    });
+
+    // 同时刷新顶部卡片和潜在人脉列表
+    Promise.all([
+      this.refreshTopCandidates(),
+      this.refreshPotentialList()
+    ]).then(() => {
+      this.setData({ isRefreshingList: false });
+      wx.showToast({
+        title: '刷新成功',
+        icon: 'success',
+        duration: 1500
+      });
+    }).catch((error) => {
+      console.error('下拉刷新失败:', error);
+      this.setData({ isRefreshingList: false });
+      wx.showToast({
+        title: '刷新失败',
+        icon: 'none',
+        duration: 1500
+      });
+    });
   },
 
   // 推荐页搜寻逻辑
@@ -284,16 +341,15 @@ Page({
       : { type: '', area: '', company: '' };
   },
 
-  // 更新筛选条件并重新加载列表
+  // 更新筛选条件并重新加载列表 - 【修改】调用刷新方法
   updateFilterAndReload(tab, newFilter) {
     this.setData({
       [`filterStatus.${tab}`]: newFilter,
-      [`scrollTop.${tab}`]: 0,
-      page: 1,
-      hasMore: true
+      [`scrollTop.${tab}`]: 0  // 【重要】滚动位置回到顶部
     }, () => {
       if (tab === 'potential') {
-        this.loadPotentialList(true);
+        // 使用刷新逻辑而不是加载逻辑
+        this.refreshPotentialList();
       }
     });
   },
@@ -337,6 +393,100 @@ Page({
     }, 800);
   },
 
+  // 【新增】刷新顶部卡片方法
+  refreshTopCandidates() {
+    return new Promise((resolve) => {
+      // 重置已关闭卡片记录，重新显示所有卡片
+      this.setData({ 
+        dismissedCardIds: [],
+        isRefreshing: true 
+      });
+      
+      // 模拟网络请求
+      setTimeout(() => {
+        const filteredCards = mockTopCandidates.slice(0, 10);
+        this.setData({
+          topCandidates: mockTopCandidates,
+          displayCandidates: filteredCards,
+          isRefreshing: false
+        });
+        resolve();
+        
+        // 埋点：刷新顶部卡片
+        wx.reportEvent('pull_to_refresh_top_cards');
+      }, 800);
+    });
+  },
+
+  // 【新增】刷新潜在人脉列表方法
+  refreshPotentialList() {
+    return new Promise((resolve) => {
+      this.setData({ 
+        page: 1,
+        hasMore: true,
+        isLoading: true
+      });
+
+      // 模拟API延迟
+      setTimeout(() => {
+        try {
+          const mockData = Array.from({ length: this.data.pageSize }, (_, i) => {
+            // 重新生成第一页数据
+            const names = ['郝亦逸', '李华', '黄轩海', '张明', '王芳', '刘伟'];
+            const levels = ['2级人脉', '3级人脉'];
+            const descriptions = [
+              '2位共同同事',
+              '可通过宋子彤·李华认识',
+              '3位共同同学', 
+              '同一行业从业者',
+              '有共同兴趣爱好'
+            ];
+            
+            return {
+              id: i + 1,
+              avatar: `https://picsum.photos/id/${(i % 50) + 200}/200/200`, // 使用不同的图片ID
+              name: names[i % names.length],
+              age: 20 + (i % 15),
+              level: levels[i % levels.length],
+              mutualCount: 1 + (i % 8),
+              desc: descriptions[i % descriptions.length],
+              cpEligible: i % 5 !== 0,
+              cpEligibleReason: i % 5 === 0 ? '今日邀请次数已达上限' : '',
+              cpStatus: ''
+            };
+          });
+
+          this.setData({
+            potentialList: mockData,
+            loadError: false,
+            isLoading: false,
+            hasMore: mockData.length === this.data.pageSize,
+            page: 2, // 下一页
+            // 【重要】滚动位置回到顶部
+            [`scrollTop.potential`]: 0
+          });
+
+          // 埋点：刷新列表
+          wx.reportEvent('pull_to_refresh_potential_list');
+          resolve();
+
+        } catch (error) {
+          console.error('刷新潜在人脉列表失败:', error);
+          this.setData({ 
+            loadError: true, 
+            isLoading: false 
+          });
+          wx.showToast({ 
+            title: '刷新失败', 
+            icon: 'none',
+            duration: 2000 
+          });
+          resolve(); // 仍然resolve，让下拉刷新完成
+        }
+      }, 1000);
+    });
+  },
+
   // 移除推荐人卡片
   handleDismissCard(e) {
     const cardId = e.currentTarget.dataset.id;
@@ -350,6 +500,20 @@ Page({
     });
 
     wx.reportEvent('dismiss_top_card', { id: cardId });
+  },
+
+  // 点击推荐人卡片进入详情页
+  handleCardClick(e) {
+    const cardId = e.currentTarget.dataset.id;
+    wx.navigateTo({ 
+      url: `/pages/connections/connections?id=${cardId}`,
+      fail: (err) => {
+        console.error('卡片跳转失败：', err);
+        wx.showToast({ title: '跳转失败', icon: 'none' });
+      }
+    });
+    
+    wx.reportEvent('click_top_card', { id: cardId });
   },
 
   // 卡片滚动处理
@@ -380,20 +544,6 @@ Page({
     }
 
     this.setData({ lastScrollLeft: scrollLeft });
-  },
-
-  // 点击推荐人卡片进入详情页
-  handleCardClick(e) {
-    const cardId = e.currentTarget.dataset.id;
-    wx.navigateTo({ 
-      url: `/pages/connections/connections?id=${cardId}`,
-      fail: (err) => {
-        console.error('卡片跳转失败：', err);
-        wx.showToast({ title: '跳转失败，请检查页面配置', icon: 'none' });
-      }
-    });
-    
-    wx.reportEvent('click_top_card', { id: cardId });
   },
 
   // 触摸事件处理
@@ -489,12 +639,12 @@ Page({
 
   // 组CP按钮点击
   handleCpButtonClick(e) {
-    // 使用 catchtap 后不需要 e.stopPropagation()
     const item = e.currentTarget.dataset.item;
-    if (!item) return;
-    
-    console.log('组CP按钮被点击，阻止跳转'); // 添加日志确认
-    
+    if (!item) {
+      console.warn('事件对象中未找到item数据');
+      return;
+    }
+        
     // 埋点：点击组CP按钮
     wx.reportEvent('click_cp', { id: item.id });
     
@@ -520,12 +670,6 @@ Page({
     }
     
     // 执行组CP流程
-    this.startCpProcess(item);
-  },
-
-  // 组CP流程
-  startCpProcess(item) {
-    // 显示确认对话框
     wx.showModal({
       title: '确认建立关系',
       content: `确定要与${item.name}建立CP关系吗？`,
@@ -537,7 +681,7 @@ Page({
           this.sendCpInvitation(item);
         }
       }
-    });
+    });   
   },
 
   // 发送CP邀请
@@ -628,82 +772,49 @@ Page({
     this.setData({ potentialList: updatedList });
   },
 
-  // 重新加载
+  // 重新加载 - 【修改】支持刷新重置
   handleRetryLoad() {
     this.setData({ 
       loadError: false,
-      page: 1,
-      hasMore: true 
+      page: 1,           // 【重要】重置页码
+      hasMore: true      // 【重要】重置hasMore状态
     });
-    this.loadPotentialList(true);
+    this.loadPotentialList();
   },
 
-  // 加载潜在人脉列表（核心方法）
-  loadPotentialList(isRetry = false) {
-    if (this.data.isLoading && !isRetry) return;
+  // 加载潜在人脉列表（优化版）
+  loadPotentialList() {
+    // 防重复加载
+    if (this.data.isLoading || !this.data.hasMore || this.data.isRefreshingList) return;
     
-    this.setData({ 
-      isLoading: true,
-      loadError: false 
-    });
+    this.setData({ isLoading: true, loadError: false });
     
-    // 模拟API延迟
     setTimeout(() => {
       try {
-        // 模拟数据 - 符合设计稿的数据结构
-        const mockData = Array.from({ length: this.data.pageSize }, (_, i) => {
-          const index = (this.data.page - 1) * this.data.pageSize + i;
-          const names = ['郝亦逸', '李华', '黄轩海', '张明', '王芳', '刘伟'];
-          const levels = ['2级人脉', '3级人脉'];
-          const descriptions = [
-            '2位共同同事',
-            '可通过宋子彤·李华认识',
-            '3位共同同学', 
-            '同一行业从业者',
-            '有共同兴趣爱好'
-          ];
-          
-          return {
-            id: index + 1,
-            avatar: `https://picsum.photos/id/${(index % 50) + 100}/200/200`,
-            name: names[index % names.length],
-            age: 20 + (index % 15),
-            level: levels[index % levels.length],
-            mutualCount: 1 + (index % 8),
-            desc: descriptions[index % descriptions.length],
-            cpEligible: index % 5 !== 0, // 20%不可组CP
-            cpEligibleReason: index % 5 === 0 ? '今日邀请次数已达上限' : '',
-            cpStatus: '' // 初始状态
-          };
-        });
-
+        const startIndex = (this.data.page - 1) * this.data.pageSize;
+        const mockData = this.generateMockData(startIndex, this.data.pageSize);
+        
+        const newList = this.data.page === 1 ? mockData : [...this.data.potentialList, ...mockData];
+        const hasMoreData = mockData.length === this.data.pageSize;
+        
         this.setData({
-          potentialList: this.data.page === 1 ? mockData : [...this.data.potentialList, ...mockData],
-          loadError: false,
+          potentialList: newList,
           isLoading: false,
-          hasMore: mockData.length === this.data.pageSize,
+          hasMore: hasMoreData,
           page: this.data.page + 1
         });
-
-        // 埋点：查看列表项
-        mockData.forEach(item => {
-          wx.reportEvent('view_potential_item', { 
-            id: item.id
+        
+        // ✅ 新增：分页加载埋点
+        if (mockData.length > 0) {
+          wx.reportEvent('load_more', { 
+            page: this.data.page - 1, 
+            pageSize: this.data.pageSize 
           });
-        });
-
+        }
       } catch (error) {
-        console.error('加载潜在人脉列表失败:', error);
-        this.setData({ 
-          loadError: true, 
-          isLoading: false 
-        });
-        wx.showToast({ 
-          title: '加载失败', 
-          icon: 'none',
-          duration: 2000 
-        });
+        this.setData({ loadError: true, isLoading: false });
       }
     }, 800);
   }
+
 });
