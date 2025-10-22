@@ -11,12 +11,7 @@ const mockTopCandidates = [
   { id: 7, avatar: 'https://picsum.photos/id/70/200/200', name: '刘思琪', summary: '1位共同导师', mutualCount: 1 },
   { id: 8, avatar: 'https://picsum.photos/id/71/200/200', name: '黄俊豪', summary: '4位共同项目成员', mutualCount: 4 },
   { id: 9, avatar: 'https://picsum.photos/id/72/200/200', name: '周雨彤', summary: '5位共同社团成员', mutualCount: 5 },
-  { id: 10, avatar: 'https://picsum.photos/id/73/200/200', name: '吴泽宇', summary: '2位共同邻居', mutualCount: 2 },
-  { id: 11, avatar: 'https://picsum.photos/id/74/200/200', name: '郑欣怡', summary: '3位共同兴趣好友', mutualCount: 3 },
-  { id: 12, avatar: 'https://picsum.photos/id/75/200/200', name: '马浩然', summary: '6位共同合作伙伴', mutualCount: 6 },
-  { id: 13, avatar: 'https://picsum.photos/id/76/200/200', name: '孙思妍', summary: '4位共同培训同学', mutualCount: 4 },
-  { id: 14, avatar: 'https://picsum.photos/id/77/200/200', name: '朱雨辰', summary: '1位共同家人的朋友', mutualCount: 1 },
-  { id: 15, avatar: 'https://picsum.photos/id/78/200/200', name: '胡艺馨', summary: '5位共同志愿者伙伴', mutualCount: 5 }
+  { id: 10, avatar: 'https://picsum.photos/id/73/200/200', name: '吴泽宇', summary: '2位共同邻居', mutualCount: 2 }
 ];
 
 function debounce(func, wait = 100) { 
@@ -79,11 +74,9 @@ Page({
     isLoadingMoreCards: false,         // 顶部卡片加载更多状态：true-正在加载
     
     // ========== 卡片滚动交互 ==========
-    lastScrollLeft: 0,                 // 卡片区域上一次横向滚动位置，用于计算滚动方向
     cardTouchStartX: 0,                // 卡片触摸起始X坐标，用于拖拽检测
     cardScrollMetrics: {               // 卡片滚动区域尺寸信息
       scrollLeft: 0,                   // 当前横向滚动位置
-      clientWidth: 0,                  // 可视区域宽度
       scrollWidth: 0                   // 内容总宽度
     },
     
@@ -183,14 +176,17 @@ Page({
     const tab = e.currentTarget.dataset.tab;
     const top = e.detail?.scrollTop || 0;
     this.scrollCache[tab] = top;
-    
     // 滚动加载更多 - 仅在潜在人脉页且距离底部50px时触发
     if (tab === 'potential' && this.data.hasMore && !this.data.isLoading && !this.data.isRefreshingList) {
-      const scrollHeight = e.detail?.scrollHeight || 0;
-      const clientHeight = e.detail?.clientHeight || 0;
+      const scrollHeight = e.detail?.scrollHeight || 0;      
       
-      // 【优化】提前50px触发加载，提升用户体验
-      if (scrollHeight - top - clientHeight < 50) {
+      // console.log(util.pxToRpx(scrollHeight) - util.pxToRpx(top));
+      const delatrpx = util.pxToRpx(scrollHeight) - util.pxToRpx(top)
+      console.log(11111);
+      console.log(delatrpx,scrollHeight-top,util.pxToRpx(800),800);
+
+      if (delatrpx < util.pxToRpx(800)) {
+        console.log('触发滚动加载更多');
         this.loadPotentialList();
       }
     }
@@ -204,13 +200,19 @@ Page({
 
   // 【新增】scroll-view下拉刷新处理
   handlePullToRefresh() {
-    if (this.data.currentTab !== 'potential') {
+    // if (this.data.currentTab !== 'potential') {
+    //   this.setData({ isRefreshingList: false });
+    //   return;
+    // }
+
+    console.log('触发scroll-view下拉刷新');
+    // 在刷新前检查网络状态
+    if (this.data.isNoNetwork) {
+      wx.showToast({ title: '无网络连接', icon: 'none' });
       this.setData({ isRefreshingList: false });
       return;
     }
 
-    console.log('触发scroll-view下拉刷新');
-    
     // 埋点：下拉刷新
     wx.reportEvent('pull_to_refresh');
     
@@ -354,19 +356,6 @@ Page({
     });
   },
 
-  // 加载潜在人脉列表
-  loadTabContent(tab, filterParams) {
-    if (tab !== 'potential') return;
-    
-    this.checkNetworkStatus();
-    if (this.data.isNoNetwork) {
-      this.setData({ loadError: true });
-      return;
-    }
-
-    this.loadPotentialList();
-  },
-
   // 顶部推荐人卡片核心逻辑
   loadTopCandidates() {
     if (this.data.isNoNetwork) {
@@ -380,7 +369,7 @@ Page({
 
     const { dismissedCardIds } = this.data;
     const filteredCards = mockTopCandidates.filter(card => !dismissedCardIds.includes(card.id));
-    const displayCards = filteredCards.slice(0, 10);
+    const displayCards = filteredCards.slice(0, 5);
 
     setTimeout(() => {
       wx.hideLoading();
@@ -404,7 +393,7 @@ Page({
       
       // 模拟网络请求
       setTimeout(() => {
-        const filteredCards = mockTopCandidates.slice(0, 10);
+        const filteredCards = mockTopCandidates;
         this.setData({
           topCandidates: mockTopCandidates,
           displayCandidates: filteredCards,
@@ -518,32 +507,28 @@ Page({
 
   // 卡片滚动处理
   handleCardScroll(e) {
-    const { scrollLeft = 0, clientWidth = 0, scrollWidth = 0 } = e.detail || {};
-    const { isRefreshing, displayCandidates, lastScrollLeft } = this.data;
+    const { scrollLeft = 0, scrollWidth = 0, deltaX = 0 } = e.detail || {};
+    const { displayCandidates } = this.data;
     
-    this.setData({ cardScrollMetrics: { scrollLeft, clientWidth, scrollWidth } });
+    this.setData({ cardScrollMetrics: { scrollLeft, scrollWidth } });
 
-    if (displayCandidates.length === 0 || isRefreshing) {
-      this.setData({ lastScrollLeft: scrollLeft });
+    if (displayCandidates.length === 0) {
       return;
     }
 
-    const scrollChange = Math.abs(scrollLeft - lastScrollLeft);
-    const currentDirection = scrollLeft - lastScrollLeft;
     const isNearLeftEnd = scrollLeft <= 5;
-    const isNearRightEnd = (scrollLeft + clientWidth) >= (scrollWidth - 5);
+    const isNearRightEnd = scrollWidth - scrollLeft <= 370;
 
-    const shouldRefresh = (
-      (isNearLeftEnd && currentDirection <= 0 && scrollChange <= 3) ||
-      (isNearRightEnd && currentDirection >= 0 && scrollChange <= 3)
-    );
+    if(isNearLeftEnd && (deltaX <= 15 && deltaX > 0)){
+      this.loadMoreCandidates('left');   
+      console.log(1111);
 
-    if (shouldRefresh) {
-      this.setData({ isRefreshing: true });
-      this.loadTopCandidates();
     }
-
-    this.setData({ lastScrollLeft: scrollLeft });
+    if(isNearRightEnd && (deltaX >= -15 && deltaX < 0)){
+      this.loadMoreCandidates('right');
+      console.log(2222);
+    }
+    // console.log('e.detail:',e.detail);
   },
 
   // 触摸事件处理
@@ -554,32 +539,34 @@ Page({
 
   handleCardTouchMove(e) {
     const touch = e.touches && e.touches[0];
+    // console.log(touch);
+    
     if (!touch) return;
 
     const startX = this.data.cardTouchStartX || 0;
     const deltaX = touch.clientX - startX;
     const THRESHOLD = 30;
 
-    const { scrollLeft = 0, clientWidth = 0, scrollWidth = 0 } = this.data.cardScrollMetrics || {};
+    const { scrollLeft = 0, scrollWidth = 0 } = this.data.cardScrollMetrics || {};
 
     const isNearLeftEnd = scrollLeft <= 5;
-    const isNearRightEnd = (scrollLeft + clientWidth) >= (scrollWidth - 5);
+    const isNearRightEnd = scrollWidth - scrollLeft <= 370;
 
     if (isNearLeftEnd && deltaX > THRESHOLD) {
       this.loadMoreCandidates('left');
+      console.log('left');
       this.setData({ cardTouchStartX: touch.clientX });
       return;
     }
-
+    console.log();
+    
     if (isNearRightEnd && deltaX < -THRESHOLD) {
       this.loadMoreCandidates('right');
+      console.log('right');
+      
       this.setData({ cardTouchStartX: touch.clientX });
       return;
     }
-  },
-
-  handleCardTouchEnd() {
-    // 触摸结束处理
   },
 
   // 加载更多卡片
@@ -598,7 +585,7 @@ Page({
       return;
     }
 
-    const toAdd = direction === 'right'
+    const toAdd = direction === 'right'  
       ? available.slice(0, count)
       : available.slice(-count);
 
@@ -815,6 +802,77 @@ Page({
         this.setData({ loadError: true, isLoading: false });
       }
     }, 800);
-  }
+  },
+  // 生成模拟数据方法
+  generateMockData(startIndex = 0, count = 20) {
+    // 模拟数据池
+    const names = [
+      '张伟', '王芳', '李娜', '刘洋', '陈静', '杨磊', '赵雪', '黄强', 
+      '周敏', '吴勇', '郑洁', '孙浩', '马丽', '朱涛', '胡军', '林芳',
+      '郭静', '何伟', '高婷', '罗强', '梁艳', '谢明', '宋佳', '唐磊',
+      '董洁', '袁伟', '邓丽', '许强', '韩梅', '冯军', '曹静', '彭涛',
+      '曾艳', '肖明', '田芳', '董军', '潘静', '董涛', '余艳', '杜明'
+    ];
+    
+    const companies = [
+      '阿里巴巴', '腾讯科技', '百度在线', '字节跳动', '美团点评',
+      '京东集团', '网易公司', '小米科技', '华为技术', '中兴通讯',
+      '联想集团', '滴滴出行', '拼多多', '快手科技', '贝壳找房'
+    ];
+    
+    const positions = [
+      '高级工程师', '产品经理', '设计师', '运营专家', '市场总监',
+      '技术专家', '数据分析师', '前端开发', '后端开发', '全栈工程师'
+    ];
+    
+    const industries = [
+      '互联网', '金融', '教育', '医疗', '电商', '游戏', '广告', '制造业'
+    ];
+    
+    const cities = [
+      '北京', '上海', '深圳', '广州', '杭州', '成都', '武汉', '西安'
+    ];
+    
+    const descriptions = [
+      '2位共同同事', '3位共同同学', '1位共同好友', '4位共同群成员',
+      '同一行业从业者', '参加过同一活动', '有共同兴趣爱好', '居住在同一区域',
+      '毕业于同一学校', '曾在同一公司工作', '有共同客户', '同一社团成员'
+    ];
+
+    // 生成指定数量的模拟数据
+    return Array.from({ length: count }, (_, index) => {
+      const globalIndex = startIndex + index;
+      const nameIndex = globalIndex % names.length;
+      const hasAge = globalIndex % 7 !== 0; // 90%的用户有年龄信息
+      const mutualCount = 1 + (globalIndex % 15); // 1-15位共同人脉
+      const isCpEligible = globalIndex % 6 !== 0; // 约83%的用户可组CP
+      
+      // 随机生成关系描述
+      const descIndex = globalIndex % descriptions.length;
+      let desc = descriptions[descIndex];
+      
+      // 随机添加具体人脉信息
+      if (descIndex < 4 && mutualCount > 1) {
+        desc = `${mutualCount}${desc.replace(/\d+/, '')}`;
+      }
+
+      return {
+        id: globalIndex + 1, // 确保ID从1开始且连续
+        avatar: `https://picsum.photos/id/${(globalIndex % 70) + 100}/200/200`, // 使用不同的图片
+        name: names[nameIndex],
+        age: hasAge ? 20 + (globalIndex % 25) : null, // 20-45岁，部分用户无年龄
+        level: globalIndex % 3 === 0 ? '2级人脉' : '3级人脉', // 70%为3级人脉
+        mutualCount: mutualCount,
+        desc: desc,
+        company: companies[globalIndex % companies.length],
+        position: positions[globalIndex % positions.length],
+        industry: industries[globalIndex % industries.length],
+        city: cities[globalIndex % cities.length],
+        cpEligible: isCpEligible,
+        cpEligibleReason: isCpEligible ? '' : '今日邀请次数已达上限',
+        cpStatus: '', // 初始状态为空
+      };
+    });
+  },
 
 });

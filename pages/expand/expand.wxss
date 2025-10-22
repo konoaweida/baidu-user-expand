@@ -148,7 +148,7 @@
 /* 【新增】分页加载状态样式 */
 .load-more-state {
   width: 100%;
-  padding: 40rpx 0;
+  padding: 80rpx 0;
   text-align: center;
   background: transparent;
 }

@@ -43,11 +43,7 @@
       <view class="empty-state" wx:if="{{isNoNetwork}}">
         <text class="empty-text">无网络连接，请检查网络后重试</text>
       </view>
-      <view 
-        class="search-container" 
-        bindtap="triggerSearch"
-        wx:else
-      >
+      <view class="search-container" bindtap="triggerSearch" wx:else>
         <image src="" class="btn-gif" mode="widthFix"></image>
         <text class="btn-text">正在为您搜寻潜在人脉</text>
       </view>
@@ -71,7 +67,6 @@
             bindscroll="handleCardScroll"
             bindtouchstart="handleCardTouchStart"
             bindtouchmove="handleCardTouchMove"
-            bindtouchend="handleCardTouchEnd"
           >
             <block wx:for="{{displayCandidates}}" wx:key="id">
               <view 
@@ -146,7 +141,6 @@
         
         <!-- 加载失败状态 -->
         <view class="load-error-state" wx:if="{{loadError && potentialList.length === 0}}">
-          <image src="/assets/images/network-error.png" class="error-icon" />
           <text class="error-text">加载失败，请重试</text>
           <view class="retry-button" bindtap="handleRetryLoad">
             <text class="retry-text">重新加载</text>
