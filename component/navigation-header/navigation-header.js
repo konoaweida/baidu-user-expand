@@ -27,6 +27,10 @@ Component({
     titleColor: {
       type: String,
       value: '#333'
+    },
+    backColor: {
+      type: Number,
+      value: 2
     }
   },
 
@@ -36,7 +40,6 @@ Component({
   data: {
     menuTop: 0,
     menuHeight: 0,
-    backSymbol: '<'
   },
 
   /**

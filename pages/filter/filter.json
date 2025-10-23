@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "navigation-header": "../../component/navigation-header/navigation-header",
+    "t-slider": "tdesign-miniprogram/slider/slider"
+  },
+  "navigationStyle":"custom"
+}

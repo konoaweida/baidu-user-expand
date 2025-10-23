@@ -10,7 +10,8 @@
     "pages/chats/charts",
     "pages/register/register",
     "pages/expand/expand",
-    "pages/connections/connections"
+    "pages/connections/connections",
+    "pages/filter/filter"
   ],
   "usingComponents": {
     "t-icon": "tdesign-miniprogram/icon/icon",

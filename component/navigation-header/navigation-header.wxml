@@ -19,7 +19,9 @@
       bindtap="onBackClick"
       style="color: {{backButtonColor}};"
     >
-      <text class="back-icon">{{backSymbol}}</text>
+      <view class="back-icon">
+        <image src="{{backColor === 1 ? '../../assets/image/左1.png' : '../../assets/image/左2.png'}}" mode="widthFix" style="width: 100%; height: 100%;"></image>
+      </view>
     </view>
 
     <!-- 居中标题 -->

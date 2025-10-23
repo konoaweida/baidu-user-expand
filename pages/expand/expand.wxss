@@ -24,7 +24,7 @@
   width: 40rpx;
   margin-top: 14rpx;
   margin-left: auto;
-  background-color: #4a42d4;
+  /* background-color: #4a42d4; */
   border-radius: 8rpx;
 }
 

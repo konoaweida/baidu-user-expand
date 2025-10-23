@@ -1,0 +1,120 @@
+<!--pages/filter/filter.wxml-->
+<navigation-header showBackButton="{{true}}" backColor="{{1}}"></navigation-header>
+
+<!-- 筛选内容容器 -->
+<view class="filter-container">
+  <!-- 星座筛选项 -->
+  <view class="filter-zodiac" bindtap="openConstellationPopup">
+    <view class="item-label">
+      <view class="filter-icon">
+        <image src="../../assets/image/路径 1.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+      </view>
+      <text class="filter-text">星座</text>
+    </view>
+    <view class="item-value zodiac">
+      <text>{{selectedConstellation || '水瓶座'}}</text>
+    </view>
+    <view class="arrow-right">
+      <image src="../../assets/image/右.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+    </view>
+  </view>
+
+  <!-- 性别筛选项 -->
+  <view class="filter-gender">
+    <view class="item-label">
+      <view class="filter-icon">
+        <image src="../../assets/image/画板 1.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+      </view>
+      <text class="filter-text">性别</text>
+    </view>
+    <view class="gender-radio-group">
+      <view 
+        class="radio-item" 
+        wx:for="{{genderOptions}}" 
+        wx:key="value" 
+        bindtap="selectGender" 
+        data-value="{{item.value}}"
+      >
+        <view class="radio-circle {{selectedGender === item.value ? 'checked' : ''}}"></view>
+        <text class="radio-text {{selectedGender === item.value ? 'checked-text' : ''}}">{{item.text}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 收入筛选项 -->
+  <view class="filter-income">
+    <view class="item-label">
+      <view class="filter-icon">
+        <image src="../../assets/image/画板 3.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+      </view>
+      <text class="filter-text">收入</text>
+    </view>
+    <view class="item-slider">
+      <slider 
+        min="0" 
+        max="10000" 
+        step="100" 
+        value="{{incomeRange}}" 
+        range 
+        bindchange="onIncomeChange" 
+      />
+      <view class="slider-labels">
+        <text>0</text>
+        <text>5000</text>
+        <text>10000+</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 年龄筛选项 -->
+  <view class="filter-item">
+    <view class="item-label">
+      <i class="icon age"></i>
+      <text>年龄</text>
+    </view>
+    <view class="item-slider">
+      <slider 
+        min="18" 
+        max="60" 
+        step="1" 
+        value="{{ageRange}}" 
+        range 
+        bindchange="onAgeChange" 
+      />
+      <view class="slider-labels">
+        <text>18</text>
+        <text>30</text>
+        <text>45</text>
+        <text>60</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 完成按钮 -->
+  <view class="confirm-btn">
+    <button class="btn" bindtap="onConfirm">完成</button>
+  </view>
+</view>
+<!-- 星座选择弹出层 -->
+<view class="popup-mask {{showConstellationPopup ? 'show' : ''}}" bindtap="closeConstellationPopup"></view>
+<view class="popup {{showConstellationPopup ? 'show' : ''}}">
+  <view class="popup-header">
+    <text>选择星座</text>
+    <view class="close-btn" bindtap="closeConstellationPopup">×</view>
+  </view>
+  <view class="popup-content">
+    <view class="constellation-buttons">
+      <!-- wx:for 遍历星座列表 -->
+      <button 
+        wx:for="{{constellationList}}" 
+        wx:key="*this"
+        class="constellation-btn {{selectedConstellation === item ? 'active' : ''}}" 
+        bindtap="selectConstellation" 
+        data-value="{{item}}"
+      >{{item}}</button>
+    </view>
+  </view>
+  <view class="popup-footer">
+    <button class="confirm-btn" bindtap="confirmConstellation">确定</button>
+  </view>
+</view>

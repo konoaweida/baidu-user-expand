@@ -182,8 +182,8 @@ Page({
       
       // console.log(util.pxToRpx(scrollHeight) - util.pxToRpx(top));
       const delatrpx = util.pxToRpx(scrollHeight) - util.pxToRpx(top)
-      console.log(11111);
-      console.log(delatrpx,scrollHeight-top,util.pxToRpx(800),800);
+      // console.log(11111);
+      // console.log(delatrpx,scrollHeight-top,util.pxToRpx(800),800);
 
       if (delatrpx < util.pxToRpx(800)) {
         console.log('触发滚动加载更多');
