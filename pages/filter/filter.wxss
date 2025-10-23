@@ -127,7 +127,8 @@
 /* 单选框样式 */
 
 /* 收入 */
-.filter-income {
+.filter-income,
+.filter-age {
   width: 100%;
   height: 216rpx;
   display: flex;
@@ -157,19 +158,30 @@
 
 /* 完成按钮样式 */
 .confirm-btn {
-  padding: 40rpx 30rpx;
+  position: absolute;
+  width: 686rpx;
+  height: 88rpx;
+  bottom: env(safe-area-inset-bottom);
+  left: 50%;
+  transform: translate(-50%, 0);
+  padding: 0 32rpx;
+  border-radius: 16rpx;
+  background: rgba(122, 79, 214, 1);
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  color: rgba(248, 244, 253, 1);
 }
 
-.btn {
-  width: 100%;
-  height: 90rpx;
-  line-height: 90rpx;
-  background-color: #7C4DFF;
-  color: #fff;
-  font-size: 34rpx;
-  border-radius: 45rpx;
+.confirm-text {
+  font-size: 36rpx;
+  font-weight: 400;
+  letter-spacing: 0rpx;
+  line-height: 36rpx;
+  color: rgba(248, 244, 253, 1);
+  text-align: center;
 }
-
 /* 弹出层遮罩 */
 .popup-mask {
   position: fixed;
@@ -192,12 +204,13 @@
 /* 星座弹出层样式 */
 .popup {
   position: fixed;
+  width: 100%;
+  height: 576rpx;
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #fff;
-  border-top-left-radius: 20rpx;
-  border-top-right-radius: 20rpx;
+  border-radius: 48rpx 48rpx 0rpx 0rpx;
+  background: rgba(255, 255, 255, 1);
   z-index: 999;
   transform: translateY(100%);
   transition: transform 0.3s ease;
@@ -211,23 +224,39 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30rpx;
-  border-bottom: 1rpx solid #eee;
+}
+
+.header-top {
+  position: absolute;
+  top: 12rpx;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 66rpx;
+  height: 10rpx;
+  opacity: 1;
+  border-radius: 320rpx;
+  background: rgba(204, 204, 204, 1);
 }
 
 .popup-header text {
-  font-size: 34rpx;
+  font-size: 32rpx;
   font-weight: 500;
-  color: #333;
+  letter-spacing: 0rpx;
+  line-height: 0rpx;
+  color: rgba(48, 31, 94, 1);
+  text-align: left;
+  vertical-align: top;
+  margin-left: 344rpx;
 }
 
 .close-btn {
-  font-size: 40rpx;
-  color: #999;
+  width: 48rpx;
+  height: 48rpx;
+  margin: 32rpx;
 }
 
 .popup-content {
-  padding: 30rpx;
+  padding: 0 37rpx;
   max-height: 500rpx;
   overflow-y: auto;
 }
@@ -235,25 +264,25 @@
 .constellation-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 24rpx;
+  gap: 28rpx;
 }
 
 .constellation-btn {
-  flex: 0 0 calc(33.33% - 16rpx); /* 3列布局 */
-  height: 80rpx;
-  line-height: 80rpx;
+  /* flex: 0 0 calc(25% - 16rpx); 3列布局 */
+  width: 148rpx;
+  height: 50rpx;
+  border-radius: 586rpx;
+  border: 2rpx solid rgba(188, 185, 192, 1);
   text-align: center;
   font-size: 30rpx;
-  border: 1rpx solid #ddd;
-  border-radius: 40rpx;
   background-color: #fff;
-  color: #333;
+  color: rgba(188, 185, 192, 1);
 }
 
 .constellation-btn.active {
-  border-color: #7C4DFF;
-  color: #7C4DFF;
-  background-color: rgba(124, 77, 255, 0.1);
+  border: 2rpx solid rgba(48, 31, 94, 1);
+  color: rgba(48, 31, 94, 1);  
+  /* background-color: rgba(124, 77, 255, 0.1); */
 }
 
 .popup-footer {

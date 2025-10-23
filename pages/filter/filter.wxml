@@ -12,7 +12,7 @@
       <text class="filter-text">星座</text>
     </view>
     <view class="item-value zodiac">
-      <text>{{selectedConstellation || '水瓶座'}}</text>
+      <text>{{zodiac || ''}}</text>
     </view>
     <view class="arrow-right">
       <image src="../../assets/image/右.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
@@ -67,10 +67,12 @@
   </view>
 
   <!-- 年龄筛选项 -->
-  <view class="filter-item">
+  <view class="filter-age">
     <view class="item-label">
-      <i class="icon age"></i>
-      <text>年龄</text>
+      <view class="filter-icon">
+        <image src="../../assets/image/画板 2.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+      </view>
+      <text class="filter-text">年龄</text>
     </view>
     <view class="item-slider">
       <slider 
@@ -89,29 +91,29 @@
       </view>
     </view>
   </view>
-
-  <!-- 完成按钮 -->
-  <view class="confirm-btn">
-    <button class="btn" bindtap="onConfirm">完成</button>
-  </view>
 </view>
+<!-- 完成按钮 -->
+<view class="confirm-btn" bindtap="onConfirm"><text class="confirm-text">完成</text></view>
 <!-- 星座选择弹出层 -->
 <view class="popup-mask {{showConstellationPopup ? 'show' : ''}}" bindtap="closeConstellationPopup"></view>
 <view class="popup {{showConstellationPopup ? 'show' : ''}}">
   <view class="popup-header">
-    <text>选择星座</text>
-    <view class="close-btn" bindtap="closeConstellationPopup">×</view>
+    <view class="header-top"></view>
+    <text>星座</text>
+    <view class="close-btn" bindtap="closeConstellationPopup">
+      <image src="../../assets/image/关闭.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+    </view>
   </view>
   <view class="popup-content">
     <view class="constellation-buttons">
       <!-- wx:for 遍历星座列表 -->
-      <button 
+      <view 
         wx:for="{{constellationList}}" 
         wx:key="*this"
         class="constellation-btn {{selectedConstellation === item ? 'active' : ''}}" 
         bindtap="selectConstellation" 
         data-value="{{item}}"
-      >{{item}}</button>
+      >{{item}}</view>
     </view>
   </view>
   <view class="popup-footer">
