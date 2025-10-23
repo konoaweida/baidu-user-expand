@@ -16,7 +16,7 @@ Page({
       '金牛座', '双子座', '巨蟹座', '狮子座', 
       '处女座', '天秤座', '天蝎座', '射手座'
     ],
-    selectedGender: 'any', 
+    gender: 'any', 
     genderOptions: [
       { value: 'any', text: '不限' },
       { value: 'male', text: '男' },
@@ -36,7 +36,7 @@ Page({
   selectGender(e) {
     const gender = e.currentTarget.dataset.value;
     this.setData({
-      selectedGender: gender
+      gender: gender
     });
   },
   // 打开星座弹出层
@@ -102,7 +102,7 @@ Page({
     // 1. 组装筛选数据（与之前一致，确保字段完整）
     const filterData = {
       constellation: this.data.selectedConstellation || '',  // 空值处理
-      gender: this.data.selectedGender,
+      gender: this.data.gender,
       income: {
         min: this.data.incomeRange[0],
         max: this.data.incomeRange[1]

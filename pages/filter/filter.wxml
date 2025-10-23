@@ -39,8 +39,8 @@
         bindtap="selectGender" 
         data-value="{{item.value}}"
       >
-        <view class="radio-circle {{selectedGender === item.value ? 'checked' : ''}}"></view>
-        <text class="radio-text {{selectedGender === item.value ? 'checked-text' : ''}}">{{item.text}}</text>
+        <view class="radio-circle {{gender === item.value ? 'checked' : ''}}"></view>
+        <text class="radio-text {{gender === item.value ? 'checked-text' : ''}}">{{item.text}}</text>
       </view>
     </view>
   </view>
