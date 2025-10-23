@@ -1,5 +1,9 @@
 <!--pages/filter/filter.wxml-->
-<navigation-header showBackButton="{{true}}" backColor="{{1}}"></navigation-header>
+<navigation-header 
+  bindback="onHeaderBack" 
+  showBackButton="{{true}}" 
+  backColor="{{1}}"
+  needDefaultBack="{{false}}"></navigation-header>
 
 <!-- 筛选内容容器 -->
 <view class="filter-container">
@@ -55,7 +59,7 @@
         max="10000" 
         step="100" 
         value="{{incomeRange}}" 
-        range 
+        range="{{true}}" 
         bindchange="onIncomeChange" 
       />
       <view class="slider-labels">
@@ -80,7 +84,7 @@
         max="60" 
         step="1" 
         value="{{ageRange}}" 
-        range 
+        range="{{true}}" 
         bindchange="onAgeChange" 
       />
       <view class="slider-labels">

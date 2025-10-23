@@ -301,21 +301,24 @@ Page({
 
   // 筛选逻辑
   handleFilterClick() {
-    const { currentTab, filterStatus } = this.data;
-    wx.showModal({
-      title: `${currentTab === 'recommend' ? '推荐' : '潜在人脉'}筛选`,
-      content: this.formatFilterContent(currentTab, filterStatus[currentTab]),
-      confirmText: '确认筛选',
-      cancelText: '重置筛选',
-      success: (res) => {
-        if (res.confirm) {
-          const newFilter = this.getMockNewFilter(currentTab);
-          this.updateFilterAndReload(currentTab, newFilter);
-        } else if (res.cancel) {
-          this.updateFilterAndReload(currentTab, this.getEmptyFilter(currentTab));
-        }
-      }
-    });
+    wx.navigateTo({
+      url: '/pages/filter/filter',
+    })
+    // const { currentTab, filterStatus } = this.data;
+    // wx.showModal({
+    //   title: `${currentTab === 'recommend' ? '推荐' : '潜在人脉'}筛选`,
+    //   content: this.formatFilterContent(currentTab, filterStatus[currentTab]),
+    //   confirmText: '确认筛选',
+    //   cancelText: '重置筛选',
+    //   success: (res) => {
+    //     if (res.confirm) {
+    //       const newFilter = this.getMockNewFilter(currentTab);
+    //       this.updateFilterAndReload(currentTab, newFilter);
+    //     } else if (res.cancel) {
+    //       this.updateFilterAndReload(currentTab, this.getEmptyFilter(currentTab));
+    //     }
+    //   }
+    // });
   },
 
   // 格式化筛选内容

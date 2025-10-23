@@ -31,6 +31,10 @@ Component({
     backColor: {
       type: Number,
       value: 2
+    },
+    needDefaultBack: {
+      type: Boolean,
+      value: true
     }
   },
 
@@ -60,14 +64,12 @@ Component({
    */
   methods: {
     onBackClick() {
-      wx.navigateBack({
-        delta: 1,
-        fail: () => {
-          // 可选：无法返回时的降级逻辑
-          // wx.switchTab({ url: '/pages/index/index' })
-        }
-      })
       this.triggerEvent('back', {}, {})
+      
+      const { needDefaultBack = true } = this.properties;
+      if (needDefaultBack) {
+        wx.navigateBack({ delta: 1 });
+      }
     }
   }
 })
