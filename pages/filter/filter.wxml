@@ -96,6 +96,15 @@
     </view>
   </view>
 </view>
+<van-slider value="{{ [10, 50] }}" range use-button-slot>
+  <view slot="left-button">
+    <image src="../../assets/image/游标 1.png" style="width: 40rpx; height: 40rpx;" mode="aspectFit"/>
+  </view>
+  <view slot="right-button">
+    <image src="../../assets/image/游标 1.png" style="width: 40rpx; height: 40rpx;" mode="aspectFit"/>
+  </view>
+</van-slider>
+
 <!-- 完成按钮 -->
 <view class="confirm-btn" bindtap="onConfirm"><text class="confirm-text">完成</text></view>
 <!-- 星座选择弹出层 -->
