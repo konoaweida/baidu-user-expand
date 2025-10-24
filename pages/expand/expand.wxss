@@ -444,3 +444,58 @@
   color: #666666;
   cursor: pointer;
 }
+
+
+
+.potential-skeleton {
+  padding: 30rpx 48rpx;
+}
+.skeleton-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+.skeleton-avatar {
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 50%;
+  background: #f0f0f0;
+  margin-right: 22rpx;
+}
+.skeleton-info {
+  flex: 1;
+}
+.skeleton-name {
+  width: 200rpx;
+  height: 42rpx;
+  background: #f0f0f0;
+  border-radius: 4rpx;
+  margin-bottom: 10rpx;
+}
+.skeleton-desc {
+  width: 350rpx;
+  height: 36rpx;
+  background: #f0f0f0;
+  border-radius: 4rpx;
+}
+.skeleton-btn {
+  width: 88rpx;
+  height: 48rpx;
+  background: #f0f0f0;
+  border-radius: 8rpx;
+}
+
+
+.group {
+  display: flex;
+  align-items: center;
+  margin-top: 32rpx;
+}
+
+.group-avatar {
+  margin-right: 24rpx;
+}
+
+.group-content {
+  width: 566rpx;
+}

@@ -76,7 +76,7 @@
                 bindtap="handleCardClick"
                 data-id="{{item.id}}"
               >
-                <image class="card-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+                <image class="card-avatar" src="{{item.avatar}}" mode="aspectFill" lazy-load="true"></image>
                 <view class="card-info">
                   <text class="card-name">{{item.name}}</text>
                   <text class="card-summary">{{item.summary}}</text>                
@@ -90,7 +90,13 @@
             </block>
           </scroll-view>
         </view>
-
+      <!-- 首屏骨架屏（在potential-list前添加） -->
+      <view class="potential-skeleton" wx:if="{{potentialList.length === 0 && isLoading && !loadError}}">
+        <view class="group" wx:for="{{[1,2,3,4,5,6,7,8]}}" wx:key="index">
+          <t-skeleton class="group-avatar" rowCol="{{rowColsAvater}}" loading></t-skeleton>
+          <t-skeleton class="group-content" rowCol="{{rowColsContent}}" loading></t-skeleton>
+        </view>
+      </view>
         <!-- 下方潜在人脉列表 -->
         <view class="potential-list" wx:if="{{potentialList.length > 0}}">
           <view 
@@ -107,6 +113,7 @@
                   class="avatar-img" 
                   src="{{item.avatar || '/assets/images/default-avatar.png'}}" 
                   mode="aspectFill"
+                  lazy-load="true"
                 />
               </view>
               
