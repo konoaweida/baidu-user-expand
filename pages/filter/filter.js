@@ -156,39 +156,124 @@ Page({
           wx.navigateBack({
             delta: 1,
             fail: () => {
-              wx.redirectTo({ url: '/pages/potentialContacts/potentialContacts' });
+              wx.redirectTo({ url: '/pages/expand/expand' });
             }
           });
         }
       }
     });
   },
-
-  // 完成筛选（提交数据）
-  onConfirm() {
-    // 组装筛选数据（确保范围为 [min, max]）
-    const filterData = {
-      constellation: this.data.zodiac || '',
-      gender: this.data.gender,
-      income: {
-        min: Math.min(this.data.incomeLeft, this.data.incomeRight),
-        max: Math.max(this.data.incomeLeft, this.data.incomeRight)
-      },
-      age: {
-        min: Math.min(this.data.ageLeft, this.data.ageRight),
-        max: Math.max(this.data.ageLeft, this.data.ageRight)
-      }
-    };
-
-    // 更新全局存储
-    filterStore.setFilters(filterData);
-
-    // 返回上一页
-    wx.navigateBack({
-      delta: 1,
-      fail: () => {
-        wx.redirectTo({ url: '/pages/expand/expand' });
+  // 重置筛选条件
+  onReset() {
+    // 二次确认弹窗
+    wx.showModal({
+      title: '提示',
+      content: '确定要重置所有筛选条件为默认值吗？',
+      confirmText: '确定',
+      cancelText: '取消',
+      success: (res) => {
+        if (res.confirm) {
+          this.resetToDefault();
+        }
       }
     });
-  }
+  },
+  // 重置为默认值
+  resetToDefault() {
+    // 1. 重置页面数据为初始状态
+    this.setData({
+      // 星座重置
+      zodiac: '',
+      selectedConstellation: '',
+      // 性别重置
+      gender: 'any',
+      // 收入滑块重置
+      incomeLeft: 0,
+      incomeRight: 0,
+      prevIncome: [0, 0],
+      // 年龄滑块重置
+      ageLeft: 0,
+      ageRight: 0,
+      prevAge: [0, 0]
+    });
+
+    // 2. 重置全局filterStore为默认值
+    const defaultFilters = {
+      gender: 'any',
+      ageMin: 0,
+      ageMax: 60,
+      incomeMin: 0,
+      incomeMax: 10000,
+      constellation: '',
+      intents: [], // 预留字段
+      cityIds: []  // 预留字段
+    };
+    filterStore.setFilters(defaultFilters);
+
+    // 3. 显示重置成功提示
+    wx.showToast({
+      title: '已重置为默认筛选',
+      icon: 'none',
+      duration: 1500
+    });
+  },
+  // 完成筛选（提交数据）
+  onConfirm() {
+    // 1. 数据校验
+    const ageMin = Math.min(this.data.ageLeft, this.data.ageRight);
+    const ageMax = Math.max(this.data.ageLeft, this.data.ageRight);
+    const incomeMin = Math.min(this.data.incomeLeft, this.data.incomeRight);
+    const incomeMax = Math.max(this.data.incomeLeft, this.data.incomeRight);
+
+    // 简单校验
+    if (ageMin < 0 || ageMax > 60) {
+      wx.showToast({
+        title: '年龄范围应在0-60之间',
+        icon: 'none',
+        duration: 1500
+      });
+      return;
+    }
+
+    if (incomeMin < 0 || incomeMax > 10000) {
+      wx.showToast({
+        title: '收入范围应在0-10000之间',
+        icon: 'none',
+        duration: 1500
+      });
+      return;
+    }
+
+    // 2. 组装完整的filterData（符合数据契约）
+    const filterData = {
+      gender: this.data.gender,
+      ageMin: ageMin,
+      ageMax: ageMax,
+      incomeMin: incomeMin,
+      incomeMax: incomeMax,
+      constellation: this.data.zodiac || '',
+      intents: [], // 预留字段
+      cityIds: []  // 预留字段
+    };
+
+    // 3. 更新全局存储
+    filterStore.setFilters(filterData);
+
+    // 4. 显示保存成功提示
+    wx.showToast({
+      title: '筛选条件已应用',
+      icon: 'none',
+      duration: 1500
+    });
+
+    // 5. 延迟返回上一页（确保提示可见）
+    setTimeout(() => {
+      wx.navigateBack({
+        delta: 1,
+        fail: () => {
+          wx.redirectTo({ url: '/pages/expand/expand' });
+        }
+      });
+    }, 1000);
+  },
 });
