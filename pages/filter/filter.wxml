@@ -65,9 +65,9 @@
         </view>
       </van-slider>
       <view class="slider-labels">
-        <text class="{{incomeLeft === 0 || incomeLeft === 0 ? 'slider-label-active' : ''}}">0 </text>
-        <text class="{{incomeLeft === 5000 || incomeLeft === 5000 ? 'slider-label-active' : ''}}">5000</text>
-        <text class="{{incomeLeft === 10000 || incomeLeft === 10000 ? 'slider-label-active' : ''}}">以上</text>
+        <text class="{{incomeLeft === 0 || incomeRight === 0 ? 'slider-label-active' : ''}}">0</text>
+        <text class="{{incomeLeft === 5000 || incomeRight === 5000 ? 'slider-label-active' : ''}}">5000</text>
+        <text class="{{incomeLeft === 10000 || incomeRight === 10000 ? 'slider-label-active' : ''}}">以上</text>
       </view>
     </view>
   </view>
