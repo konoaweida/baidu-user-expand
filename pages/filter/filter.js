@@ -1,52 +1,53 @@
-// pages/filter/filter.js
 const filterStore = require('../../store/filterStore.js');
 Page({
   data: {
-    value: 35,
-    label(value, position) {
-      const symbols = { min: '%', max: '%', start: '%', end: '%' };
-      return `${value}${symbols[position]}`;
-    },
     // 星座相关
     showConstellationPopup: false, // 控制弹出层显示
     selectedConstellation: '', // 选中的星座
     zodiac: '', // 星座显示文本
-    constellationList: [ // 星座列表（供遍历）
+    constellationList: [ // 星座列表
       '摩羯座', '水瓶座', '双鱼座', '白羊座', 
       '金牛座', '双子座', '巨蟹座', '狮子座', 
       '处女座', '天秤座', '天蝎座', '射手座'
     ],
+
+    // 性别相关
     gender: 'any', 
     genderOptions: [
       { value: 'any', text: '不限' },
       { value: 'male', text: '男' },
-      { value: 'female', text: '女', }
+      { value: 'female', text: '女' }
     ],
-    // 收入范围（滑块值）
-    incomeRange: [0, 5000],
 
-    // 年龄范围（滑块值）
-    ageRange: [18, 60]
+    // 收入滑块相关（视觉游标位置+历史值）
+    incomeLeft: 0,
+    incomeRight: 0,
+    prevIncome: [0, 0],
+
+    // 年龄滑块相关（视觉游标位置+历史值）
+    ageLeft: 0,
+    ageRight: 0,
+    prevAge: [0, 0]
   },
-    // handleChange(e) {
-    //   this.setData({
-    //     value: e.detail.value,
-    //   });
-    // },
+
+  // 性别选择
   selectGender(e) {
     const gender = e.currentTarget.dataset.value;
-    this.setData({
-      gender: gender
-    });
+    this.setData({ gender });
   },
+
   // 打开星座弹出层
   openConstellationPopup() {
-    this.setData({ showConstellationPopup: true, selectedConstellation: '双鱼座'});
+    this.setData({ 
+      showConstellationPopup: true,
+      // 打开时保留已选值（若无则默认空）
+      selectedConstellation: this.data.zodiac || '' 
+    });
   },
 
   // 关闭星座弹出层
   closeConstellationPopup() {
-    this.setData({ showConstellationPopup: false, selectedConstellation: ''});
+    this.setData({ showConstellationPopup: false });
   },
 
   // 选择星座
@@ -58,69 +59,134 @@ Page({
 
   // 确认星座选择
   confirmConstellation() {
-    this.setData({ showConstellationPopup: false, zodiac: this.data.selectedConstellation });
-  },
-  
-  // 收入滑块变更
-  onIncomeChange(e) {
-    this.setData({
-      incomeRange: e.detail.value
+    this.setData({ 
+      showConstellationPopup: false, 
+      zodiac: this.data.selectedConstellation 
     });
   },
 
-  // 年龄滑块变更
-  onAgeChange(e) {
-    this.setData({
-      ageRange: e.detail.value
-    });
+  // 收入滑块拖动中（实时更新视觉位置）
+  onIncomeDrag(e) {
+    const current = e.detail;
+    // console.log(e.detail);
+    
+    // 严格校验数据有效性（避免undefined）
+    if (!Array.isArray(current) || current.length !== 2 || 
+        typeof current[0] !== 'number' || typeof current[1] !== 'number') {
+      return;
+    }
+    const prev = this.data.prevIncome;
+
+    // 判断左/右游标移动
+    if (current[0] !== prev[0] && current[1] === prev[1]) {
+      // 左游标移动
+      this.setData({
+        incomeLeft: current[0],
+        prevIncome: current
+      });
+    } else if (current[1] !== prev[1] && current[0] === prev[0]) {
+      // 右游标移动
+      this.setData({
+        incomeRight: current[1],
+        prevIncome: current
+      });
+    } else {
+      // 初始状态或特殊情况（如交叉拖动）
+      this.setData({
+        incomeLeft: current[0],
+        incomeRight: current[1],
+        prevIncome: current
+      });
+    }
   },
+
+  // 收入滑块结束拖动
+  onIncomeChange(e) {
+    // console.log(e.detail);
+    this.onIncomeDrag(e); // 复用拖动逻辑
+  },
+
+  // 年龄滑块拖动中（实时更新视觉位置）
+  onAgeDrag(e) {
+    const current = e.detail;
+    // 严格校验数据有效性
+    if (!Array.isArray(current) || current.length !== 2 || 
+        typeof current[0] !== 'number' || typeof current[1] !== 'number') {
+      return;
+    }
+    const prev = this.data.prevAge;
+
+    // 判断左/右游标移动
+    if (current[0] !== prev[0] && current[1] === prev[1]) {
+      // 左游标移动
+      this.setData({
+        ageLeft: current[0],
+        prevAge: current
+      });
+    } else if (current[1] !== prev[1] && current[0] === prev[0]) {
+      // 右游标移动
+      this.setData({
+        ageRight: current[1],
+        prevAge: current
+      });
+    } else {
+      // 初始状态或特殊情况
+      this.setData({
+        ageLeft: current[0],
+        ageRight: current[1],
+        prevAge: current
+      });
+    }
+  },
+
+  // 年龄滑块结束拖动
+  onAgeChange(e) {
+    this.onAgeDrag(e); // 复用拖动逻辑
+  },
+
+  // 头部返回按钮（二次确认）
   onHeaderBack() {
-    // 1. 弹出二次确认弹窗
     wx.showModal({
       title: '提示',
-      content: '是否放弃当前筛选变更？', // 明确告知用户“不保存”
+      content: '是否放弃当前筛选变更？',
       confirmText: '放弃',
       cancelText: '取消',
       success: (res) => {
-        // 2. 用户确认放弃：执行返回（不保存任何筛选变更）
         if (res.confirm) {
           wx.navigateBack({
             delta: 1,
             fail: () => {
-              // 降级逻辑：若无法返回（如页面栈仅1层），跳回潜在人脉页（需替换为你的人脉页路径）
               wx.redirectTo({ url: '/pages/potentialContacts/potentialContacts' });
             }
           });
         }
-        // 3. 用户取消：留在当前筛选页，不做任何操作（保留已选筛选条件）
       }
     });
   },
 
-  // 完成筛选（返回上一页并携带筛选数据）
+  // 完成筛选（提交数据）
   onConfirm() {
-    // 1. 组装筛选数据（与之前一致，确保字段完整）
+    // 组装筛选数据（确保范围为 [min, max]）
     const filterData = {
-      constellation: this.data.selectedConstellation || '',  // 空值处理
+      constellation: this.data.zodiac || '',
       gender: this.data.gender,
       income: {
-        min: this.data.incomeRange[0],
-        max: this.data.incomeRange[1]
+        min: Math.min(this.data.incomeLeft, this.data.incomeRight),
+        max: Math.max(this.data.incomeLeft, this.data.incomeRight)
       },
       age: {
-        min: this.data.ageRange[0],
-        max: this.data.ageRange[1]
+        min: Math.min(this.data.ageLeft, this.data.ageRight),
+        max: Math.max(this.data.ageLeft, this.data.ageRight)
       }
     };
 
-    // 2. 关键：将筛选数据更新到全局store
+    // 更新全局存储
     filterStore.setFilters(filterData);
 
-    // 3. 返回潜在人脉页（无需传递参数，人脉页从store获取）
+    // 返回上一页
     wx.navigateBack({
       delta: 1,
       fail: () => {
-        // 降级逻辑：跳回人脉页（避免页面栈异常）
         wx.redirectTo({ url: '/pages/expand/expand' });
       }
     });
