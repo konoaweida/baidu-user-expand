@@ -20,7 +20,7 @@
 }
 
 .item-label {
-  width: 128rpx;
+  width: auto;
   height: 48rpx;
   margin-right: 394rpx;
   display: flex; /* 横向排列子元素 */
@@ -210,13 +210,41 @@
   color: rgba(248, 244, 253, 1);
 }
 
-.confirm-text {
+.bottom-btn {
+  position: absolute;
+  width: 686rpx;
+  height: 88rpx;
+  bottom: env(safe-area-inset-bottom);
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: flex;
+  text-align: center;
+  justify-content: space-between;
+  align-items: center;
+  color: rgba(248, 244, 253, 1);
+}
+
+.resect-text {
+  margin-left: 81rpx;
   font-size: 36rpx;
   font-weight: 400;
   letter-spacing: 0rpx;
   line-height: 36rpx;
-  color: rgba(248, 244, 253, 1);
+  color: rgba(105, 40, 219, 1);
   text-align: center;
+  vertical-align: top;
+}
+.confirm-text {
+  width: 394rpx;
+  height: 100%;
+  font-size: 36rpx;
+  font-weight: 400;
+  text-align: center; 
+  line-height: 88rpx; 
+  letter-spacing: 0rpx;
+  color: rgba(248, 244, 253, 1);
+  background: rgba(122, 79, 214, 1);
+  border-radius: 16rpx;
 }
 /* 弹出层遮罩 */
 .popup-mask {

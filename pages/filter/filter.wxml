@@ -101,8 +101,11 @@
   </view>
 </view>
 
-<!-- 完成按钮 -->
-<view class="confirm-btn" bindtap="onConfirm"><text class="confirm-text">完成</text></view>
+<!-- 按钮 -->
+<view class="bottom-btn">
+  <text class="resect-text">重置</text>
+  <text bindtap="onConfirm" class="confirm-text">完成</text>
+</view>
 
 <!-- 星座选择弹出层 -->
 <view class="popup-mask {{showConstellationPopup ? 'show' : ''}}" bindtap="closeConstellationPopup"></view>
