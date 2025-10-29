@@ -1,3 +1,4 @@
+/* 基础容器样式 */
 .expand-container .navigation-header {
   background: #FEFEFE;
 }
@@ -7,6 +8,7 @@
   width: 100%;
 }
 
+/* 标签栏样式 */
 .tabs-container {
   position: fixed;
   left: 0;
@@ -24,7 +26,6 @@
   width: 40rpx;
   margin-top: 14rpx;
   margin-left: auto;
-  /* background-color: #4a42d4; */
   border-radius: 8rpx;
 }
 
@@ -72,6 +73,7 @@
   opacity: 1;
 }
 
+/* 内容滚动区样式 */
 .tab-content {
   width: 100%;
   box-sizing: border-box;
@@ -138,14 +140,15 @@
   display: block;
 }
 
+/* 潜在人脉列表样式 */
 .potential-list {
   box-sizing: border-box;
   display: flex;
-  padding-bottom: 132rpx;  /* 【优化】为加载状态留出空间 */
+  padding-bottom: 132rpx;  
   flex-wrap: wrap;
 }
 
-/* 【新增】分页加载状态样式 */
+/* 加载状态样式 */
 .load-more-state {
   width: 100%;
   padding: 100rpx 0;
@@ -164,14 +167,14 @@
   color: #ccc;
   display: block;
 }
-/* 潜在人脉列表项样式 */
+
+/* 列表项样式 */
 .content-item {
   width: 750rpx;
   height: 158rpx;
   background: #fff;
   border-radius: 16rpx;
   padding: 30rpx 48rpx;
-  /* margin: 30rpx 0; */
   display: flex;
   align-items: center;
   transform: translateZ(0);
@@ -202,7 +205,7 @@
   height: 100%;
 }
 
-/* 信息区域 */
+/* 信息区域样式 */
 .item-info {
   flex: 1;
   display: flex;
@@ -215,7 +218,6 @@
 .info-main {
   display: flex;
   align-items: center;
-  /* margin-bottom: 8rpx; */
 }
 
 .item-name {
@@ -234,7 +236,6 @@
 .item-age {
   width: auto;
   height: 36rpx;
-  /** 文本1 */
   margin: 10rpx 0;
   font-size: 24rpx;
   font-weight: 400;
@@ -251,7 +252,6 @@
   height: 42rpx;
   align-items: bottom;
   gap: 15rpx;
-  /* 新增整体省略样式 */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -272,13 +272,13 @@
   color: #666;
   line-height: 1.4;
   flex: 1;
-  min-width: 0; /* 重要：让flex项可以收缩 */
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* 组CP按钮 */
+/* 组CP按钮样式 */
 .cp-button {
   width: 88rpx;
   height: 48rpx;
@@ -316,16 +316,10 @@
   vertical-align: top;
 }
 
-/* 加载失败状态 */
+/* 加载失败样式 */
 .load-error-state {
   padding: 120rpx 40rpx;
   text-align: center;
-}
-
-.error-icon {
-  width: 120rpx;
-  height: 120rpx;
-  margin-bottom: 32rpx;
 }
 
 .error-text {
@@ -444,78 +438,32 @@
   cursor: pointer;
 }
 
-
-
-.potential-skeleton {
-  padding: 30rpx 48rpx;
-}
-.skeleton-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 30rpx;
-}
-.skeleton-avatar {
-  width: 92rpx;
-  height: 92rpx;
-  border-radius: 50%;
-  background: #f0f0f0;
-  margin-right: 22rpx;
-}
-.skeleton-info {
-  flex: 1;
-}
-.skeleton-name {
-  width: 200rpx;
-  height: 42rpx;
-  background: #f0f0f0;
-  border-radius: 4rpx;
-  margin-bottom: 10rpx;
-}
-.skeleton-desc {
-  width: 350rpx;
-  height: 36rpx;
-  background: #f0f0f0;
-  border-radius: 4rpx;
-}
-.skeleton-btn {
-  width: 88rpx;
-  height: 48rpx;
-  background: #f0f0f0;
-  border-radius: 8rpx;
+/* 骨架屏通用动画 */
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
-
-.group {
-  display: flex;
-  align-items: center;
-  margin-top: 32rpx;
-}
-
-.group-avatar {
-  margin-right: 24rpx;
-}
-
-.group-content {
-  width: 566rpx;
-}
-
-/* 顶部推荐人卡片骨架屏容器 */
+/* 顶部推荐人卡片骨架屏 */
 .cards-skeleton {
   display: flex;
   width: 100%;
-  height: 100%; /* 继承容器高度332rpx */
-  gap: 23rpx; /* 与真实卡片间距一致 */
-  overflow-x: auto; /* 支持横向滚动（若骨架屏数量多） */
+  height: 100%;
+  gap: 23rpx;
+  overflow-x: auto;
   padding-bottom: 10rpx;
-  scrollbar-width: none; /* 隐藏滚动条 */
+  scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
 .cards-skeleton::-webkit-scrollbar {
-  display: none; /* 隐藏WebKit滚动条 */
+  display: none;
 }
 
-/* 单个骨架屏卡片：尺寸与真实卡片完全一致 */
 .skeleton-card {
   width: 222rpx;
   height: 100%;
@@ -527,64 +475,79 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex-shrink: 0; /* 禁止收缩，保持固定宽度 */
+  flex-shrink: 0;
 }
 
-/* 骨架屏头像：圆形，位置与真实头像对齐 */
 .skeleton-avatar {
   width: 104rpx;
   height: 104rpx;
-  border-radius: 50%; /* 圆形 */
-  background: #f2f2f2;
-  margin-top: 35rpx; /* 与真实头像 marginTop 一致 */
-  /* 加载动画：渐变闪烁 */
+  border-radius: 50%;
+  margin-top: 35rpx;
   background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite;
 }
 
-/* 骨架屏姓名：短矩形，位置与真实姓名对齐 */
 .skeleton-name {
   width: 120rpx;
   height: 36rpx;
-  background: #f2f2f2;
-  border-radius: 4rpx;
-  margin-top: 10rpx; /* 与真实姓名间距一致 */
-  /* 复用加载动画 */
   background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite;
+  border-radius: 4rpx;
+  margin-top: 10rpx;
 }
 
-/* 骨架屏简介：长矩形，位置与真实简介对齐 */
 .skeleton-summary {
   width: 160rpx;
   height: 32rpx;
-  background: #f2f2f2;
+  background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
   border-radius: 4rpx;
-  margin-top: 5rpx; /* 与真实简介间距一致 */
-  /* 复用加载动画 */
+  margin-top: 10rpx;
+}
+
+/* 潜在人脉列表骨架屏（自定义实现） */
+.potential-skeleton {
+  padding: 0 48rpx;
+}
+
+.skeleton-potential-group {
+  display: flex;
+  align-items: center;
+  padding: 30rpx 0;
+}
+
+.skeleton-potential-avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  margin-right: 24rpx;
   background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite;
 }
 
-/* 骨架屏加载动画：横向渐变移动 */
-@keyframes skeleton-loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+.skeleton-potential-content {
+  width: 540rpx;
 }
 
-/* 修复真实卡片容器高度：确保骨架屏与真实卡片高度一致 */
-.top-cards-container {
+.skeleton-potential-name {
+  width: 180rpx;
+  height: 36rpx;
+  background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4rpx;
+  margin-bottom: 16rpx;
+}
+
+.skeleton-potential-desc {
   width: 100%;
-  height: 332rpx; /* 固定高度，避免骨架屏/卡片切换时高度跳动 */
-  background-color: transparent;
-  padding: 32rpx 20rpx 22rpx;
-  box-sizing: border-box;
-  overflow: hidden; /* 防止内容溢出 */
+  height: 32rpx;
+  background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4rpx;
 }
