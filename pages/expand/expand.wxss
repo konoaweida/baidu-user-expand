@@ -148,7 +148,7 @@
 /* 【新增】分页加载状态样式 */
 .load-more-state {
   width: 100%;
-  padding: 80rpx 0;
+  padding: 100rpx 0;
   text-align: center;
   background: transparent;
 }
@@ -164,15 +164,14 @@
   color: #ccc;
   display: block;
 }
-
 /* 潜在人脉列表项样式 */
 .content-item {
   width: 750rpx;
-  height: 98rpx;
+  height: 158rpx;
   background: #fff;
   border-radius: 16rpx;
-  padding: 0rpx 48rpx 0rpx 48rpx;
-  margin: 30rpx 0;
+  padding: 30rpx 48rpx;
+  /* margin: 30rpx 0; */
   display: flex;
   align-items: center;
   transform: translateZ(0);
@@ -498,4 +497,94 @@
 
 .group-content {
   width: 566rpx;
+}
+
+/* 顶部推荐人卡片骨架屏容器 */
+.cards-skeleton {
+  display: flex;
+  width: 100%;
+  height: 100%; /* 继承容器高度332rpx */
+  gap: 23rpx; /* 与真实卡片间距一致 */
+  overflow-x: auto; /* 支持横向滚动（若骨架屏数量多） */
+  padding-bottom: 10rpx;
+  scrollbar-width: none; /* 隐藏滚动条 */
+  -ms-overflow-style: none;
+}
+
+.cards-skeleton::-webkit-scrollbar {
+  display: none; /* 隐藏WebKit滚动条 */
+}
+
+/* 单个骨架屏卡片：尺寸与真实卡片完全一致 */
+.skeleton-card {
+  width: 222rpx;
+  height: 100%;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0; /* 禁止收缩，保持固定宽度 */
+}
+
+/* 骨架屏头像：圆形，位置与真实头像对齐 */
+.skeleton-avatar {
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 50%; /* 圆形 */
+  background: #f2f2f2;
+  margin-top: 35rpx; /* 与真实头像 marginTop 一致 */
+  /* 加载动画：渐变闪烁 */
+  background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+/* 骨架屏姓名：短矩形，位置与真实姓名对齐 */
+.skeleton-name {
+  width: 120rpx;
+  height: 36rpx;
+  background: #f2f2f2;
+  border-radius: 4rpx;
+  margin-top: 10rpx; /* 与真实姓名间距一致 */
+  /* 复用加载动画 */
+  background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+/* 骨架屏简介：长矩形，位置与真实简介对齐 */
+.skeleton-summary {
+  width: 160rpx;
+  height: 32rpx;
+  background: #f2f2f2;
+  border-radius: 4rpx;
+  margin-top: 5rpx; /* 与真实简介间距一致 */
+  /* 复用加载动画 */
+  background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+/* 骨架屏加载动画：横向渐变移动 */
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 修复真实卡片容器高度：确保骨架屏与真实卡片高度一致 */
+.top-cards-container {
+  width: 100%;
+  height: 332rpx; /* 固定高度，避免骨架屏/卡片切换时高度跳动 */
+  background-color: transparent;
+  padding: 32rpx 20rpx 22rpx;
+  box-sizing: border-box;
+  overflow: hidden; /* 防止内容溢出 */
 }

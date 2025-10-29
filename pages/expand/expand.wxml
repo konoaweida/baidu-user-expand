@@ -1,37 +1,36 @@
+<!-- index.wxml -->
 <view class="expand-container">
   <navigation-header id="navHeader"></navigation-header>
   <view class="tabs-placeholder" style="height: 110rpx; width: 100%;"></view>
 
-  <!-- 顶部Tab栏 -->
   <view class="tabs-container" style="top: {{navHeaderHeightRpx}}rpx;">
-    <view 
+    <view
       class="tab-item {{currentTab === 'recommend' ? 'active' : ''}} one"
       bindtap="handleTabClick"
       data-tab="recommend"
     >推荐</view>
-    <view 
+    <view
       class="tab-item {{currentTab === 'potential' ? 'active' : ''}} two"
       bindtap="handleTabClick"
       data-tab="potential"
     >潜在人脉</view>
-    <view 
+    <view
       class="filter-btn"
       wx:if="{{currentTab === 'potential'}}"
-      bindtap="handleFilterClick"  
+      bindtap="handleFilterClick"
     >
-      <image src="../../assets/image/设置配置.png" class="filter-icon" mode="widthFix" style= "width: 100%; height: 100%;"></image>
+      <image src="../../assets/image/设置配置.png" class="filter-icon" mode="widthFix" style="width: 100%; height: 100%;"></image>
     </view>
   </view>
 
-  <!-- 内容滚动区域 - 【修改】添加scroll-view下拉刷新属性 -->
-  <scroll-view 
-    class="tab-content" 
+  <scroll-view
+    class="tab-content"
     scroll-y="{{true}}"
     scroll-top="{{scrollTop[currentTab]}}"
     data-tab="{{currentTab}}"
-    enhanced="{{true}}"  
-    bounce="{{false}}"  
-    scroll-with-animation="{{true}}"  
+    enhanced="{{true}}"
+    bounce="{{false}}"
+    scroll-with-animation="{{true}}"
     show-scrollbar="{{false}}"
     bindscroll="handleScroll"
     refresher-enabled="{{currentTab === 'potential'}}"
@@ -40,7 +39,6 @@
     refresher-background="#F8F9FD"
     style="height: calc(100vh - {{navHeaderHeightRpx}}rpx - 110rpx - env(safe-area-inset-bottom));"
   >
-    <!-- 推荐Tab内容 -->
     <view class="content-recommend" wx:if="{{currentTab === 'recommend'}}">
       <view class="empty-state" wx:if="{{isNoNetwork}}">
         <text class="empty-text">无网络连接，请检查网络后重试</text>
@@ -51,15 +49,28 @@
       </view>
     </view>
 
-    <!-- 潜在人脉Tab内容 -->
     <view class="content-potential" wx:else>
       <view class="empty-state" wx:if="{{isNoNetwork}}">
         <text class="empty-text">无网络连接，请检查网络后重试</text>
       </view>
       <view wx:else>
-        <!-- 顶部推荐人卡片滑动区（无数据则隐藏） -->
-        <view class="top-cards-container" wx:if="{{displayCandidates.length > 0}}">
-          <scroll-view 
+        <view class="top-cards-container">
+          <!-- 推荐人卡片骨架屏：刷新/加载中且无数据时显示 -->
+          <view wx:if="{{showSkeleton}}" class="cards-skeleton">
+            <block wx:for="{{[1,2,3,4,5]}}" wx:key="index"> <!-- 循环生成5个骨架屏，与默认卡片数量一致 -->
+              <view class="skeleton-card">
+                <!-- 圆形头像骨架 -->
+                <view class="skeleton-avatar"></view>
+                <!-- 姓名骨架 -->
+                <view class="skeleton-name"></view>
+                <!-- 简介骨架 -->
+                <view class="skeleton-summary"></view>
+              </view>
+            </block>
+          </view>
+
+          <!-- 真实推荐人卡片：加载完成且有数据时显示 -->
+          <scroll-view
             class="cards-scroll"
             scroll-x="true"
             enable-flex="true"
@@ -69,95 +80,95 @@
             bindscroll="handleCardScroll"
             bindtouchstart="handleCardTouchStart"
             bindtouchmove="handleCardTouchMove"
+            wx:else
           >
             <block wx:for="{{displayCandidates}}" wx:key="id">
-              <view 
-                class="card-item" 
+              <view
+                class="card-item"
                 bindtap="handleCardClick"
                 data-id="{{item.id}}"
               >
                 <image class="card-avatar" src="{{item.avatar}}" mode="aspectFill" lazy-load="true"></image>
                 <view class="card-info">
                   <text class="card-name">{{item.name}}</text>
-                  <text class="card-summary">{{item.summary}}</text>                
+                  <text class="card-summary">{{item.summary}}</text>
                 </view>
-                <view 
-                  class="card-close" 
-                  catchtap="handleDismissCard" 
+                <view
+                  class="card-close"
+                  catchtap="handleDismissCard"
                   data-id="{{item.id}}"
                 >×</view>
               </view>
             </block>
           </scroll-view>
         </view>
-      <!-- 首屏骨架屏（在potential-list前添加） -->
-      <view class="potential-skeleton" wx:if="{{potentialList.length === 0 && isLoading && !loadError}}">
-        <view class="group" wx:for="{{[1,2,3,4,5,6,7,8]}}" wx:key="index">
-          <t-skeleton class="group-avatar" rowCol="{{rowColsAvater}}" loading></t-skeleton>
-          <t-skeleton class="group-content" rowCol="{{rowColsContent}}" loading></t-skeleton>
+        <view class="potential-skeleton" wx:if="{{showSkeleton}}">
+          <view class="group" wx:for="{{[1,2,3,4,5,6,7,8]}}" wx:key="index">
+            <t-skeleton class="group-avatar" rowCol="{{rowColsAvater}}" loading></t-skeleton>
+            <t-skeleton class="group-content" rowCol="{{rowColsContent}}" loading></t-skeleton>
+          </view>
         </view>
-      </view>
-        <!-- 下方潜在人脉列表 -->
-        <view class="potential-list" wx:if="{{potentialList.length > 0}}">
-          <view 
-            class="content-item" 
-            wx:for="{{potentialList}}" 
-            wx:key="id"
-            bindtap="handlePotentialItemClick"
-            data-item="{{item}}"
-          >
-            <view class="potential-item">
-              <!-- 左侧头像 -->
-              <view class="item-avatar">
-                <image 
-                  class="avatar-img" 
-                  src="{{item.avatar || '/assets/images/default-avatar.png'}}" 
-                  mode="aspectFill"
-                  lazy-load="true"
-                />
-              </view>
-              
-              <!-- 中间信息区域 -->
-              <view class="item-info">
-                <view class="info-main">
-                  <text class="item-name">{{item.name || '未知用户'}}</text>
-                  <text class="item-age" wx:if="{{item.age}}">{{item.age}}</text>
+
+        <view class="potential-list" wx:if="{{potentialList.length > 0 && !showSkeleton}}">
+          <view class="virtual-scroll-container" style="height: {{virtualHeightRpx}}rpx; position: relative;">
+            <view class="virtual-list" style="transform: translateY({{translateYRpx}}rpx);">
+              <block wx:for="{{visibleList}}" wx:key="id">
+                <view 
+                  class="content-item virtual-item" 
+                  style="height: {{itemHeightRpx}}rpx;"
+                  bindtap="handlePotentialItemClick"
+                  data-item="{{item}}"
+                >
+                  <view class="potential-item">
+                    <view class="item-avatar">
+                      <image
+                        class="avatar-img"
+                        src="{{item.avatar || '/assets/images/default-avatar.png'}}"
+                        mode="aspectFill"
+                        lazy-load="true"
+                      />
+                    </view>
+
+                    <view class="item-info">
+                      <view class="info-main">
+                        <text class="item-name">{{item.name || '未知用户'}}</text>
+                        <text class="item-age" wx:if="{{item.age}}">{{item.age}}</text>
+                      </view>
+                      <view class="info-details">
+                        <text class="connection-level">{{item.level || '2级人脉'}}</text>
+                        <text class="mutual-count" wx:if="{{item.mutualCount > 0}}">{{item.mutualCount}}位共同人脉</text>
+                        <text class="connection-desc">{{item.desc || '暂无关系描述'}}</text>
+                      </view>
+                    </view>
+
+                    <view
+                      class="cp-button {{item.cpEligible === false || item.cpStatus === 'pending' ? 'disabled' : ''}}"
+                      catchtap="handleCpButtonClick"
+                      data-item="{{item}}"
+                    >
+                      <text class="cp-button-text">{{item.cpStatus === 'pending' ? '邀请中' : '组CP'}}</text>
+                    </view>
+                  </view>
                 </view>
-                <view class="info-details">
-                  <text class="connection-level">{{item.level || '2级人脉'}}</text>
-                  <text class="mutual-count" wx:if="{{item.mutualCount > 0}}">{{item.mutualCount}}位共同人脉</text>
-                  <text class="connection-desc">{{item.desc || '暂无关系描述'}}</text>
-                </view>
-              </view>
-              
-              <!-- 右侧组CP按钮 -->
-              <view 
-                class="cp-button {{item.cpEligible === false || item.cpStatus === 'pending' ? 'disabled' : ''}}"
-                catchtap="handleCpButtonClick"
-                data-item="{{item}}"
-              >
-                <text class="cp-button-text">{{item.cpStatus === 'pending' ? '邀请中' : '组CP'}}</text>
-              </view>
+              </block>
             </view>
           </view>
-          
-          <!-- 【新增】分页加载状态 -->
+
           <view class="load-more-state">
             <text wx:if="{{isLoading && hasMore}}" class="loading-text">加载中...</text>
+            <text wx:if="{{preloadingNextPage && !isLoading}}" class="loading-text">预加载中...</text>
             <text wx:if="{{!hasMore && potentialList.length > 0}}" class="no-more-text">没有更多了</text>
           </view>
         </view>
-        
-        <!-- 加载失败状态 -->
-        <view class="load-error-state" wx:if="{{loadError && potentialList.length === 0}}">
+
+        <view class="load-error-state" wx:if="{{loadError && potentialList.length === 0 && !showSkeleton}}">
           <text class="error-text">加载失败，请重试</text>
           <view class="retry-button" bindtap="handleRetryLoad">
             <text class="retry-text">重新加载</text>
           </view>
         </view>
-        
-        <!-- 无数据状态 -->
-        <view class="empty-state" wx:if="{{potentialList.length === 0 && !loadError}}">
+
+        <view class="empty-state" wx:if="{{potentialList.length === 0 && !loadError && !isLoading && !showSkeleton}}">
           <text class="empty-text">暂无潜在人脉数据</text>
         </view>
       </view>
