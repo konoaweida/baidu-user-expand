@@ -313,7 +313,6 @@ Page({
       this.cachedFullList = null;
       return false;
     }
-
     // 拼接缓存数据，更新页面状态
     const newList = [...this.data.potentialList, ...nextPageData];
     const hasMoreData = newList.length < this.cachedFullList.length;
@@ -917,6 +916,41 @@ Page({
       console.warn('事件对象中未找到item数据');
       return;
     }
+    //第一步：登录校验（核心缺失点）
+    const token = wx.getStorageSync('userToken'); // 假设token存在本地缓存
+    if (!token) {
+      wx.showModal({
+        title: '需要登录',
+        content: '请先登录后再建立CP关系',
+        confirmText: '去登录',
+        cancelText: '稍后',
+        success: (res) => {
+          if (res.confirm) {
+            // 引导授权登录（根据项目登录方案选择，示例用wx.getUserProfile）
+            wx.getUserProfile({
+              desc: '用于建立CP关系',
+              success: (profileRes) => {
+                // 此处需调用项目的“登录接口”获取token，示例省略接口请求
+                wx.request({
+                  url: '/api/user/login', // 项目真实登录接口
+                  method: 'POST',
+                  data: { code: '', userInfo: profileRes.userInfo }, // 需传code（通过wx.login获取）
+                  success: (loginRes) => {
+                    if (loginRes.data.success && loginRes.data.data.token) {
+                      wx.setStorageSync('userToken', loginRes.data.data.token);
+                      // 登录成功后，重新触发CP流程
+                      this.handleCpButtonClick(e);
+                    }
+                  },
+                  fail: () => wx.showToast({ title: '登录失败，请重试', icon: 'none' })
+                });
+              }
+            });
+          }
+        }
+      });
+      return; // 未登录时终止后续流程
+    }
 
     wx.reportEvent('click_cp', { id: item.id });
 
@@ -953,42 +987,55 @@ Page({
   },
 
   sendCpInvitation(item) {
+    const token = wx.getStorageSync('userToken');
     wx.showLoading({ title: '发送邀请中...', mask: true });
 
+    // 先标记为pending（优化用户感知）
     this.updateItemCpStatus(item.id, 'pending');
 
-    setTimeout(() => {
-      wx.hideLoading();
-
-      const success = Math.random() > 0.2;
-
-      if (success) {
-        wx.showToast({
-          title: '邀请发送成功',
-          icon: 'success',
-          duration: 1500
-        });
-
-        wx.reportEvent('cp_invitation_sent', {
-          id: item.id,
-          status: 'success'
-        });
-      } else {
-        wx.showToast({
-          title: '发送失败，请重试',
-          icon: 'none',
-          duration: 2000
-        });
-
-        this.updateItemCpStatus(item.id, '');
-
-        wx.reportEvent('cp_invitation_sent', {
-          id: item.id,
-          status: 'fail',
-          error: 'network_error'
-        });
+    wx.request({
+      url: '/circle/cp/create', // 需求指定的接口地址
+      method: 'POST',
+      header: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // 携带登录态token
+      },
+      data: { targetId: item.id }, // 传递目标用户ID（需求要求的参数）
+      success: (res) => {
+        wx.hideLoading();
+        // 接口成功处理（需根据项目实际返回格式调整）
+        if (res.data.success && res.data.data.cpId) {
+          const cpId = res.data.data.cpId; // 接收接口返回的cpId
+          wx.showToast({ title: '邀请发送成功', icon: 'success', duration: 1500 });
+          
+          // 【新增】3. 存储cpId（供后续跳转使用）
+          wx.setStorageSync(`cpId_${item.id}`, cpId);
+          
+          // 【新增】4. 成功后跳转会话/详情页（需求核心缺失点）
+          setTimeout(() => {
+            wx.navigateTo({
+              url: `/pages/cp/chat?cpId=${cpId}` // 跳转会话页（或详情页，根据项目路由调整）
+            });
+          }, 1500); // 延迟跳转，确保用户看到成功提示
+          
+          // 埋点：上报成功事件
+          wx.reportEvent('cp_invitation_sent', { id: item.id, status: 'success', cpId });
+        } else {
+          // 接口返回业务错误（如“对方已拒绝过您的邀请”）
+          wx.showToast({ title: res.data.message || '发送失败', icon: 'none', duration: 2000 });
+          this.updateItemCpStatus(item.id, ''); // 恢复按钮状态
+          wx.reportEvent('cp_invitation_sent', { id: item.id, status: 'fail', error: res.data.message });
+        }
+      },
+      fail: (err) => {
+        // 网络错误处理
+        wx.hideLoading();
+        wx.showToast({ title: '网络异常，请重试', icon: 'none', duration: 2000 });
+        this.updateItemCpStatus(item.id, ''); // 恢复按钮状态
+        wx.reportEvent('cp_invitation_sent', { id: item.id, status: 'fail', error: 'network_error' });
+        console.error('CP邀请接口失败:', err);
       }
-    }, 1500);
+    });
   },
 
   updateItemCpStatus(itemId, status) {
@@ -1012,11 +1059,16 @@ Page({
     const { potentialList } = this.data;
     const updatedList = potentialList.map((item) => {
       if (item.cpStatus === 'pending' && Math.random() > 0.7) {
-        wx.showToast({
-          title: `${item.name}已接受您的CP邀请`,
-          icon: 'success',
-          duration: 2000
-        });
+        const cpId = wx.getStorageSync(`cpId_${item.id}`); // 读取之前存储的cpId
+        const successMsg = `${item.name}已接受您的CP邀请`;
+        wx.showToast({ title: successMsg, icon: 'success', duration: 2000 });
+
+        // 【新增】接受后自动跳转会话页（可选，根据产品需求决定是否自动跳转）
+        if (cpId) {
+          setTimeout(() => {
+            wx.navigateTo({ url: `/pages/cp/chat?cpId=${cpId}` });
+          }, 2000);
+        }
 
         return {
           ...item,
