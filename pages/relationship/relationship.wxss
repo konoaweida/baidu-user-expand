@@ -1,0 +1,118 @@
+/* pages/relationship/relationship.wxss */
+.relationship-container {
+  height: 100vh;
+  width: 100vw;
+}
+
+.relationship-content {
+  padding: 0 32rpx;
+}
+
+.relationship-item {
+  height: 112rpx;
+  width: 100%;
+  padding: 48rpx 32rpx 16rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-title {
+  width: 130rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+}
+
+.item-icon {
+  width: 48rpx; 
+  height: 48rpx;
+  margin-right: 24rpx;
+}
+
+.item-text {
+  font-size: 28rpx;
+  font-weight: 400;
+  color: rgba(5, 2, 11, 1);
+  text-align: left;
+}
+
+.item-check {
+  width: 28rpx;
+  height: 28rpx;
+}
+
+/* 输入框容器 */
+.apply-desc-container {
+  height: 106rpx;
+  display: flex;
+  align-items: flex-start;
+  background-color: #f5f5f5;
+  border-radius: 24rpx;
+  padding: 32rpx 32rpx 0rpx 38rpx;
+  margin-top: 48rpx;
+}
+
+/* 输入内容的样式（用户输入后显示的文字） */
+.apply-desc-input {
+  flex: 1;
+  font-size: 28rpx;
+  font-weight: 400;
+  letter-spacing: 0rpx;
+  line-height: 40.54rpx;
+  color: rgba(158, 158, 158, 1);
+  text-align: left;
+  vertical-align: top;
+}
+
+/* 占位符的样式（默认显示的提示文字） */
+.apply-desc-placeholde {
+  flex: 1;
+  font-size: 28rpx;
+  font-weight: 400;
+  letter-spacing: 0rpx;
+  line-height: 40.54rpx;
+  color: rgba(158, 158, 158, 1);
+  text-align: left;
+  vertical-align: top;
+}
+
+/* 字数统计 */
+.word-count {
+  font-size: 24rpx;
+  font-weight: 400;
+  letter-spacing: 0rpx;
+  line-height: 34.76rpx;
+  color: rgba(158, 158, 158, 1);
+  text-align: left;
+  vertical-align: top;
+}
+
+/* 底部按钮 */
+.bottom-btn {
+  position: absolute;
+  width: 686rpx;
+  height: 88rpx;
+  bottom: env(safe-area-inset-bottom);
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: flex;
+  text-align: center;
+  justify-content: space-between;
+  align-items: center;
+  color: rgba(248, 244, 253, 1);
+}
+
+.confirm-text {
+  /* width: 394rpx; */
+  width: 100%;
+  height: 100%;
+  font-size: 36rpx;
+  font-weight: 400;
+  text-align: center; 
+  line-height: 88rpx; 
+  letter-spacing: 0rpx;
+  color: rgba(248, 244, 253, 1);
+  background: rgba(122, 79, 214, 1);
+  border-radius: 16rpx;
+}

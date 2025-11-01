@@ -22,7 +22,24 @@
     </view>
   </view>
 
+  <!-- 推荐页内容 -->
+  <view class="content-recommend" wx:if="{{currentTab === 'recommend'}}">
+    <view class="empty-state" wx:if="{{isNoNetwork}}">
+      <text class="empty-text">无网络连接，请检查网络后重试</text>
+    </view>
+    <view class="recommend-container" wx:else>
+      <view class="background-image">
+        <image src="../../assets/image/10-19动画.gif" mode="aspectFill" style="width: 100%; height: 100%;"></image>
+      </view>
+      <view class="search-container" bindtap="triggerSearch">
+        <text class="btn-text">正在为您摆渡人脉...</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 潜在人脉页内容 -->
   <scroll-view
+    wx:else
     class="tab-content"
     scroll-y="{{true}}"
     scroll-top="{{scrollTop[currentTab]}}"
@@ -38,19 +55,7 @@
     refresher-background="#F8F9FD"
     style="height: calc(100vh - {{navHeaderHeightRpx}}rpx - 110rpx - env(safe-area-inset-bottom));"
   >
-    <!-- 推荐页内容 -->
-    <view class="content-recommend" wx:if="{{currentTab === 'recommend'}}">
-      <view class="empty-state" wx:if="{{isNoNetwork}}">
-        <text class="empty-text">无网络连接，请检查网络后重试</text>
-      </view>
-      <view class="search-container" bindtap="triggerSearch" wx:else>
-        <image src="" class="btn-gif" mode="widthFix"></image>
-        <text class="btn-text">正在为您搜寻潜在人脉</text>
-      </view>
-    </view>
-
-    <!-- 潜在人脉页内容 -->
-    <view class="content-potential" wx:else>
+    <view class="content-potential">
       <view class="empty-state" wx:if="{{isNoNetwork}}">
         <text class="empty-text">无网络连接，请检查网络后重试</text>
       </view>

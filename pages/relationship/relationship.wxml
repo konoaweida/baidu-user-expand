@@ -1,0 +1,41 @@
+<!--pages/relationship/relationship.wxml-->
+<view class="relationship-container">
+  <navigation-header 
+    showBackButton="{{true}}" 
+    backColor="{{1}}">
+  </navigation-header>
+  <view class="relationship-content">
+  
+    <!-- 选项 -->
+    <view class="relationship-item" wx:for="{{relationshipList}}" wx:key="index">
+      <view class="item-title">
+        <image src="{{item.icon}}" class="item-icon"></image>
+        <text class="item-text">{{item.name}}</text>
+      </view>
+      <view class="item-check">
+        <image 
+          src="{{checkedButton ? '../../assets/image/已选择.png' : '../../assets/image/未选中.png'}}" 
+          class="check-icon" 
+          style="width: 100%; height: 100%;" 
+          bindtap="onFamilyCheck"
+          ></image>
+      </view>
+    </view>
+
+    <!-- 申请说明输入框 -->
+    <view class="apply-desc-container">
+      <input 
+        class="apply-desc-input" 
+        placeholder="添加申请说明(可选填)" 
+        placeholder-class="apply-desc-placeholder"
+        bindinput="onDescInput" 
+        value="{{inputValue}}"
+        maxlength="15"
+      />
+      <text class="word-count">{{wordCount}}/15</text>
+    </view>
+  </view>
+  <view class="bottom-btn">
+    <text class="confirm-text" bindtap="onConfirm">申请和TA建立关系</text>
+  </view>
+</view>
