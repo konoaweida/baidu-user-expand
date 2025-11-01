@@ -1,0 +1,59 @@
+<view class="login-container">
+  <!-- 背景图 -->
+  <image class="background-image" src="../../assets/image/微信图片 1.png" mode="aspectFill"></image>
+  
+  <navigation-header showPlaceholder="{{false}}"></navigation-header>
+  
+  <view class="login-content">
+    <!-- 快捷登录按钮（默认显示） -->
+    <view class="login-button" wx:if="{{!isShowCodeLogin}}">
+      <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">快捷登录</button>
+    </view>
+    
+    <!-- 验证码登录界面（用户取消授权后显示） -->
+    <view class="code-login" wx:elif="{{isShowCodeLogin}}">
+      <view class="input-group">
+        <!-- 手机号输入 -->
+        <view class="phone-input">
+          <text class="country-code">+86</text>
+          <input 
+            type="digit"
+            placeholder="请输入手机号" 
+            bindinput="bindPhoneInput" 
+            value="{{phoneNumber}}" 
+            maxlength="11"
+          />
+        </view>
+        <!-- 验证码输入 + 获取按钮 -->
+        <view class="verify-input">
+          <input 
+            type="digit"
+            placeholder="请输入验证码" 
+            bindinput="bindVerifyInput" 
+            value="{{verifyCode}}" 
+            maxlength="6"
+          />
+          <button 
+            class="get-code" 
+            bindtap="getVerifyCode" 
+            disabled="{{!isPhoneValid || isCodeSending}}"
+          >
+            {{isCodeSending ? countDown + 's后重新获取' : '获取验证码'}}
+          </button>
+        </view>
+      </view>
+      <!-- 用户协议 -->
+      <view class="agreement">
+        <view class="checkbox {{agreementChecked ? 'active' : ''}}" bindtap="toggleAgreement">
+          <image class="check-icon" src="{{agreementChecked ? '../../assets/image/校验-小.png' : ''}}" mode="aspectFit"></image>
+        </view>
+        <view class="agreement-text">点击登录， 即表示同意<text>《隐私政策》</text>和<text>《服务条款》</text></view>
+      </view>
+      <!-- 登录按钮 -->
+      <view 
+        class="login-btn" 
+        bindtap="codeLogin" 
+      >登录</view>
+    </view>
+  </view>
+</view>

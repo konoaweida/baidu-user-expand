@@ -1,0 +1,145 @@
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.login-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+}
+
+/* 快捷登录按钮样式 */
+.login-button button {
+  width: 400rpx;
+  height: 80rpx;
+  margin-bottom: 400rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  background-color: #7A4FD6;
+  color: white;
+  font-size: 32rpx;
+}
+
+/* 验证码登录区域样式 */
+.code-login {
+  width: 100%;
+  margin-bottom: calc(env(safe-area-inset-bottom) + 20rpx);
+}
+
+.input-group {
+  display: flex;
+  padding: 0 62rpx;
+  height: 218rpx;
+  flex-direction: column;
+  gap: 30rpx;
+  margin-bottom: 140rpx;
+}
+
+.phone-input, 
+.verify-input {
+  display: flex;
+  align-items: center;
+  height: 88rpx;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-bottom: 2rpx solid rgba(230, 230, 230, 1);
+  /* border-radius: 10rpx; */
+  padding: 20rpx 0;
+}
+
+.country-code {
+  font-size: 32rpx;
+  font-weight: 400;
+  letter-spacing: 0rpx;
+  line-height: 46.34rpx;
+  color: rgba(5, 2, 11, 1);
+  text-align: left;
+  vertical-align: middle;
+  border-right: 2.4rpx solid rgba(173, 160, 160, 1);
+  padding-right: 22rpx;
+  margin-right: 28rpx;
+}
+
+.input-group input {
+  flex: 1;
+  height: 60rpx;
+  font-size: 28rpx;
+}
+
+.verify-input .get-code {
+  width: 180rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 24rpx;
+  /* border-radius: 30rpx; */
+  background-color: #7A4FD6;
+  color: white;
+}
+
+.login-btn {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 16rpx;
+  background-color: #7A4FD6;
+  font-size: 32rpx;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+}
+
+.agreement {
+  display: flex;
+  height: 32rpx;
+  margin-bottom: 44rpx;
+  padding: 0 31rpx;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.agreement .checkbox {
+  width: 32rpx;
+  height: 100%;
+  border-radius: 50%;
+  /* background-color: #7A4FD6; */
+  border:  2rpx solid #9E9E9E;
+  margin-right: 12rpx;
+}
+
+.check-icon {
+  width: 100%;
+  height: 100%;
+}
+
+.agreement .checkbox.active {
+  background-color: #7A4FD6;
+}
+
+.agreement .agreement-text {
+  font-size: 22rpx;
+  font-weight: 400;
+  letter-spacing: 0rpx;
+  line-height: 31.86rpx;
+  color: rgba(5, 2, 11, 1);
+}
+.agreement .agreement-text text {
+  color: #1677FF;
+}
