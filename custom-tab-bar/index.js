@@ -13,6 +13,7 @@ Component({
     }
   },
   data: {
+    isShow: true,
     list: [
       { pagePath: "/pages/expand/expand", text: "拓圈", icon: "usergroup-add" },
       { pagePath: "/pages/chat/chat", text: "聊天", icon: "chat-bubble" },
@@ -48,6 +49,12 @@ Component({
     //     this.updateActive(matchedIndex)
     //   }
     // },
+
+    // 切换显隐状态的方法（供外部调用）
+    toggleVisibility(flag) {
+      this.setData({ isShow: flag });
+    },
+    
     onChange(e) {
       const selectedIndex = e.detail.value;
 

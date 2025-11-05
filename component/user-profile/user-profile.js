@@ -5,5 +5,10 @@ Component({
       type: Object,
       value: {}
     }
+  },
+  methods: {
+     handleOpenRelation() {
+      this.triggerEvent('openRelationPopup')
+     }
   }
 });

@@ -29,7 +29,7 @@
     </view>
     <view class="recommend-container" wx:else>
       <view class="background-image">
-        <image src="../../assets/image/10-19动画.gif" mode="aspectFill" style="width: 100%; height: 100%;"></image>
+        <image src="../../assets/image/10-19动画.gif" lazy-load="true" mode="aspectFill" style="width: 100%; height: 100%;"></image>
       </view>
       <view class="search-container" bindtap="triggerSearch">
         <text class="btn-text">正在为您摆渡人脉...</text>
@@ -157,7 +157,7 @@
 
                     <view
                       class="cp-button {{item.cpEligible === false || item.cpStatus === 'pending' ? 'disabled' : ''}}"
-                      catchtap="handleCpButtonClick"
+                      catchtap="showPopup"
                       data-item="{{item}}"
                     >
                       <text class="cp-button-text">{{item.cpStatus === 'pending' ? '邀请中' : '组CP'}}</text>
@@ -191,3 +191,11 @@
     </view>
   </scroll-view>
 </view>
+
+<!-- 组建关系弹出层组件 -->
+<build-relationships  
+  show="{{isPopupShow}}"
+  targetUserId="123456"
+  bind:close="hidePopup"
+  bind:navBack="handlePopupNavBack"
+></build-relationships>

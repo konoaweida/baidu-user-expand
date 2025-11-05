@@ -1,5 +1,7 @@
 const util = require('../../utils/util.js');
+const request = require('../../utils/request.js');
 const filterStore = require('../../store/filterStore.js');
+const app = getApp();
 
 const ITEM_HEIGHT_RPX = 158;
 const mockTopCandidates = [
@@ -85,6 +87,8 @@ function writeListCache(payload) {
 
 Page({
   data: {
+    isPopupShow: false, // 弹出层显示状态
+    recommendList: [],
     currentTab: 'recommend',
     scrollTop: { recommend: 0, potential: 0 },
 
@@ -113,7 +117,7 @@ Page({
 
     btnLoading: false,
     isNoNetwork: false,
-    navHeaderHeightRpx: 0,
+    navHeaderHeightRpx: 172,
     showFilterPanel: false,
     showSkeleton: false,
 
@@ -147,6 +151,9 @@ Page({
   pendingPage: null,
 
   onLoad() {
+    console.log('全局openid:', app.globalData.openid);
+    console.log('全局token:', app.globalData.token);
+    this.getRecommendList();
     this.checkNetworkStatus();
     this.debouncedTabClick = debounce(this._handleTabClick, 300);
     this.scrollCache = {};
@@ -213,6 +220,22 @@ Page({
     this.cachedFullList = null;
     this.hasCachedFullData = false;
     this.pendingPage = null;
+  },
+
+  // 获取推荐人列表
+  async getRecommendList() {
+    try {
+      const res = await request.post('/api/recommend/list', {}, { needToken: false });
+      
+      if (res?.code === 200) {
+        this.setData({
+          recommendList: Array.isArray(res.data) ? res.data : []
+        });
+      }
+    } catch (err) {
+      // 错误由封装的接口处理过，这里仅做极简兜底（如空数组）
+      this.setData({ recommendList: [] });
+    }
   },
 
   // 初始化潜在人脉列表（页面就绪/切换到potential tab时触发）
@@ -577,64 +600,76 @@ Page({
       });
   },
 
+  // 推荐人跳转
   triggerSearch() {
+    // 1. 基础校验：无网络或重复点击时拦截
     if (this.data.isNoNetwork) {
-      wx.showToast({
-        title: '无网络连接，请检查网络',
-        icon: 'none'
-      });
+      wx.showToast({ title: '无网络连接，请检查网络', icon: 'none' });
       return;
     }
     if (this.data.btnLoading) return;
 
+    // 2. 开启加载状态，执行后续逻辑
     this.setData({ btnLoading: true }, () => {
-      wx.reportEvent('view_recommend_loading');
+      wx.reportEvent('view_recommend_loading'); // 上报加载事件
       wx.getNetworkType({
-        success: (res) => {
+        success: async (res) => {
           const isNoNetwork = res.networkType === 'none';
           this.setData({ isNoNetwork });
 
+          // 3. 网络类型为“无”时的处理
           if (isNoNetwork) {
-            wx.showToast({
-              title: '无网络连接，请检查网络',
-              icon: 'none'
-            });
+            wx.showToast({ title: '无网络连接，请检查网络', icon: 'none' });
             this.setData({ btnLoading: false });
             wx.reportEvent('retry_recommend', { reason: 'no_network' });
             return;
           }
 
-          setTimeout(() => {
-            const mockSuccess = true;
-            const mockHasData = true;
+          try {
+            let { recommendList } = this.data;
 
-            if (!mockSuccess) {
-              wx.showToast({ title: '搜寻失败，请重试', icon: 'none' });
-              this.setData({ btnLoading: false });
-              return;
-            }
-            if (!mockHasData) {
-              wx.showToast({
-                title: '暂无匹配的潜在人脉',
-                icon: 'none'
-              });
-              this.setData({ btnLoading: false });
-              return;
+            // 4. 初始列表为空：先拉新推荐人（避免首次点击无数据）
+            if (recommendList.length === 0) {
+              await this.getRecommendList();
+              recommendList = this.data.recommendList; // 拉新后更新列表引用
             }
 
+            // 5. 顺序取第一个元素，提取 userId（核心标识）
+            const selectedUser = recommendList[0];
+            const userId = selectedUser?.userId;
+            if (!userId) throw new Error('未获取到有效用户ID');
+
+            // 6. 删除已抽取的第一个元素（抽一个少一个）
+            recommendList.splice(0, 1);
+            this.setData({ recommendList }); // 更新列表到 data
+
+            // 7. 关键：删除后若列表为空，异步拉新（不阻塞跳转，为下次点击准备）
+            if (recommendList.length === 0) {
+              this.getRecommendList()
+                .then(() => console.log('新推荐人列表已提前加载'))
+                .catch(err => console.error('提前拉新失败，下次点击将重试：', err));
+            }
+
+            // 8. 跳转目标页面，仅携带 userId（目标页面将通过此ID获取详细信息）
             wx.navigateTo({
-              url: '/pages/connections/connections',
-              success: () => this.setData({ btnLoading: false }),
+              url: `/pages/connections/connections?userId=${userId}`, // 只传 userId
+              success: () => {
+                this.setData({ btnLoading: false }); // 跳转成功后关闭加载
+              },
               fail: () => {
-                wx.showToast({
-                  title: '跳转失败，请重试',
-                  icon: 'none'
-                });
-                this.setData({ btnLoading: false });
+                wx.showToast({ title: '跳转失败，请重试', icon: 'none' });
+                this.setData({ btnLoading: false }); // 跳转失败也关闭加载
               }
             });
-          }, 50);
+
+          } catch (err) {
+            // 9. 所有异常统一处理（拉列表失败、无userId等）
+            console.error('搜寻流程异常：', err);
+            wx.showToast({ title: err.message || '搜寻失败，请重试', icon: 'none' });
+            this.setData({ btnLoading: false });
+          }
         },
+        // 10. 获取网络类型失败的兜底处理
         fail: () => {
           this.setData({ isNoNetwork: true, btnLoading: false });
           wx.showToast({ title: '网络异常，请重试', icon: 'none' });
@@ -947,7 +982,10 @@ Page({
       });
       return; // 未登录时终止后续流程
     }
-
+    
+    wx.navigateTo({
+      url: `/pages/relationship/relationship`,
+    })
     wx.reportEvent('click_cp', { id: item.id });
 
     if (item.cpEligible === false) {
@@ -1155,6 +1193,7 @@ Page({
       this.setData({ isLoading: true, isLoadingMoreError: false });
     }
 
+    // 模拟网络请求
     setTimeout(() => {
       try {
         const startIndex = (currentPage - 1) * this.data.pageSize;
@@ -1273,5 +1312,23 @@ Page({
         cpStatus: ''
       };
     });
+  },
+  // 显示弹出层
+  showPopup() {
+    this.setData({ isPopupShow: true });
+    const tabBar = this.getTabBar();
+    if (tabBar) tabBar.toggleVisibility(false);
+  },
+  // 隐藏弹出层
+  hidePopup() {
+    this.setData({ isPopupShow: false });
+    const tabBar = this.getTabBar();
+    if (tabBar) tabBar.toggleVisibility(true);
+  },
+  // 自定义导航栏返回逻辑（如询问是否放弃编辑）
+  handlePopupNavBack() {
+    this.hidePopup();
+    const tabBar = this.getTabBar();
+    if (tabBar) tabBar.toggleVisibility(true);
   }
 });

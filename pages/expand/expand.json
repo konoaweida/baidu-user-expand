@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-    "navigation-header": "../../component/navigation-header/navigation-header"
+    "navigation-header": "../../component/navigation-header/navigation-header",
+    "build-relationships": "../../component/build-relationships/build-relationships"
   },
   "navigationStyle": "custom"
 }

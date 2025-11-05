@@ -5,7 +5,7 @@
     showBackButton="{{true}}"
     bind:back="onNavBack"
     ></navigation-header>
-  <user-profile></user-profile>
+  <user-profile user="{{userDetail}}" bind:openRelationPopup="onReceiveOpenPopup" ></user-profile>
   <tab-swiper tabs="{{tabs}}" currentTab="{{currentTab}}" bind:tabchange="onTabChange">
     <!-- cp链（第一个选项卡） -->
     <view slot="tab-content-0" class="tab-panel">
@@ -24,3 +24,10 @@
     </view>
   </tab-swiper>
 </view>
+<!-- 组建关系弹出层组件 -->
+<build-relationships  
+  show="{{isPopupShow}}"
+  targetUserId="123456"
+  bind:close="hidePopup"
+  bind:navBack="handlePopupNavBack"
+></build-relationships>

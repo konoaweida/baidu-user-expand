@@ -3,7 +3,7 @@
   <view class="user-background">
     <image                                  
       class="bg-image" 
-      src="/assets/image/微信图片_20250906204507_794_8.jpg" 
+      src="{{user.backgroundImage || '/assets/image/微信图片_20250906204507_794_8.jpg'}}" 
       mode="aspectFill"
       alt="用户背景图"
     />
@@ -18,22 +18,22 @@
         <view class="user-avatar">
           <image 
             class="avatar-image" 
-            src="/assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg" 
+            src="{{user.avatar || '/assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg'}}" 
             mode="aspectFill"
             alt="用户头像"
           />
         </view>
         <!-- 人脉cp -->
-        <view class="user-cp"><view class="cp-text">150</view>人脉cp链</view>
+        <view class="user-cp"><view class="cp-text">{{user.cpRelationCount || 0}}</view>人脉cp链</view>
         <!-- 用户名称 -->
         <view class="user-nameip">
-          <view class="user-name">我是名称</view>
-          <view class="user-ip">IP:河南</view>
+          <view class="user-name">{{user.nickName || '未知用户'}}</view>
+          <view class="user-ip">IP:{{user.city || '未知'}}</view>
         </view>
-        <view class="user-relationship">建立关系</view>
+        <view class="user-relationship" bindtap="handleOpenRelation">{{user.mutualCp ? '已互相CP' : '建立关系'}}</view>
       </view>
       <!-- 用户描述 -->
-      <view class="user-desc">文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍</view>
+      <view class="user-desc">{{user.signature || '暂无个性签名'}}</view>
     </view>
   </view>
 </view>

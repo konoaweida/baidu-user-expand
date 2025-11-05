@@ -68,6 +68,7 @@ Component({
       
       const { needDefaultBack = true } = this.properties;
       if (needDefaultBack) {
+        // console.log(1111);
         wx.navigateBack({ delta: 1 });
       }
     }

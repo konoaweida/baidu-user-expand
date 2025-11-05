@@ -1,16 +1,18 @@
-<t-tab-bar 
-  t-class="t-tab-bar"
-  value="{{active}}" 
-  bindchange="onChange" 
-  shape="round" 
-  theme="tag" 
-  split="{{false}}">
+<view wx:if="{{isShow}}">
+  <t-tab-bar 
+    t-class="t-tab-bar"
+    value="{{active}}" 
+    bindchange="onChange" 
+    shape="round" 
+    theme="tag" 
+    split="{{false}}">
 
-  <t-tab-bar-item
-    wx:for="{{list}}"
-    wx:key="pagePath"
-    value="{{index}}"
-    icon="{{item.icon}}"
-    label="{{item.text}}">
-  </t-tab-bar-item>
-</t-tab-bar>
+    <t-tab-bar-item
+      wx:for="{{list}}"
+      wx:key="pagePath"
+      value="{{index}}"
+      icon="{{item.icon}}"
+      label="{{item.text}}">
+    </t-tab-bar-item>
+  </t-tab-bar>
+</view>
