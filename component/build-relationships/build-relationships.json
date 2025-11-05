@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "navigation-header": "../../component/navigation-header/navigation-header"
+  }
+}

@@ -12,7 +12,8 @@
     "pages/register/register",
     "pages/expand/expand",
     "pages/connections/connections",
-    "pages/filter/filter"
+    "pages/filter/filter",
+    "pages/relationship/relationship"
   ],
   "usingComponents": {
     "t-icon": "tdesign-miniprogram/icon/icon",

@@ -1,0 +1,50 @@
+<view class="relationship-container" wx:if="{{show}}">
+  <!-- 导航栏：绑定返回事件 -->
+  <navigation-header 
+    showBackButton="{{true}}" 
+    backColor="{{1}}"
+    bind:back="handleNavBack"
+  ></navigation-header>
+
+  <!-- 内容区域：基于 cpTypesList 渲染（优先接口数据） -->
+  <view class="relationship-content">
+    <!-- 关系类型选项列表：绑定整个项的点击事件 -->
+    <view 
+      class="relationship-item" 
+      wx:for="{{cpTypesList}}" 
+      wx:key="id" 
+      data-index="{{index}}"  
+      bindtap="onFamilyCheck" 
+    >
+      <view class="item-title">
+        <image src="{{item.icon}}" class="item-icon"></image>
+        <text class="item-text">{{item.typeName}}</text>
+      </view>
+      <view class="item-check">
+        <image 
+          src="{{index === selectedIndex ? '../../assets/image/已选择.png' : '../../assets/image/未选中.png'}}" 
+          class="check-icon" 
+          style="width: 100%; height: 100%;" 
+        ></image>
+      </view>
+    </view>
+
+    <!-- 申请说明输入框：保持不变 -->
+    <view class="apply-desc-container">
+      <input 
+        class="apply-desc-input" 
+        placeholder="添加申请说明(可选填)" 
+        placeholder-class="apply-desc-placeholder"
+        bindinput="onDescInput" 
+        value="{{inputValue}}"   
+        maxlength="15"           
+      />
+      <text class="word-count">{{wordCount}}/15</text>
+    </view>
+  </view>
+
+  <!-- 底部提交按钮 -->
+  <view class="bottom-btn" bindtap="onConfirm">
+    <text class="confirm-text">申请和TA建立关系</text>
+  </view>
+</view>

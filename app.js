@@ -14,6 +14,8 @@ App({
     })
   },
   globalData: {
+    openid: '',       // 全局存储openid
+    access_token: '',  // 全局存储access_token
     userInfo: null
   }
 })
