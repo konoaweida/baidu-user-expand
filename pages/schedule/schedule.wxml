@@ -1,2 +1,63 @@
 <!--pages/schedule/schedule.wxml-->
-<text>pages/schedule/schedule.wxml</text>
+<navigation-header>
+  <view class="search-row">
+    <!-- 搜索框容器：通过 isFocus 切换高度 -->
+    <view class="search-box {{isFocus ? 'search-box-focus' : ''}}">
+      <!-- 搜索图标 -->
+      <image class="search-icon" src="../../assets/image/路径 7.png" mode="aspectFit"></image>
+      <!-- 搜索输入框 -->
+      <input 
+        class="search-input" 
+        placeholder="圈内搜索" 
+        placeholder-class="search-placeholder"
+        bindinput="onSearchInput" 
+        bindfocus="onFocus"   
+        bindblur="onBlur"     
+        value="{{inputValue}}"
+      />
+      <!-- 清除图标：输入内容且聚焦时显示 -->
+      <image 
+        class="clear-icon" 
+        src="../../assets/image/union.png"  
+        mode="aspectFit"
+        wx:if="{{isFocus && inputValue.length > 0}}"
+        bindtap="clearInput"
+      ></image>
+    </view>
+    <!-- 取消按钮：聚焦时显示 -->
+    <text class="cancel-btn" wx:if="{{isFocus}}" bindtap="onCancel">取消</text>
+  </view>
+</navigation-header>
+<view class="schedule-container">
+  <!-- 待处理关系 -->
+  <view class="pending-relationship">
+    <view class='left-icon'>
+      <image src='../../assets/image/图标-默认-感兴趣.png' mode='aspectFit' style='width: 100%; height: 100%;'></image>
+      <view class='mini-icon'>
+        <text>3</text>
+      </view>
+    </view>
+    <view class='right-text'>待处理关系</view>
+  </view>
+  <!-- 关系分组 -->
+  <view class="group-item">
+    <!-- 分组图标 -->
+    <view class="group-icon">
+        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFit" style="width: 100%; height: 100%;"></image>
+    </view>
+    <!-- 分组信息（名称+成员头像+人数） -->
+    <view class="group-info">
+        <view class="group-name">家人</view>
+        <view class="group-members">
+        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFill" class="member-avatar"></image>
+        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFill" class="member-avatar"></image>
+        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFill" class="member-avatar"></image>
+        <text class="member-count">11人</text>
+        </view>
+    </view>
+    <!-- 右侧更多按钮 -->
+    <view class="group-more">
+        <text>...</text>
+    </view>
+    </view>
+</view>
