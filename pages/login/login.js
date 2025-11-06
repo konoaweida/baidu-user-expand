@@ -1,3 +1,4 @@
+const request = require('../../utils/request.js');
 Page({
   data: {
     isNewUser: false,        // 是否为新用户
@@ -10,6 +11,7 @@ Page({
     tempUserId: '',           // 临时用户ID（用于后续请求）
     agreementChecked: false, // 是否同意用户协议
     isLoginDisabled: true, // 登录按钮是否禁用（默认禁用）
+    loginCode: '', // 登录时使用的验证码
 
   },
 
@@ -26,9 +28,10 @@ Page({
   },
 
   // 微信手机号授权回调
-  getPhoneNumber(e) {
+  getPhoneNumber(e) { 
     const { errMsg, code } = e.detail;
     console.log('手机号授权结果:', e.detail);
+    const app = getApp();
 
     // 1. 用户取消授权：切换到验证码登录
     if (errMsg.includes('fail')) {
@@ -43,52 +46,99 @@ Page({
     // 2. 用户允许授权：用手机号code调用后端登录
     if (errMsg === 'getPhoneNumber:ok' && code) {
       wx.showLoading({ title: '登录中...' });
-
-      // 获取临时用户ID（从本地存储或data中）
-      const tempUserId = wx.getStorageSync('tempUserId') || this.data.tempUserId;
-
-      wx.request({
-        url: '', 
-        method: 'POST',
-        data: { 
-          phoneCode: code,        // 手机号快速验证的code
-          tempUserId: tempUserId  // 临时用户ID，用于关联用户
-        },
-        success: (res) => {
+      request.post(
+        '/api/auth/wx-phone',
+        {phoneCode: code,code: this.data.loginCode,deviceType: 'wechat-mini'},
+        {needToken: false}).then(res => {
           wx.hideLoading();
+
+          const { access_token, refresh_token, expire_in, refresh_expire_in, openid } = res.data;
+          // 1. 存储到本地缓存
+
+          // 计算 token 过期时间（当前时间 + 有效期，单位：毫秒）
+          const now = Date.now();
+          const tokenExpireTime = now + expire_in * 1000; // access_token过期时间
+          const refreshTokenExpireTime = now + refresh_expire_in * 1000; // 新增：refresh_token过期时间
+
+          wx.setStorageSync('token', access_token);
+          wx.setStorageSync('refreshToken', refresh_token);
+          wx.setStorageSync('tokenExpireTime', tokenExpireTime);
+          wx.setStorageSync('refreshTokenExpireTime', refreshTokenExpireTime);
+          wx.setStorageSync('openid', openid);
           
-          if (res.data.success) {
-            // 登录成功：保存用户信息并跳转首页
-            wx.setStorageSync('userInfo', res.data.userInfo);
-            wx.setStorageSync('token', res.data.token);
-            
-            // 清除临时用户ID
-            wx.removeStorageSync('tempUserId');
-            
-            wx.showToast({
-              title: '登录成功',
-              icon: 'success',
-              success: () => {
-                setTimeout(() => {
-                  wx.reLaunch({ url: '/pages/index/index' });
-                }, 1500);
-              }
-            });
-          } else {
-            // 登录失败
-            wx.showToast({
-              title: res.data.msg || '登录失败，请重试',
-              icon: 'none'
-            });
-            this.setData({ isShowCodeLogin: true });
-          }
-        },
-        fail: (error) => {
+          // 2. 存储到全局store（关键新增代码）
+          app.globalData.token = access_token;
+          app.globalData.refreshToken = refresh_token;
+          app.globalData.tokenExpireTime = tokenExpireTime;
+          app.globalData.refreshTokenExpireTime = refreshTokenExpireTime; 
+          app.globalData.openid = openid;
+          
+          wx.showToast({
+            title: '登录成功',
+            icon: 'success',
+            success: () => {
+              setTimeout(() => {
+                wx.reLaunch({ url: '/pages/expand/expand' });
+              }, 1500);
+            }
+          });
+        }).catch(err => {          
           wx.hideLoading();
           console.error('登录请求失败:', error);
           this.handleError('网络异常，登录失败');
-        }
-      });
+        })
+
+
+      // wx.request({
+      //   url: 'http://192.168.0.110:8099/bd-client/api/auth/wx-phone', 
+      //   method: 'POST',
+      //   data: { 
+      //     phoneCode: code,        // 手机号快速验证的code
+      //     code: this.data.loginCode,  // 临时用户ID，用于关联用户
+      //     deviceType: 'wechat-mini'
+      //   },
+      //   success: (res) => {
+      //     wx.hideLoading();
+      //     // console.log(res.data.data);
+      //     const { access_token, refresh_token, expire_in, refresh_expire_in, openid } = res.data.data;
+
+      //     // 1. 存储到本地缓存
+
+      //     // 计算 token 过期时间（当前时间 + 有效期，单位：毫秒）
+      //     const now = Date.now();
+      //     const tokenExpireTime = now + expire_in * 1000; // access_token过期时间
+      //     const refreshTokenExpireTime = now + refresh_expire_in * 1000; // 新增：refresh_token过期时间
+
+      //     wx.setStorageSync('token', access_token);
+      //     wx.setStorageSync('refreshToken', refresh_token);
+      //     wx.setStorageSync('tokenExpireTime', tokenExpireTime);
+      //     wx.setStorageSync('refreshTokenExpireTime', refreshTokenExpireTime);
+      //     wx.setStorageSync('openid', openid);
+          
+      //     // 2. 存储到全局store（关键新增代码）
+      //     app.globalData.token = access_token;
+      //     app.globalData.refreshToken = refresh_token;
+      //     app.globalData.tokenExpireTime = tokenExpireTime;
+      //     app.globalData.refreshTokenExpireTime = refreshTokenExpireTime; 
+      //     app.globalData.openid = openid;
+          
+      //     wx.showToast({
+      //       title: '登录成功',
+      //       icon: 'success',
+      //       success: () => {
+      //         setTimeout(() => {
+      //           // wx.reLaunch({ url: '/pages/expand/expand' });
+      //         }, 1500);
+      //       }
+      //     });
+
+      //   },
+      //   fail: (error) => {
+      //     wx.hideLoading();
+      //     console.error('登录请求失败:', error);
+      //     this.handleError('网络异常，登录失败');
+      //   }
+      // });
     }
   },
 
@@ -96,6 +146,12 @@ Page({
   checkUserStatus() { 
     wx.login({
       success: (res) => {
+        
+      this.setData({ loginCode: res.code });
+      if (this.data.loginCode) {
+        wx.setStorageSync('loginCode', this.data.loginCode);
+      }
+
         if (res.code) {
           // 发送登录code到后端，查询用户状态
           wx.request({
@@ -152,7 +208,7 @@ Page({
       duration: 2000
     });
     this.setData({
-      isShowCodeLogin: true // 错误时强制显示验证码登录
+      isShowCodeLogin: false // 错误时强制显示验证码登录
     });
   },
 

@@ -16,7 +16,7 @@ Component({
       }
     },
     targetUserId: {
-      type: String,
+      type: Number,
       value: ''
     }
   },
@@ -47,7 +47,7 @@ Component({
    */
   methods: {
     /**
-     * 导航栏返回：触发关闭事件
+     * 导航栏返回：触发关闭事件 
      */
     handleNavBack() {
       this.triggerEvent('navBack', {}, {
@@ -147,40 +147,61 @@ Component({
       // 提交请求
       this.setData({ isSubmitting: true });
       wx.showLoading({ title: '提交中...' });
-
-      wx.request({
-        url: 'https://your-domain/api/relation/apply',
-        method: 'POST',
-        header: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${submitData.token}`
-        },
-        data: submitData,
-        success: (res) => {
-          if (res.data?.success) {
+      request.post('/api/cp/add', {toId: targetUserId, cpType: selectedIndex, applyMsg: inputValue}).then(res => {
+        if (res.code === 200) {
+          wx.showToast({
+            title: '申请发送成功',
+            icon: 'success',
+            duration: 1500,
+            success: () => setTimeout(() => this.triggerEvent('close'), 1500)
+          });
+        } else {
             wx.showToast({
-              title: '申请发送成功',
-              icon: 'success',
-              duration: 1500,
-              success: () => setTimeout(() => this.triggerEvent('close'), 1500)
-            });
-          } else {
-            wx.showToast({
-              title: res.data?.msg || '提交失败，请稍后重试',
+              title: res.msg || '提交失败，请稍后重试',
               icon: 'none',
               duration: 1500
             });
           }
-        },
-        fail: (error) => {
-          console.error('申请失败：', error);
-          wx.showToast({ title: '网络异常，请重试', icon: 'none' });
-        },
-        complete: () => {
-          this.setData({ isSubmitting: false });
-          wx.hideLoading();
-        }
-      });
+      }).catch(err => {
+        console.error('申请失败：', error);
+        wx.showToast({ title: '网络异常，请重试', icon: 'none' });
+      }).finally(() => {
+        this.setData({ isSubmitting: false });
+        wx.hideLoading();
+      })
+      // wx.request({
+      //   url: 'https://your-domain/api/relation/apply',
+      //   method: 'POST',
+      //   header: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${submitData.token}`
+      //   },
+      //   data: submitData,
+      //   success: (res) => {
+      //     if (res.data?.success) {
+      //       wx.showToast({
+      //         title: '申请发送成功',
+      //         icon: 'success',
+      //         duration: 1500,
+      //         success: () => setTimeout(() => this.triggerEvent('close'), 1500)
+      //       });
+      //     } else {
+      //       wx.showToast({
+      //         title: res.data?.msg || '提交失败，请稍后重试',
+      //         icon: 'none',
+      //         duration: 1500
+      //       });
+      //     }
+      //   },
+      //   fail: (error) => {
+      //     console.error('申请失败：', error);
+      //     wx.showToast({ title: '网络异常，请重试', icon: 'none' });
+      //   },
+      //   complete: () => {
+      //     this.setData({ isSubmitting: false });
+      //     wx.hideLoading();
+      //   }
+      // });
     }
   }
 });

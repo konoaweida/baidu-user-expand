@@ -46,7 +46,7 @@ Page({
   async getUserDetail(userId) {
     try {
       // 调用接口，获取用户完整数据
-      const res = await request.get(`/api/user/recommend/info/${userId}`);
+      const res = await request.get(`/api/user/recommend/info/${userId}`, {userId});
 
       // 验证接口返回（按实际后端规范调整，此处假设code=200为成功）
       if (res?.code !== 200 || !res.data) {
@@ -73,7 +73,7 @@ Page({
       console.error('拉取用户详情失败：', err);
       this.setData({ isLoading: false, isError: true });
       wx.showToast({ title: err.message || '网络异常，请重试', icon: 'none' });
-      setTimeout(() => wx.navigateBack({ delta: 1 }), 1500);
+      // setTimeout(() => wx.navigateBack({ delta: 1 }), 1500);
     }
   },  
 

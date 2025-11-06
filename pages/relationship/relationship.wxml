@@ -1,24 +1,34 @@
-<!--pages/relationship/relationship.wxml-->
 <view class="relationship-container">
+  <!-- 导航栏（假设navigation-header为自定义组件） -->
   <navigation-header 
     showBackButton="{{true}}" 
     backColor="{{1}}">
   </navigation-header>
+
+  <!-- 内容区域 -->
   <view class="relationship-content">
   
-    <!-- 选项 -->
-    <view class="relationship-item" wx:for="{{relationshipList}}" wx:key="index">
+    <!-- 关系类型选项列表（基于主要数据源cpTypesList渲染） -->
+    <view 
+      class="relationship-item" 
+      wx:for="{{cpTypesList}}" 
+      wx:key="id"  
+      data-index="{{index}}"  
+      bindtap="onFamilyCheck"  
+    >
       <view class="item-title">
+        <!-- 关系图标 -->
         <image src="{{item.icon}}" class="item-icon"></image>
-        <text class="item-text">{{item.name}}</text>
+        <!-- 关系名称（使用typeName字段，与数据结构一致） -->
+        <text class="item-text">{{item.typeName}}</text>
       </view>
+      <!-- 选中状态图标 -->
       <view class="item-check">
         <image 
-          src="{{checkedButton ? '../../assets/image/已选择.png' : '../../assets/image/未选中.png'}}" 
+          src="{{index === selectedIndex ? '../../assets/image/已选择.png' : '../../assets/image/未选中.png'}}" 
           class="check-icon" 
           style="width: 100%; height: 100%;" 
-          bindtap="onFamilyCheck"
-          ></image>
+        ></image>
       </view>
     </view>
 
@@ -29,13 +39,16 @@
         placeholder="添加申请说明(可选填)" 
         placeholder-class="apply-desc-placeholder"
         bindinput="onDescInput" 
-        value="{{inputValue}}"
-        maxlength="15"
+        value="{{inputValue}}"   
+        maxlength="15"           
       />
+      <!-- 字数统计 -->
       <text class="word-count">{{wordCount}}/15</text>
     </view>
   </view>
-  <view class="bottom-btn">
-    <text class="confirm-text" bindtap="onConfirm">申请和TA建立关系</text>
+
+  <!-- 底部提交按钮 -->
+  <view class="bottom-btn" bindtap="onConfirm">
+    <text class="confirm-text">申请和TA建立关系</text>
   </view>
 </view>

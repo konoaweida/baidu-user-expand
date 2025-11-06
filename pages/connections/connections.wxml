@@ -27,7 +27,7 @@
 <!-- 组建关系弹出层组件 -->
 <build-relationships  
   show="{{isPopupShow}}"
-  targetUserId="123456"
+  targetUserId="{{userDetail.userId || 123456}}"
   bind:close="hidePopup"
   bind:navBack="handlePopupNavBack"
 ></build-relationships>

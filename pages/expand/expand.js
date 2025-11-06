@@ -153,6 +153,9 @@ Page({
   onLoad() {
     console.log('全局openid:', app.globalData.openid);
     console.log('全局token:', app.globalData.token);
+    console.log('全局refreshToken:', app.globalData.refreshToken);
+    console.log('全局tokenExpireTime:', app.globalData.tokenExpireTime);
+    console.log('全局refreshTokenExpireTime:', app.globalData.refreshTokenExpireTime);
     this.getRecommendList();
     this.checkNetworkStatus();
     this.debouncedTabClick = debounce(this._handleTabClick, 300);
@@ -224,16 +227,28 @@ Page({
 
   // 获取推荐人列表
   async getRecommendList() {
-    try {
-      const res = await request.post('/api/recommend/list', {}, { needToken: false });
-      
-      if (res?.code === 200) {
+    try {   
+      if(this.data.recommendList.length > 0) return
+
+      // 步骤1：先检查本地缓存是否存在
+      const localData = wx.getStorageSync('recommendList');
+      if (localData && localData.length > 0) {
         this.setData({
-          recommendList: Array.isArray(res.data) ? res.data : []
+          recommendList: localData
+        });
+        return;
+      }
+
+      // 步骤2：缓存不存在时，调用接口获取数据
+      const { code, data } = await request.post('/api/recommend/list');     
+      if (code === 200) {        
+        const userIds = Array.isArray(data.userIds) ? data.userIds : [];    
+        wx.setStorageSync('recommendList', userIds);      
+        this.setData({
+          recommendList: userIds
         });
       }
     } catch (err) {
-      // 错误由封装的接口处理过，这里仅做极简兜底（如空数组）
       this.setData({ recommendList: [] });
     }
   },
@@ -635,13 +650,14 @@ Page({
             }
 
             // 5. 顺序取第一个元素，提取 userId（核心标识）
-            const selectedUser = recommendList[0];
-            const userId = selectedUser?.userId;
+            const userId = recommendList[0];
             if (!userId) throw new Error('未获取到有效用户ID');
-
+            console.log(userId);
+            
             // 6. 删除已抽取的第一个元素（抽一个少一个）
             recommendList.splice(0, 1);
             this.setData({ recommendList }); // 更新列表到 data
+            wx.setStorageSync('recommendList', recommendList);
 
             // 7. 关键：删除后若列表为空，异步拉新（不阻塞跳转，为下次点击准备）
             if (recommendList.length === 0) {

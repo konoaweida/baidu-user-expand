@@ -24,15 +24,22 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/login/login",
-          "pathName": "pages/login/login",
+          "name": "pages/schedule/schedule",
+          "pathName": "pages/schedule/schedule",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
+          "name": "pages/index/index",
+          "pathName": "pages/index/index",
           "query": "",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "pages/filter/filter",
-          "pathName": "pages/filter/filter",
+          "name": "pages/login/login",
+          "pathName": "pages/login/login",
           "query": "",
           "launchMode": "default",
           "scene": null
@@ -41,13 +48,6 @@
           "name": "pages/connections/connections",
           "pathName": "pages/connections/connections",
           "query": "id=1",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/connections/connections",
-          "pathName": "pages/connections/connections",
-          "query": "",
           "launchMode": "default",
           "scene": null
         },
