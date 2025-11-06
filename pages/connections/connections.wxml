@@ -1,33 +1,99 @@
-<!--pages/connections/connections.wxml-->
 <view class="connections-container">
   <navigation-header  
     showPlaceholder="{{false}}"
     showBackButton="{{true}}"
     bind:back="onNavBack"
-    ></navigation-header>
-  <user-profile user="{{userDetail}}" bind:openRelationPopup="onReceiveOpenPopup" ></user-profile>
-  <tab-swiper tabs="{{tabs}}" currentTab="{{currentTab}}" bind:tabchange="onTabChange">
-    <!-- cp链（第一个选项卡） -->
-    <view slot="tab-content-0" class="tab-panel">
-      <!-- 在此处放置 cp 链 列表或子组件 -->
-      <view class="placeholder">
-        <text>CP 链 列表示例内容</text>
-      </view>
+  ></navigation-header>
+
+  <view class="user-profile-root">
+    <!-- 背景图 -->
+    <view class="user-background">
+      <image
+        class="bg-image" 
+        src="{{userDetail.backgroundImage || '/assets/image/微信图片_20250906204507_794_8.jpg'}}" 
+        mode="aspectFill"
+        alt="用户背景图"
+      />
     </view>
 
-    <!-- 动态（第二个选项卡） -->
-    <view slot="tab-content-1" class="tab-panel">
-      <!-- 在此处放置 动态 流 或子组件 -->
-      <view class="placeholder">
-        <text>动态 列表示例内容</text>
+    <!-- 用户信息区 -->
+    <view class="user-layout">
+      <view class="user-info">
+        <!-- 用户头部信息 -->
+        <view class="user-header">
+          <!-- 用户头像 -->
+          <view class="user-avatar">
+            <image 
+              class="avatar-image" 
+              src="{{userDetail.avatar || '/assets/image/1028c3c7f8a19900d55630f214fa7c3b.jpg'}}" 
+              mode="aspectFill"
+              alt="用户头像"
+            />
+          </view>
+          <!-- 人脉cp -->
+          <view class="user-cp">
+            <view class="cp-text">{{userDetail.cpRelationCount || 0}}</view>人脉cp链
+          </view>
+          <!-- 用户名称与IP -->
+          <view class="user-nameip">
+            <view class="user-name">{{userDetail.nickName || '未知用户'}}</view>
+            <view class="user-ip">IP:{{userDetail.city || '未知'}}</view>
+          </view>
+          <view 
+            class="user-relationship"
+            bindtap="handleOpenRelation"
+          >
+            {{userDetail.mutualCp ? '已互相CP' : '建立关系'}}
+          </view>
+        </view>
+
+        <!-- 用户描述 -->
+        <view class="user-desc">{{userDetail.signature || '暂无个性签名'}}</view>
       </view>
     </view>
-  </tab-swiper>
+  </view>
+
+  <!-- tab-swiper结构 -->
+  <view class="tab-swiper-container">
+    <!-- tabs header -->
+    <view class="tab-bar">
+      <block wx:for="{{tabs}}" wx:key="id">
+        <view
+          class="tab-item {{currentTab === index ? 'active' : ''}}"
+          bindtap="switchTab"
+          data-index="{{index}}"
+        >
+          {{item.name}}
+        </view>
+      </block>
+    </view>
+
+    <!-- Swiper body -->
+    <swiper
+      current="{{currentTab}}"
+      bindchange="onSwiperChange"
+      style="height: {{swiperHeight}}px;"
+    >
+      <block wx:for="{{tabs}}" wx:key="id">
+        <swiper-item>
+          <view class="content-scroll" id="tab{{index}}">
+            <view wx:if="{{index === 0}}">
+              <text>CP 链 列表示例内容</text>
+            </view>
+            <view wx:elif="{{index === 1}}">
+              <text>动态 列表示例内容</text>
+            </view>
+          </view>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+
+  <!-- 弹出层 -->
+  <build-relationships  
+    show="{{isPopupShow}}"
+    targetUserId="{{userDetail.userId || 123456}}"
+    bind:close="hidePopup"
+    bind:navBack="handlePopupNavBack"
+  ></build-relationships>
 </view>
-<!-- 组建关系弹出层组件 -->
-<build-relationships  
-  show="{{isPopupShow}}"
-  targetUserId="{{userDetail.userId || 123456}}"
-  bind:close="hidePopup"
-  bind:navBack="handlePopupNavBack"
-></build-relationships>

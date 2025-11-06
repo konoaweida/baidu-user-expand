@@ -4,6 +4,7 @@
     showBackButton="{{true}}" 
     backColor="{{1}}"
     bind:back="handleNavBack"
+    needDefaultBack="{{false}}"
   ></navigation-header>
 
   <!-- 内容区域：基于 cpTypesList 渲染（优先接口数据） -->
