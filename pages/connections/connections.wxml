@@ -2,7 +2,6 @@
   <navigation-header  
     showPlaceholder="{{false}}"
     showBackButton="{{true}}"
-    bind:back="onNavBack"
   ></navigation-header>
 
   <view class="user-profile-root">

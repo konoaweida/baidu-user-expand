@@ -1,9 +1,6 @@
 {
   "usingComponents": {
-    "user-profile": "../../component/user-profile/user-profile",
-    "post-item": "../../component/post-item/post-item",
-    "tab-swiper": "../../component/tab-swiper/tab-swiper",
-    "user-body": "../../component/user-body/user-body"
+    "post-item": "../../component/post-item/post-item"
   },
   "navigationStyle": "custom"
 }

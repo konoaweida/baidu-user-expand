@@ -1,7 +1,7 @@
 // pages/schedule/schedule.js
 Page({
   data: {
-    isPopupShow: false, // 弹出层显示状态
+    isGroupPopupShow: false, // 弹出层显示状态
     isFocus: false,   // 控制搜索框聚焦状态
     inputValue: ''    // 存储输入内容
   },
@@ -35,35 +35,29 @@ Page({
     // 若需隐藏键盘，可调用：wx.hideKeyboard();
   },
   
-  // 显示弹出层
-  showPopup() {
-    this.setData({ isPopupShow: true });
+
+  // 打开群组弹出层
+  openGroupPopup() {
+    console.log(111);
+    
+    this.setData({ 
+      isGroupPopupShow: true,
+    });
     const tabBar = this.getTabBar();
     if (tabBar) tabBar.toggleVisibility(false);
   },
 
-  // 隐藏弹出层
-  hidePopup() {
-    this.setData({ isPopupShow: false });
+  // 关闭群组弹出层
+  closeGroupPopup() {
+    this.setData({ isGroupPopupShow: false });
     const tabBar = this.getTabBar();
     if (tabBar) tabBar.toggleVisibility(true);
   },
 
-  // 自定义导航栏返回逻辑（如询问是否放弃编辑）
-  handlePopupNavBack() {
-    this.hidePopup();
-    // // 示例：弹出确认框，确认后关闭弹出层
-    // wx.showModal({
-    //   title: '提示',
-    //   content: '是否放弃当前编辑？',
-    //   success: (res) => {
-    //     if (res.confirm) {
-    //       this.hidePopup(); // 确认后关闭
-    //     }
-    //     // 取消则不做处理，留在弹出层
-    //   }
-    // });
-    const tabBar = this.getTabBar();
-    if (tabBar) tabBar.toggleVisibility(true);
-  }
+  // 确认群组头像昵称选择选择
+  confirmGroup() {
+    this.setData({ 
+      isGroupPopupShow: false, 
+    });
+  },
 });
