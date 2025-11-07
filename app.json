@@ -28,23 +28,23 @@
     "list": [
       {
         "pagePath": "pages/expand/expand",
-        "text": "托圈"
+        "text": "拓圈"
       },
       {
         "pagePath": "pages/chat/chat",
-        "text": "聊天"
+        "text": "人脉矿场"
       },
       {
         "pagePath": "pages/schedule/schedule",
-        "text": "行程"
+        "text": "信息广场"
       },
       {
         "pagePath": "pages/event/event",
-        "text": "事件"
+        "text": "圈子"
       },
       {
         "pagePath": "pages/user/user",
-        "text": "我的"
+        "text": "个人主页"
       }
     ]
   },

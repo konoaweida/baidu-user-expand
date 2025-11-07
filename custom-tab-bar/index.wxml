@@ -1,18 +1,20 @@
-<view wx:if="{{isShow}}">
-  <t-tab-bar 
-    t-class="t-tab-bar"
-    value="{{active}}" 
-    bindchange="onChange" 
-    shape="round" 
-    theme="tag" 
-    split="{{false}}">
-
-    <t-tab-bar-item
-      wx:for="{{list}}"
-      wx:key="pagePath"
-      value="{{index}}"
-      icon="{{item.icon}}"
-      label="{{item.text}}">
-    </t-tab-bar-item>
-  </t-tab-bar>
+<!-- 移除wx:if，用样式控制显示/隐藏 -->
+<view class="tab-bar-container {{isShow ? 'show' : 'hide'}}">
+  <view class="tab-bar">
+    <view 
+      class="tab-bar-item {{active === index ? 'active' : ''}}" 
+      wx:for="{{list}}" 
+      wx:key="pagePath" 
+      bindtap="switchTab" 
+      data-path="{{item.pagePath}}"
+      data-index="{{index}}"
+    >
+      <image 
+        class="tab-bar-icon" 
+        src="{{active === index ? item.selectedIcon : item.icon}}" 
+        mode="aspectFit" 
+        style="width: 100%; height: 100%;"
+      ></image>
+    </view>
+  </view>
 </view>

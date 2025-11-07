@@ -1,25 +1,54 @@
-.t-tab-bar {
-  width: 660rpx;
-  height: 130rpx;
-  margin: 0 auto; 
-  /* 若需要固定在页面底部（常见 Tab 栏场景），补充定位（可选但推荐） */
-  position: fixed;
-  --td-tab-bar-color: #98A0A5;
-  --td-tab-bar-active-color: #FFF;
-  --td-tab-bar-active-bg: #7A4FD6;
-  /* --td-tab-bar-hover-color: #7A4FD6; */
-  --td-tab-bar-item-active-color: var(--td-brand-color, #8A9AA5);
-  box-shadow: 0 0 30rpx 10rpx rgba(147, 134, 226, 0.15);
-  border-radius: 65rpx; /* 与高度匹配，形成圆形或椭圆形的光晕 */
-}
-/* 关键：针对 Tab 栏内部的 text 和 view 覆盖全局颜色 */
-.t-tab-bar text,
-.t-tab-bar view {
-  color: var(--td-tab-bar-color); 
+/* 新增：TabBar容器（控制动画核心） */
+.tab-bar-container {
+  position: fixed; /* 固定在底部，确保动画位置稳定 */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center; /* 让内部tab-bar居中 */
+  z-index: 999; /* 确保在页面内容上方 */
+  pointer-events: none; /* 隐藏时禁用点击，避免遮挡下方内容 */
+  
+  /* 初始隐藏状态：在屏幕底部外 + 透明 */
+  opacity: 0;
+  transform: translateY(100%);
+  /* 动画过渡：持续0.3秒，缓动效果更自然 */
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* 如果有激活状态的子元素，单独指定激活色 */
-.t-tab-bar-item__content .t-tab-bar-item__content--checked .t-tab-bar-item__content--tag text,
-.t-tab-bar-item__content .t-tab-bar-item__content--checked .t-tab-bar-item__content--tag view {
-  color: #FFF; 
+/* 新增：显示状态 - 滑入屏幕 + 完全透明 */
+.tab-bar-container.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto; /* 显示时恢复点击 */
+}
+
+/* 原有样式保持不变，以下是你的原代码（无需修改） */
+.tab-bar {
+  width: 654rpx;
+  height: 132rpx;
+  margin: 0 auto;
+  border-radius: 456rpx 456rpx 356rpx 356rpx;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0rpx 0rpx 80rpx rgba(152, 128, 191, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 32rpx 24rpx 32rpx;
+  margin-bottom: env(safe-area-inset-bottom);
+}
+
+.tab-bar-item {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+/* 图标样式 */
+.tab-bar-icon {
+  transition: all 0.2s; /* 切换动画 */
+}
+
+/* 选中状态样式 */
+.tab-bar-item.active .tab-bar-icon {
+  transform: scale(1.1);
 }

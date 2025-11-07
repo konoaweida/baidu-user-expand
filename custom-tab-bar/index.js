@@ -6,65 +6,98 @@ Component({
   storeBindings: {
     store,
     fields: {
-      active: 'activeTabBarIndex' 
+      active: 'activeTabBarIndex' // 从store获取当前选中索引
     },
     actions: {
-      updateActive: 'updateActiveTabBarIndex'
+      updateActive: 'updateActiveTabBarIndex' // 同步选中状态到store
     }
   },
   data: {
     isShow: true,
     list: [
-      { pagePath: "/pages/expand/expand", text: "拓圈", icon: "usergroup-add" },
-      { pagePath: "/pages/chat/chat", text: "聊天", icon: "chat-bubble" },
-      { pagePath: "/pages/event/event", text: "事件", icon: "calendar" },
-      { pagePath: "/pages/schedule/schedule", text: "行程", icon: "task-checked" },
-      { pagePath: "/pages/user/user", text: "我的", icon: "user" },
+      { 
+        pagePath: "/pages/expand/expand", 
+        text: "拓圈", 
+        icon: "../assets/image/tabbar/拓圈.png", // 未选中图标
+        selectedIcon: "../assets/image/tabbar/拓圈选中.png" // 选中图标
+      },
+      { 
+        pagePath: "/pages/chat/chat", 
+        text: "人脉矿场", 
+        icon: "../assets/image/tabbar/广场.png",
+        selectedIcon: "../assets/image/tabbar/广场选中.png"
+      },
+      { 
+        pagePath: "/pages/event/event", 
+        text: "信息广场", 
+        icon: "../assets/image/tabbar/矿场.png",
+        selectedIcon: "../assets/image/tabbar/矿场选中.png"
+      },
+      { 
+        pagePath: "/pages/schedule/schedule", 
+        text: "圈子", 
+        icon: "../assets/image/tabbar/圈子.png",
+        selectedIcon: "../assets/image/tabbar/圈子选中.png"
+      },
+      { 
+        pagePath: "/pages/user/user", 
+        text: "个人主页", 
+        icon: "../assets/image/tabbar/我的.png",
+        selectedIcon: "../assets/image/tabbar/我的选中.png"
+      },
     ],
   },
   lifetimes: {
-    // 组件挂载时执行
-    // attached() {
-    //   setTimeout(() => {
-    //     this.syncTabBarActive();
-    //   }, 100);
-    // }
+    // 组件挂载时同步当前页面的Tab状态
+    attached() {
+      // 延迟确保页面路由已加载
+      setTimeout(() => {
+        this.syncTabBarActive();
+      }, 100);
+    }
   },
   methods: {
-    // 核心方法：自动同步当前页面对应的TabBar索引
-    // syncTabBarActive() {
-    //   // 1. 获取当前页面路径（如 "/pages/chat/chat"）
-    //   const pages = getCurrentPages()
-    //   const currentPage = pages[pages.length - 1]
-    //   const currentPath = currentPage.route // 获取路由（不带"/"）
-    //   const fullCurrentPath = `/${currentPath}` // 拼接成完整路径（带"/"）
+    // 同步当前页面对应的Tab索引
+    syncTabBarActive() {
+      const pages = getCurrentPages();
+      if (pages.length === 0) return;
+      
+      // 获取当前页面路由（如 "pages/chat/chat"）
+      const currentPage = pages[pages.length - 1];
+      const currentPath = `/${currentPage.route}`; // 拼接为完整路径（带"/"）
+      
+      // 查找当前路径在list中的索引
+      const matchedIndex = this.data.list.findIndex(item => item.pagePath === currentPath);
+      
+      // 若找到匹配项且状态不一致，更新选中状态
+      if (matchedIndex !== -1 && matchedIndex !== this.data.active) {
+        this.updateActive(matchedIndex);
+      }
+    },
 
-    //   // 2. 在list中查找当前路径对应的索引
-    //   const matchedIndex = this.data.list.findIndex(
-    //     item => item.pagePath === fullCurrentPath
-    //   )
+    // 点击Tab项切换页面
+    switchTab(e) {
+      const { path, index } = e.currentTarget.dataset;
+      const currentActive = this.data.active;
+      
+      // 若点击的是当前选中项，不重复操作
+      if (index === currentActive) return;
+      
+      // 更新选中状态到store
+      this.updateActive(index);
+      
+      // 切换到目标Tab页面（仅支持app.json中配置的tabBar页面）
+      wx.switchTab({
+        url: path,
+        fail: (err) => {
+          console.error("Tab切换失败：", err);
+        }
+      });
+    },
 
-    //   // 3. 如果找到匹配的索引，更新激活状态
-    //   if (matchedIndex !== -1 && matchedIndex !== this.data.active) {
-    //     this.updateActive(matchedIndex)
-    //   }
-    // },
-
-    // 切换显隐状态的方法（供外部调用）
+    // 切换TabBar显隐状态（供外部调用）
     toggleVisibility(flag) {
       this.setData({ isShow: flag });
-    },
-    
-    onChange(e) {
-      const selectedIndex = e.detail.value;
-
-      const targetPath = this.data.list[selectedIndex].pagePath;
-
-      this.updateActive(selectedIndex);
-
-      wx.switchTab({ 
-        url: targetPath
-      });
     },
   },
 });
