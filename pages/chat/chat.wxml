@@ -1,3 +1,0 @@
-<!--pages/chat/chat.wxml-->
-<text>pages/chat/chat.wxml</text>
-<button bindtap="onTap">点击</button>

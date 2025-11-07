@@ -1,6 +1,8 @@
-const request = require('../../utils/request.js');
+// pkgB/pages/login/login.js
 Page({
   data: {
+    menuTop: 0,       // 菜单按钮顶部距离（rpx）
+    menuHeight: 0,    // 菜单按钮高度（rpx）
     isNewUser: false,        // 是否为新用户
     isShowCodeLogin: false,  // 是否显示验证码登录
     phoneNumber: '',         // 手机号
@@ -16,8 +18,10 @@ Page({
   },
 
   onLoad() {
+    this.initMenuButtonPos();
     // 页面加载时检查用户状态
     this.checkUserStatus();
+
   },
 
   onUnload() {
@@ -26,7 +30,22 @@ Page({
       clearInterval(this.timer);
     }
   },
-
+  // 计算菜单按钮位置（核心逻辑）
+  initMenuButtonPos() {
+    // 获取系统信息（屏幕宽度）
+    const { screenWidth = 375 } = wx.getSystemInfoSync();
+    // 获取菜单按钮布局（px）
+    const { top = 0, height = 0 } = wx.getMenuButtonBoundingClientRect();
+    // px转rpx（保留2位小数，与原工具一致）
+    const px2rpx = px => Number(((px * 750) / screenWidth).toFixed(2));
+    
+    // 设置数据
+    this.setData({
+      menuTop: px2rpx(top),
+      menuHeight: px2rpx(height)
+    });
+  },
+  
   // 微信手机号授权回调
   getPhoneNumber(e) { 
     const { errMsg, code } = e.detail;
@@ -46,13 +65,19 @@ Page({
     // 2. 用户允许授权：用手机号code调用后端登录
     if (errMsg === 'getPhoneNumber:ok' && code) {
       wx.showLoading({ title: '登录中...' });
-      request.post(
-        '/api/auth/wx-phone',
-        {phoneCode: code,code: this.data.loginCode,deviceType: 'wechat-mini'},
-        {needToken: false}).then(res => {
+      wx.request({
+        url: 'http://192.168.0.110:8099/bd-client/api/auth/wx-phone', 
+        method: 'POST',
+        data: { 
+          phoneCode: code,        // 手机号快速验证的code
+          code: this.data.loginCode,  // 临时用户ID，用于关联用户
+          deviceType: 'wechat-mini'
+        },
+        success: (res) => {
           wx.hideLoading();
+          // console.log(res.data.data);
+          const { access_token, refresh_token, expire_in, refresh_expire_in, openid } = res.data.data;
 
-          const { access_token, refresh_token, expire_in, refresh_expire_in, openid } = res.data;
           // 1. 存储到本地缓存
 
           // 计算 token 过期时间（当前时间 + 有效期，单位：毫秒）
@@ -82,63 +107,14 @@ Page({
               }, 1500);
             }
           });
-        }).catch(err => {          
+
+        },
+        fail: (error) => {
           wx.hideLoading();
           console.error('登录请求失败:', error);
           this.handleError('网络异常，登录失败');
-        })
-
-
-      // wx.request({
-      //   url: 'http://192.168.0.110:8099/bd-client/api/auth/wx-phone', 
-      //   method: 'POST',
-      //   data: { 
-      //     phoneCode: code,        // 手机号快速验证的code
-      //     code: this.data.loginCode,  // 临时用户ID，用于关联用户
-      //     deviceType: 'wechat-mini'
-      //   },
-      //   success: (res) => {
-      //     wx.hideLoading();
-      //     // console.log(res.data.data);
-      //     const { access_token, refresh_token, expire_in, refresh_expire_in, openid } = res.data.data;
-
-      //     // 1. 存储到本地缓存
-
-      //     // 计算 token 过期时间（当前时间 + 有效期，单位：毫秒）
-      //     const now = Date.now();
-      //     const tokenExpireTime = now + expire_in * 1000; // access_token过期时间
-      //     const refreshTokenExpireTime = now + refresh_expire_in * 1000; // 新增：refresh_token过期时间
-
-      //     wx.setStorageSync('token', access_token);
-      //     wx.setStorageSync('refreshToken', refresh_token);
-      //     wx.setStorageSync('tokenExpireTime', tokenExpireTime);
-      //     wx.setStorageSync('refreshTokenExpireTime', refreshTokenExpireTime);
-      //     wx.setStorageSync('openid', openid);
-          
-      //     // 2. 存储到全局store（关键新增代码）
-      //     app.globalData.token = access_token;
-      //     app.globalData.refreshToken = refresh_token;
-      //     app.globalData.tokenExpireTime = tokenExpireTime;
-      //     app.globalData.refreshTokenExpireTime = refreshTokenExpireTime; 
-      //     app.globalData.openid = openid;
-          
-      //     wx.showToast({
-      //       title: '登录成功',
-      //       icon: 'success',
-      //       success: () => {
-      //         setTimeout(() => {
-      //           // wx.reLaunch({ url: '/pages/expand/expand' });
-      //         }, 1500);
-      //       }
-      //     });
-
-      //   },
-      //   fail: (error) => {
-      //     wx.hideLoading();
-      //     console.error('登录请求失败:', error);
-      //     this.handleError('网络异常，登录失败');
-      //   }
-      // });
+        }
+      });
     }
   },
 

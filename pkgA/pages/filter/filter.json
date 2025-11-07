@@ -1,6 +1,6 @@
 {
   "usingComponents": {
-    "navigation-header": "../../component/navigation-header/navigation-header",
+    "navigation-header": "../../../component/navigation-header/navigation-header",
     "van-slider": "@vant/weapp/slider/index"
   },
   "navigationStyle":"custom"

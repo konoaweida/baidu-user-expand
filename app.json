@@ -1,17 +1,28 @@
 {
   "pages": [
-    "pages/login/login",
     "pages/index/index",
-    "pages/logs/logs",
-    "pages/event/event",
     "pages/register/register",
-    "pages/expand/expand",
     "pages/connections/connections",
-    "pages/filter/filter",
+    "pages/expand/expand",
     "pages/socialMine/socialMine",
     "pages/infoPlaza/infoPlaza",
     "pages/circles/circles",
     "pages/user/user"
+  ],
+  "subpackages": [
+    {
+      "root": "pkgA",
+      "pages": [
+        "pages/filter/filter"
+      ]
+    },
+    {
+      "root": "pkgB",
+      "pages": [
+        "pages/login/login"
+      ],
+      "independent": true
+    }
   ],
   "tabBar": {
     "custom": true,

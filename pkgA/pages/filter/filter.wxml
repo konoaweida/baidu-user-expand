@@ -1,4 +1,4 @@
-<!--pages/filter/filter.wxml-->
+<!--pkgA/pages/filter/filter.wxml-->
 <navigation-header 
   bindback="onHeaderBack" 
   showBackButton="{{true}}" 
@@ -12,7 +12,7 @@
   <view class="filter-zodiac" bindtap="openConstellationPopup">
     <view class="item-label">
       <view class="filter-icon">
-        <image src="../../assets/image/filter/路径 1.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+        <image src="../../static/路径 1.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
       </view>
       <text class="filter-text">星座</text>
     </view>
@@ -20,7 +20,7 @@
       <text>{{zodiac || ''}}</text>
     </view>
     <view class="arrow-right">
-      <image src="../../assets/image/filter/右.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+      <image src="../../static/右.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
     </view>
   </view>
 
@@ -28,7 +28,7 @@
   <view class="filter-gender">
     <view class="item-label">
       <view class="filter-icon">
-        <image src="../../assets/image/filter/画板 1.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+        <image src="../../static/画板 1.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
       </view>
       <text class="filter-text">性别</text>
     </view>
@@ -50,18 +50,18 @@
   <view class="filter-income">
     <view class="item-label">
       <view class="filter-icon">
-        <image src="../../assets/image/filter/画板 3.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+        <image src="../../static/画板 3.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
       </view>
       <text class="filter-text">收入</text>
     </view>
     <view class="item-slider">
       <van-slider value="{{[incomeLeft, incomeRight]}}" bind:drag="onIncomeDrag" bind:change='onIncomeChange' range use-button-slot inactive-color="#E6E6E6" active-color="#7A4FD6" bar-height="6rpx" max="10000" min="0" step="100">
         <view class="slider-button" slot="left-button">
-          <image class="slider-icon" src="{{incomeLeft === 0 && incomeRight === 0 ? '../../assets/image/filter/游标 2.png' : '../../assets/image/filter/游标 1.png'}}" mode="aspectFit"/>
+          <image class="slider-icon" src="{{incomeLeft === 0 && incomeRight === 0 ? '../../static/游标 2.png' : '../../static/游标 1.png'}}" mode="aspectFit"/>
           <text class="slider-value">{{incomeLeft}}</text>
         </view>
         <view class="slider-button" slot="right-button">
-          <image class="slider-icon" src="{{incomeLeft === 0 && incomeRight === 0 ? '../../assets/image/filter/游标 2.png' : '../../assets/image/filter/游标 1.png'}}" mode="aspectFit"/>
+          <image class="slider-icon" src="{{incomeLeft === 0 && incomeRight === 0 ? '../../static/游标 2.png' : '../../static/游标 1.png'}}" mode="aspectFit"/>
           <text class="slider-value">{{incomeRight}}</text>
         </view>
       </van-slider>
@@ -77,18 +77,18 @@
   <view class="filter-age">
     <view class="item-label">
       <view class="filter-icon">
-        <image src="../../assets/image/filter/画板 2.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+        <image src="../../static/画板 2.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
       </view>
       <text class="filter-text">年龄</text>
     </view>
     <view class="item-slider">
       <van-slider value="{{[ageLeft, ageRight]}}" bind:drag="onAgeDrag" bind:change='onAgeChange' step="1" range use-button-slot inactive-color="#E6E6E6" active-color="#7A4FD6" bar-height="6rpx" max="60" min="0">
         <view class="slider-button" slot="left-button">
-          <image class="slider-icon" src="{{ageLeft === 0 && ageRight === 0 ? '../../assets/image/filter/游标 2.png' : '../../assets/image/filter/游标 1.png'}}" mode="aspectFit"/>
+          <image class="slider-icon" src="{{ageLeft === 0 && ageRight === 0 ? '../../static/游标 2.png' : '../../static/游标 1.png'}}" mode="aspectFit"/>
           <text class="slider-value">{{ageLeft}}</text>
         </view>
         <view class="slider-button" slot="right-button">
-          <image class="slider-icon" src="{{ageLeft === 0 && ageRight === 0 ? '../../assets/image/filter/游标 2.png' : '../../assets/image/filter/游标 1.png'}}" mode="aspectFit"/>
+          <image class="slider-icon" src="{{ageLeft === 0 && ageRight === 0 ? '../../static/游标 2.png' : '../../static/游标 1.png'}}" mode="aspectFit"/>
           <text class="slider-value">{{ageRight}}</text>
         </view>
       </van-slider>
@@ -115,7 +115,7 @@
     <view class="header-top"></view>
     <text>星座</text>
     <view class="close-btn" bindtap="closeConstellationPopup">
-      <image src="../../assets/image/关闭.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+      <image src="../../../assets/image/关闭.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
     </view>
   </view>
   <view class="popup-content">

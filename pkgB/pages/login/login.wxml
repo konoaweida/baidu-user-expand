@@ -1,8 +1,17 @@
+<!--pkgB/pages/login/login.wxml-->
 <view class="login-container">
   <!-- 背景图 -->
-  <image class="background-image" src="../../assets/image/微信图片 1.png" mode="aspectFill"></image>
+  <image class="background-image" src="../../static/微信图片 1.png" mode="aspectFill"></image>
   
-  <navigation-header showPlaceholder="{{false}}"></navigation-header>
+  <!-- 固定头部容器：总高度与占位高度一致 -->
+  <view class="navigation" style="top: 0; height: {{menuTop + menuHeight + 12}}rpx;">
+    <!-- 导航核心区域：基于胶囊位置定位 -->
+    <view 
+      class="navigation-header" 
+      style="top: {{menuTop - 12}}rpx; height: {{menuHeight}}rpx; padding-top: 12rpx; padding-bottom: 12rpx;"
+    >
+    </view>
+  </view>
   
   <view class="login-content">
     <!-- 快捷登录按钮（默认显示） -->

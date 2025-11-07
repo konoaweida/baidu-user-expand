@@ -43,16 +43,16 @@
   <view class="group-item" bindtap="showFriendPopup">
     <!-- 分组图标 -->
     <view class="group-icon">
-        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFit" style="width: 100%; height: 100%;"></image>
+        <image src="../../assets/image/relationship/图标-家人.png" mode="aspectFit" style="width: 100%; height: 100%;"></image>
     </view>
     <!-- 分组信息（名称+成员头像+人数） -->
     <view class="group-info">
         <view class="group-name">家人</view>
         <view class="group-members">
-        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFill" class="member-avatar"></image>
-        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFill" class="member-avatar"></image>
-        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFill" class="member-avatar"></image>
-        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFill" class="member-avatar"></image>
+        <image src="../../assets/image/relationship/图标-家人.png" mode="aspectFill" class="member-avatar"></image>
+        <image src="../../assets/image/relationship/图标-家人.png" mode="aspectFill" class="member-avatar"></image>
+        <image src="../../assets/image/relationship/图标-家人.png" mode="aspectFill" class="member-avatar"></image>
+        <image src="../../assets/image/relationship/图标-家人.png" mode="aspectFill" class="member-avatar"></image>
         <text class="member-count">11人</text>
         </view>
     </view>
@@ -102,7 +102,7 @@
   <view class="friend-popup-content">
    <view class="friend-item">
     <view class="friend-avatar">
-      <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFit" style="width: 100%; height: 100%;"></image>
+      <image src="../../assets/image/relationship/图标-家人.png" mode="aspectFit" style="width: 100%; height: 100%;"></image>
       <view class='mini-icon'>
         <text>3</text>
       </view>

@@ -1,4 +1,5 @@
-const filterStore = require('../../store/filterStore.js');
+// pkgA/pages/filter/filter.js
+const filterStore = require('../../../store/filterStore');
 Page({
   data: {
     // 星座相关
