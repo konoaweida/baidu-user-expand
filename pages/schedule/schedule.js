@@ -1,7 +1,8 @@
 // pages/schedule/schedule.js
 Page({
   data: {
-    isGroupPopupShow: false, // 弹出层显示状态
+    isGroupPopupShow: false, // 圈子信息弹出层显示状态
+    isFriendPopupShow:false, 
     isFocus: false,   // 控制搜索框聚焦状态
     inputValue: ''    // 存储输入内容
   },
@@ -60,4 +61,23 @@ Page({
       isGroupPopupShow: false, 
     });
   },
+
+  // 显示好友弹出层
+  showFriendPopup() {
+    this.setData({ isFriendPopupShow: true });
+    const tabBar = this.getTabBar();
+    if (tabBar) tabBar.toggleVisibility(false);
+  },
+  // 隐藏好友弹出层
+  hideFriendPopup() {
+    this.setData({ isFriendPopupShow: false });
+    const tabBar = this.getTabBar();
+    if (tabBar) tabBar.toggleVisibility(true);
+  },
+  // 自定义导航栏返回逻辑（如询问是否放弃编辑）
+  handlePopupNavBack() {
+    this.hideFriendPopup();
+    const tabBar = this.getTabBar();
+    if (tabBar) tabBar.toggleVisibility(true);
+  }
 });

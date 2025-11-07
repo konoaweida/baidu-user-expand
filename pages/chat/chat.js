@@ -10,10 +10,10 @@ Page({
   },
   onTap() {
     wx.request({
-      url: 'http://192.168.0.115:8099/bd-client/api/graph/province/11',
+      url: 'http://192.168.0.108:8099/bd-client/api/graph/province/11',
       method: 'GET',
       data: {
-        toId: 11
+        // toId: 11
       },
       success: (res) => {
         console.log(res)
