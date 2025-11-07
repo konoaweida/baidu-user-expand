@@ -2,12 +2,8 @@
   "pages": [
     "pages/login/login",
     "pages/index/index",
-    "pages/group/group",
     "pages/logs/logs",
-    "pages/chat/chat",
-    "pages/schedule/schedule",
     "pages/event/event",
-    "pages/chats/charts",
     "pages/register/register",
     "pages/expand/expand",
     "pages/connections/connections",
