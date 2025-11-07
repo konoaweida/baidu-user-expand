@@ -1,0 +1,3 @@
+<!--pages/socialMine/socialMine.wxml-->
+<text>pages/socialMine/socialMine.wxml</text>
+<button bindtap="onTap">点击</button>

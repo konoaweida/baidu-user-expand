@@ -5,21 +5,18 @@
     "pages/group/group",
     "pages/logs/logs",
     "pages/chat/chat",
-    "pages/user/user",
     "pages/schedule/schedule",
     "pages/event/event",
     "pages/chats/charts",
     "pages/register/register",
     "pages/expand/expand",
     "pages/connections/connections",
-    "pages/filter/filter"
+    "pages/filter/filter",
+    "pages/socialMine/socialMine",
+    "pages/infoPlaza/infoPlaza",
+    "pages/circles/circles",
+    "pages/user/user"
   ],
-  "usingComponents": {
-    "t-icon": "tdesign-miniprogram/icon/icon",
-    "t-tab-bar": "tdesign-miniprogram/tab-bar/tab-bar",
-    "t-tab-bar-item": "tdesign-miniprogram/tab-bar-item/tab-bar-item",
-    "t-navbar": "tdesign-miniprogram/navbar/navbar"
-  },
   "tabBar": {
     "custom": true,
     "color": "#000000",
@@ -31,15 +28,15 @@
         "text": "拓圈"
       },
       {
-        "pagePath": "pages/chat/chat",
+        "pagePath": "pages/socialMine/socialMine",
         "text": "人脉矿场"
       },
       {
-        "pagePath": "pages/schedule/schedule",
+        "pagePath": "pages/infoPlaza/infoPlaza",
         "text": "信息广场"
       },
       {
-        "pagePath": "pages/event/event",
+        "pagePath": "pages/circles/circles",
         "text": "圈子"
       },
       {
@@ -48,6 +45,7 @@
       }
     ]
   },
+  "usingComponents": {},
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "Weixin",

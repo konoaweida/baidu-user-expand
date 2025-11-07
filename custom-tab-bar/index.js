@@ -22,19 +22,19 @@ Component({
         selectedIcon: "../assets/image/tabbar/拓圈选中.png" // 选中图标
       },
       { 
-        pagePath: "/pages/chat/chat", 
+        pagePath: "/pages/socialMine/socialMine", 
         text: "人脉矿场", 
         icon: "../assets/image/tabbar/广场.png",
         selectedIcon: "../assets/image/tabbar/广场选中.png"
       },
       { 
-        pagePath: "/pages/event/event", 
+        pagePath: "/pages/infoPlaza/infoPlaza", 
         text: "信息广场", 
         icon: "../assets/image/tabbar/矿场.png",
         selectedIcon: "../assets/image/tabbar/矿场选中.png"
       },
       { 
-        pagePath: "/pages/schedule/schedule", 
+        pagePath: "/pages/circles/circles", 
         text: "圈子", 
         icon: "../assets/image/tabbar/圈子.png",
         selectedIcon: "../assets/image/tabbar/圈子选中.png"

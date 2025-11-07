@@ -1,0 +1,117 @@
+<!--pages/circles/circles.wxml-->
+<navigation-header class="nav-header">
+  <view class="search-row">
+    <!-- 搜索框容器：通过 isFocus 切换高度 -->
+    <view class="search-box {{isFocus ? 'search-box-focus' : ''}}">
+      <!-- 搜索图标 -->
+      <image class="search-icon" src="../../assets/image/路径 7.png" mode="aspectFit"></image>
+      <!-- 搜索输入框 -->
+      <input 
+        class="search-input" 
+        placeholder="圈内搜索" 
+        placeholder-class="search-placeholder"
+        bindinput="onSearchInput" 
+        bindfocus="onFocus"   
+        bindblur="onBlur"     
+        value="{{inputValue}}"
+      />
+      <!-- 清除图标：输入内容且聚焦时显示 -->
+      <image 
+        class="clear-icon" 
+        src="../../assets/image/union.png"  
+        mode="aspectFit"
+        wx:if="{{isFocus && inputValue.length > 0}}"
+        bindtap="clearInput"
+      ></image>
+    </view>
+    <!-- 取消按钮：聚焦时显示 -->
+    <text class="cancel-btn" wx:if="{{isFocus}}" bindtap="onCancel">取消</text>
+  </view>
+</navigation-header>
+<view class="schedule-container">
+  <!-- 待处理关系 -->
+  <view class="pending-relationship">
+    <view class='left-icon'>
+      <image src='../../assets/image/图标-默认-感兴趣.png' mode='aspectFit' style='width: 100%; height: 100%;'></image>
+      <view class='mini-icon'>
+        <text>3</text>
+      </view>
+    </view>
+    <view class='right-text'>待处理关系</view>
+  </view>
+  <!-- 关系分组 -->
+  <view class="group-item" bindtap="showFriendPopup">
+    <!-- 分组图标 -->
+    <view class="group-icon">
+        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFit" style="width: 100%; height: 100%;"></image>
+    </view>
+    <!-- 分组信息（名称+成员头像+人数） -->
+    <view class="group-info">
+        <view class="group-name">家人</view>
+        <view class="group-members">
+        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFill" class="member-avatar"></image>
+        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFill" class="member-avatar"></image>
+        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFill" class="member-avatar"></image>
+        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFill" class="member-avatar"></image>
+        <text class="member-count">11人</text>
+        </view>
+    </view>
+    <!-- 右侧更多按钮 -->
+    <view class="group-more" catchtap="openGroupPopup">
+        <text>...</text>
+    </view>
+    </view>
+</view>
+
+
+<!-- 弹出层遮罩  -->
+<view class="popup-mask {{isGroupPopupShow ? 'show' : ''}}"></view>
+<!-- 弹出层 -->
+<view class="popup {{isGroupPopupShow ? 'show' : ''}}">
+  <view class="popup-header">
+    <view class="header-top"></view>
+    <view class="close-btn" bindtap="closeGroupPopup">
+      <image src="../../assets/image/关闭.png" mode="aspectFit" style="width: 100%; height: 100%"></image>
+    </view>
+  </view>
+  <view class="popup-content">
+  </view>
+  <view class="popup-footer">
+    <button class="confirm-btn" bindtap="confirmGroup">确定</button>
+  </view>
+</view>
+
+<!-- 圈子好友弹出层 -->
+<view class="friend-popup-container" wx:if="{{isFriendPopupShow}}">
+  <!-- 导航栏：绑定返回事件 -->
+  <navigation-header 
+    class="nav-popup-header"
+    showBackButton="{{true}}" 
+    backColor="{{1}}"
+    bind:back="handlePopupNavBack"
+    needDefaultBack="{{false}}"
+  >
+    <view class="nav-item">
+      <view class="nav-icon">
+        <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFit" style="width: 100%; height: 100%;"></image>
+      </view>
+      <view class="nav-number">11人</view>
+    </view>
+  </navigation-header>
+  <!-- 内容区域-->
+  <view class="friend-popup-content">
+   <view class="friend-item">
+    <view class="friend-avatar">
+      <image src="../../assets/image/图标-默认-感兴趣 (1).png" mode="aspectFit" style="width: 100%; height: 100%;"></image>
+      <view class='mini-icon'>
+        <text>3</text>
+      </view>
+    </view>
+    <view class="friend-info">
+      <view class="friend-name">张三</view>
+      <view class="friend-esc">我是消息11111111111111111111111111111111111111111</view>
+    </view>
+    <view class="info-time">11:40</view>
+   </view>
+  </view>
+</view>
