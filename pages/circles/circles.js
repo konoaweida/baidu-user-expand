@@ -1,10 +1,25 @@
 // pages/circles/circles.js
+const request = require('../../utils/request.js');
 Page({
   data: {
     isGroupPopupShow: false, // 圈子信息弹出层显示状态
     isFriendPopupShow:false, 
     isFocus: false,   // 控制搜索框聚焦状态
-    inputValue: ''    // 存储输入内容
+    inputValue: '',    // 存储输入内容
+    cpList: []
+  },
+
+  async getCpList() {
+    try {
+      const { data } = request.get('/api/cp/list')
+      this.setData({
+        cpList: data
+      })
+    } catch(err) {
+      console.log(err);
+
+    }
+
   },
 
   // 搜索框聚焦：切换状态，显示高度/图标/取消按钮

@@ -24,6 +24,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/infoPlaza/infoPlaza",
+          "pathName": "pages/infoPlaza/infoPlaza",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
           "name": "pkgA/pages/filter/filter",
           "pathName": "pkgA/pages/filter/filter",
           "query": "",

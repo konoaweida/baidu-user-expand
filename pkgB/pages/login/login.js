@@ -66,7 +66,7 @@ Page({
     if (errMsg === 'getPhoneNumber:ok' && code) {
       wx.showLoading({ title: '登录中...' });
       wx.request({
-        url: 'http://192.168.0.110:8099/bd-client/api/auth/wx-phone', 
+        url: 'http://1.95.53.183:8095/bd-client/api/auth/wx-phone', 
         method: 'POST',
         data: { 
           phoneCode: code,        // 手机号快速验证的code
@@ -89,14 +89,7 @@ Page({
           wx.setStorageSync('refreshToken', refresh_token);
           wx.setStorageSync('tokenExpireTime', tokenExpireTime);
           wx.setStorageSync('refreshTokenExpireTime', refreshTokenExpireTime);
-          wx.setStorageSync('openid', openid);
-          
-          // 2. 存储到全局store（关键新增代码）
-          app.globalData.token = access_token;
-          app.globalData.refreshToken = refresh_token;
-          app.globalData.tokenExpireTime = tokenExpireTime;
-          app.globalData.refreshTokenExpireTime = refreshTokenExpireTime; 
-          app.globalData.openid = openid;
+          wx.setStorageSync('openid', openid);      
           
           wx.showToast({
             title: '登录成功',

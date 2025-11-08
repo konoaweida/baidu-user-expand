@@ -1,7 +1,7 @@
 <view class="expand-container">
   <navigation-header id="navHeader"></navigation-header>
+  <!-- tab栏 -->
   <view class="tabs-placeholder" style="height: 110rpx; width: 100%;"></view>
-
   <view class="tabs-container" style="top: {{navHeaderHeightRpx}}rpx;">
     <view
       class="tab-item {{currentTab === 'recommend' ? 'active' : ''}} one"

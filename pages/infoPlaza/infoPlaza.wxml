@@ -1,2 +1,67 @@
 <!--pages/infoPlaza/infoPlaza.wxml-->
-<text>pages/infoPlaza/infoPlaza.wxml</text>
+<!-- 顶部导航栏 -->
+<navigation-header id="navHeader" class="nav-header">
+  <view class="search-row">
+    <!-- 搜索框容器：通过 isFocus 切换高度 -->
+    <view class="search-box {{isFocus ? 'search-box-focus' : ''}}">
+      <!-- 搜索图标 -->
+      <image class="search-icon" src="../../assets/image/路径 7.png" mode="aspectFit"></image>
+      <!-- 搜索输入框 -->
+      <input 
+        class="search-input" 
+        placeholder="圈内搜索" 
+        placeholder-class="search-placeholder"
+        bindinput="onSearchInput" 
+        bindfocus="onFocus"   
+        bindblur="onBlur"     
+        value="{{inputValue}}"
+      />
+      <!-- 清除图标：输入内容且聚焦时显示 -->
+      <image 
+        class="clear-icon" 
+        src="../../assets/image/union.png"  
+        mode="aspectFit"
+        wx:if="{{isFocus && inputValue.length > 0}}"
+        bindtap="clearInput"
+      ></image>
+    </view>
+    <!-- 取消按钮：聚焦时显示 -->
+    <text class="cancel-btn" wx:if="{{isFocus}}" bindtap="onCancel">取消</text>
+  </view>
+</navigation-header>
+
+<!-- tab栏 -->
+<view class="tabs-placeholder" style="height: 110rpx; width: 100%;"></view>
+<view class="tabs-container" style="top: {{navHeaderHeightRpx}}rpx;">
+  <view
+    class="tab-item {{currentTab === 'inCircle' ? 'active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="inCircle"
+  >圈内</view>
+  <view
+    class="tab-item {{currentTab === 'outCircle' ? 'active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="outCircle"
+  >圈外</view>
+</view>
+
+<!-- 动态列表容器（移除 loading 相关判断，直接显示） -->
+<scroll-view
+  class="dynamic-list"
+  scroll-y
+  style="height: calc(100vh - {{navHeaderHeightRpx + 110}}rpx);"
+  bindscroll="onListScroll"
+  scroll-top="{{scrollTop[currentTab] || 0}}"
+>
+  <!-- 有数据时渲染列表 -->
+  <view class="dynamic-item" wx:for="{{dynamicList[currentTab]}}" wx:key="id">
+    <!-- 后续可补充动态项具体内容，如头像、昵称、动态文本等 -->
+  </view>
+
+  <!-- 空态提示（无数据或无网） -->
+  <view class="empty-state" wx:if="{{dynamicList[currentTab].length === 0}}">
+    <image src="../../assets/image/empty.png" mode="aspectFit" class="empty-icon"></image>
+    <text class="empty-text">{{hasNetwork ? '暂无相关动态~' : '网络异常，请检查网络后重试'}}</text>
+    <button class="refresh-btn" wx:if="!hasNetwork" bindtap="refreshList">重新加载</button>
+  </view>
+</scroll-view>
