@@ -1,0 +1,32 @@
+<!--pkgA/pages/infoList/infoList.wxml-->
+<!-- 圈子好友消息列表 -->
+<!-- 导航栏：绑定返回事件 -->
+<navigation-header 
+  class="nav-popup-header"
+  showBackButton="{{true}}" 
+  backColor="{{1}}"
+>
+  <view class="nav-item">
+    <view class="nav-icon">
+      <image src="../../../assets/image/relationship/图标-家人.png" mode="aspectFit" style="width: 100%; height: 100%;"></image>
+    </view>
+    <view class="nav-number">11人</view>
+  </view>
+</navigation-header>
+<!-- 内容区域-->
+<view class="friend-popup-content">
+  <view class="friend-item">
+  <view class="friend-avatar">
+    <image src="../../../assets/image/relationship/图标-家人.png" mode="aspectFit" style="width: 100%; height: 100%;"></image>
+    <view class='mini-icon'>
+      <text>3</text>
+    </view>
+  </view>
+  <view class="friend-info">
+    <view class="friend-name">张三</view>
+    <view class="friend-esc">我是消息11111111111111111111111111111111111111111</view>
+  </view>
+  <view class="info-time">11:40</view>
+  </view>
+</view>
+

@@ -3,10 +3,9 @@ const request = require('../../utils/request.js');
 Page({
   data: {
     isGroupPopupShow: false, // 圈子信息弹出层显示状态
-    isFriendPopupShow:false, 
     isFocus: false,   // 控制搜索框聚焦状态
     inputValue: '',    // 存储输入内容
-    cpList: []
+    cpList: [1,2,3]
   },
 
   async getCpList() {
@@ -21,7 +20,12 @@ Page({
     }
 
   },
-
+  goToDetail(e) {
+    const { id } = e.currentTarget.dataset
+    wx.navigateTo({
+      url: `/pkgA/pages/infoList/infoList?id=${id}`,
+    })
+  },
   // 搜索框聚焦：切换状态，显示高度/图标/取消按钮
   onFocus() {
     this.setData({ isFocus: true });
@@ -76,23 +80,4 @@ Page({
       isGroupPopupShow: false, 
     });
   },
-
-  // 显示好友弹出层
-  showFriendPopup() {
-    this.setData({ isFriendPopupShow: true });
-    const tabBar = this.getTabBar();
-    if (tabBar) tabBar.toggleVisibility(false);
-  },
-  // 隐藏好友弹出层
-  hideFriendPopup() {
-    this.setData({ isFriendPopupShow: false });
-    const tabBar = this.getTabBar();
-    if (tabBar) tabBar.toggleVisibility(true);
-  },
-  // 自定义导航栏返回逻辑（如询问是否放弃编辑）
-  handlePopupNavBack() {
-    this.hideFriendPopup();
-    const tabBar = this.getTabBar();
-    if (tabBar) tabBar.toggleVisibility(true);
-  }
 });

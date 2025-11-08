@@ -24,11 +24,25 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/infoPlaza/infoPlaza",
-          "pathName": "pages/infoPlaza/infoPlaza",
+          "name": "pages/circles/circles",
+          "pathName": "pages/circles/circles",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "pkgA/pages/infoList/infoList",
+          "pathName": "pkgA/pages/infoList/infoList",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/infoPlaza/infoPlaza",
+          "pathName": "pages/infoPlaza/infoPlaza",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "pkgA/pages/filter/filter",

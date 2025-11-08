@@ -33,7 +33,7 @@ Page({
   // 计算菜单按钮位置（核心逻辑）
   initMenuButtonPos() {
     // 获取系统信息（屏幕宽度）
-    const { screenWidth = 375 } = wx.getSystemInfoSync();
+    const { screenWidth = 375 } = wx.getWindowInfo();
     // 获取菜单按钮布局（px）
     const { top = 0, height = 0 } = wx.getMenuButtonBoundingClientRect();
     // px转rpx（保留2位小数，与原工具一致）

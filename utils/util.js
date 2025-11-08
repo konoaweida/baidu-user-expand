@@ -13,7 +13,7 @@ const formatNumber = n => {
   return n[1] ? n : `0${n}`
 }
 
-const systemInfo = wx.getSystemInfoSync()
+const systemInfo = wx.getWindowInfo()
 const screenWidthPx = systemInfo.screenWidth || 375
 
 const pxToRpx = (px) => Number(((px * 750) / screenWidthPx).toFixed(2))
