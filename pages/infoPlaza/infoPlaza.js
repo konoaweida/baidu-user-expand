@@ -79,39 +79,13 @@ Page({
   },
 
   /**
-   * 加载动态列表数据（删除 loading 状态控制）
+   * 加载动态列表数据
    * @param {string} tab - 目标Tab（inCircle/outCircle）
    */
   loadDynamicList(tab) {
     // 无网时直接返回，显示空态
     if (!this.data.hasNetwork) return;
 
-    // 模拟接口请求（实际项目替换为真实接口）
-    const mockApi = tab === 'inCircle' 
-      ? 'https://mock-api/inCircle/dynamics' 
-      : 'https://mock-api/outCircle/dynamics';
-
-    wx.request({
-      url: mockApi,
-      data: {
-        keyword: this.data.inputValue, // 携带搜索筛选条件
-        page: 1,
-        pageSize: 10
-      },
-      success: (res) => {
-        if (res.statusCode === 200 && res.data.success) {
-          // 直接更新对应Tab的动态数据
-          this.setData({
-            [`dynamicList.${tab}`]: res.data.data
-          });
-        } else {
-          this.setData({ [`dynamicList.${tab}`]: [] });
-        }
-      },
-      fail: () => {
-        this.setData({ [`dynamicList.${tab}`]: [] });
-      }
-    });
   },
 
   /**
@@ -188,15 +162,6 @@ Page({
     if (this.data.hasNetwork) {
       this.loadDynamicList(this.data.currentTab);
     }
-  },
-
-  /**
-   * 下拉刷新（更新当前Tab数据）
-   */
-  onPullDownRefresh() {
-    const currentTab = this.data.currentTab;
-    this.loadDynamicList(currentTab); // 移除 loading 相关标记
-    wx.stopPullDownRefresh();
   },
 
   /**

@@ -5,15 +5,35 @@ Page({
     isGroupPopupShow: false, // 圈子信息弹出层显示状态
     isFocus: false,   // 控制搜索框聚焦状态
     inputValue: '',    // 存储输入内容
-    cpList: [1,2,3]
+    cpList: [1,2,3],  
+    incomingData: [],
+  },
+  async onLoad() {
+    this.getCpList()
+    this.getCpComing()
   },
 
+  async getCpComing() {
+    try {
+      const { data } = request.get('/api/cp/coming')
+      this.setData({
+        incomingData: data
+      })
+      console.log(data);
+    } catch(err) {
+      console.log(err);
+    }
+  },
+
+  // 获取圈子列表
   async getCpList() {
     try {
       const { data } = request.get('/api/cp/list')
-      this.setData({
-        cpList: data
-      })
+      console.log(data);
+      
+      // this.setData({
+      //   cpList: data
+      // })
     } catch(err) {
       console.log(err);
 

@@ -1,7 +1,6 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/register/register",
     "pages/connections/connections",
     "pages/expand/expand",
     "pages/socialMine/socialMine",

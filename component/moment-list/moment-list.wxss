@@ -1,10 +1,10 @@
 /* 原有核心样式（保持不变） */
-.moment-list-class {
+.moment-list {
   width: 718rpx;
-  background-color: #F2F2F2;
+  background-color: #FFFFFF;
   margin: 0 auto;
-  padding: 25rpx 16rpx 20rpx;
-  border-radius: 48rpx;
+  padding: 24rpx 16rpx 18rpx;
+  border-radius: 16rpx;
   box-sizing: border-box;
   overflow: hidden; /* 裁剪超出卡片的内容 */
   /* 移除父容器的 position:relative！避免干扰子容器定位 */
@@ -13,18 +13,19 @@
 .moment-userinfo {
   display: flex;
   align-items: center;
-  margin-left: 25rpx;
-  margin-bottom: 10rpx;
+  margin-left: 36rpx;
+  margin-bottom: 4rpx;
   gap: 20rpx;
   width: 100%;
+  height: 76rpx;
 }
 
 .userinfo-avatar {
   background-color: #e5e5e5;
   border-radius: 50%;
   height: 76rpx;
-  overflow: hidden;
   width: 76rpx;
+  overflow: hidden;
 }
 
 .userinfo-avatar .avatar {
@@ -34,11 +35,13 @@
 
 .userinfo-nickname {
   height: 48rpx;
-  line-height: 48rpx;
   font-size: 32rpx;
-  font-weight: medium;
-  color: #05020B;
-  font-family: "Source Han Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0rpx;
+  line-height: 46.34rpx;
+  color: rgba(5, 2, 11, 1);
+  text-align: left;
+  vertical-align: top;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -46,15 +49,19 @@
 }
 
 .moment-desc {
+  width: 616rpx;
+  height: 42rpx;  
   font-size: 28rpx;
-  line-height: 44rpx;
+  line-height: 42rpx;
+  color: rgba(5, 2, 11, 1);
+  text-align: left;
+  vertical-align: top;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
   overflow: hidden;
-  margin-left: 25rpx;
-  margin-bottom: 20rpx;
-  width: 616rpx;
+  margin-left: 34rpx;
+  margin-bottom: 14rpx;
 }
 
 /* 关键：共同父容器（作为定位参考） */
@@ -62,7 +69,7 @@
   position: relative; /* 让 .moment-actions 以它为参考 */
   width: 100%; /* 与图片宽度一致 */
   height: 428rpx; /* 与图片高度完全一致（消除高度差） */
-  border-radius: 48rpx; /* 与图片圆角一致，避免视觉错位 */
+  border-radius: 16rpx; /* 与图片圆角一致，避免视觉错位 */
   overflow: hidden; /* 裁剪图片/按钮容器超出的部分 */
 }
 
@@ -70,7 +77,6 @@
 .moment-image {
   width: 100%;
   height: 100%; /* 填满父容器高度（428rpx） */
-  border-radius: 48rpx; /* 与父容器圆角一致 */
 }
 
 /* .moment-actions 容器：参考父容器定位，底部对齐图片 */
@@ -81,35 +87,26 @@
   right: 0; /* 容器宽度 = 父容器宽度 = 图片宽度（消除宽度差） */
   height: 96rpx; /* 固定高度，不影响对齐 */
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.8);
-  /* 可选：让容器底部圆角与图片呼应，视觉更连贯 */
-  border-bottom-left-radius: 48rpx;
-  border-bottom-right-radius: 48rpx;
+  border-radius: 0rpx 0rpx 16rpx 16rpx;
+  background: rgba(255, 255, 255, 0.8);
   /* 消除任何可能的间距误差 */
   margin: 0;
   padding: 0;
+} 
+
+.item {
+  width: 48rpx;
+  height: 48rpx;
+  background-color: #fff;
 }
 
-/* .moment-actions button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: transparent;
+.item.comment {
+  margin-left: 58rpx;
+  margin-right: 24rpx;
 }
 
-.moment-actions button::after {
-  border: none;
-}
-
-.moment-actions image {
-  width: 36rpx;
-  height: 36rpx;
-  margin-bottom: 4rpx;
-} */
-
-.moment-actions .action-text {
-  font-size: 24rpx;
-  color: #666;
+.item.like {
+  margin-right: 384rpx;
 }

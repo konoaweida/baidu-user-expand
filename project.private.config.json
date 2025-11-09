@@ -24,11 +24,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/circles/circles",
-          "pathName": "pages/circles/circles",
+          "name": "pages/socialMine/socialMine",
+          "pathName": "pages/socialMine/socialMine",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "pages/circles/circles",
+          "pathName": "pages/circles/circles",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "pkgA/pages/infoList/infoList",
@@ -45,22 +52,8 @@
           "scene": null
         },
         {
-          "name": "pkgA/pages/filter/filter",
-          "pathName": "pkgA/pages/filter/filter",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
           "name": "pkgB/pages/login/login",
           "pathName": "pkgB/pages/login/login",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/index/index",
-          "pathName": "pages/index/index",
           "query": "",
           "launchMode": "default",
           "scene": null

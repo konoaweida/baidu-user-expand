@@ -1,1 +1,5 @@
 /* pages/socialMine/socialMine.wxss */
+page {
+  background-color: #d98abc;
+}
+
