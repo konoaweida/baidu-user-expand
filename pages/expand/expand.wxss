@@ -171,14 +171,14 @@
 .potential-list {
   box-sizing: border-box;
   display: flex;
-  padding-bottom: 132rpx;  
+  padding-bottom: 132rpx; 
   flex-wrap: wrap;
 }
 
 /* 加载状态样式 */
 .load-more-state {
   width: 100%;
-  padding: 100rpx 0;
+  padding: 50rpx 0;
   text-align: center;
   background: transparent;
 }

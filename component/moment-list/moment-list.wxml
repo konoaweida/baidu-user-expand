@@ -2,7 +2,7 @@
   <!-- 1. 用户信息区 -->
   <view class="moment-userinfo">
     <view class="userinfo-avatar">
-      <image class="avatar" src="{{moment.avatar || '/assets/image/微信图片_20250906204507_794_8.jpg'}}"></image>
+      <image lazy-load class="avatar" src="{{moment.avatar || '/assets/image/微信图片_20250906204507_794_8.jpg'}}"></image>
     </view>
     <text class="userinfo-nickname">{{value.nickname || '未知用户'}}</text>
   </view>
@@ -20,7 +20,8 @@
       wx:if="{{showImage}}"
       class="moment-image" 
       src="{{moment.images[0] || '/assets/image/微信图片_20250906204507_794_8.jpg'}}" 
-      mode="aspectFill"  
+      mode="aspectFill" 
+      lazy-load
     ></image>
     <!-- 4. .moment-actions 容器（现在参考父容器定位） -->
     <view class="moment-actions">

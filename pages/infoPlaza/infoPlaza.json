@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-    "navigation-header": "../../component/navigation-header/navigation-header"
+    "navigation-header": "../../component/navigation-header/navigation-header",
+    "moment-list": "../../component/moment-list/moment-list"
   },
   "navigationStyle":  "custom" 
 }

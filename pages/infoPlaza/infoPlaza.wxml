@@ -1,22 +1,17 @@
-<!--pages/infoPlaza/infoPlaza.wxml-->
 <!-- 顶部导航栏 -->
 <navigation-header id="navHeader" class="nav-header">
   <view class="search-row">
-    <!-- 搜索框容器：通过 isFocus 切换高度 -->
     <view class="search-box {{isFocus ? 'search-box-focus' : ''}}">
-      <!-- 搜索图标 -->
       <image class="search-icon" src="../../assets/image/路径 7.png" mode="aspectFit"></image>
-      <!-- 搜索输入框 -->
       <input 
         class="search-input" 
-        placeholder="圈内搜索" 
+        placeholder="圈外搜索" 
         placeholder-class="search-placeholder"
         bindinput="onSearchInput" 
         bindfocus="onFocus"   
         bindblur="onBlur"     
         value="{{inputValue}}"
       />
-      <!-- 清除图标：输入内容且聚焦时显示 -->
       <image 
         class="clear-icon" 
         src="../../assets/image/union.png"  
@@ -25,7 +20,6 @@
         bindtap="clearInput"
       ></image>
     </view>
-    <!-- 取消按钮：聚焦时显示 -->
     <text class="cancel-btn" wx:if="{{isFocus}}" bindtap="onCancel">取消</text>
   </view>
 </navigation-header>
@@ -34,34 +28,71 @@
 <view class="tabs-placeholder" style="height: 110rpx; width: 100%;"></view>
 <view class="tabs-container" style="top: {{navHeaderHeightRpx}}rpx;">
   <view
-    class="tab-item {{currentTab === 'inCircle' ? 'active' : ''}}"
-    bindtap="handleTabClick"
-    data-tab="inCircle"
-  >圈内</view>
-  <view
     class="tab-item {{currentTab === 'outCircle' ? 'active' : ''}}"
     bindtap="handleTabClick"
     data-tab="outCircle"
   >圈外</view>
+  <view
+    class="tab-item {{currentTab === 'inCircle' ? 'active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="inCircle"
+  >圈内</view>
 </view>
 
-<!-- 动态列表容器（移除 loading 相关判断，直接显示） -->
+<!-- 动态列表容器 -->
 <scroll-view
   class="dynamic-list"
   scroll-y
+  enhanced  
+  show-scrollbar="{{false}}"  
+  scroll-with-animation="{{false}}"  
   style="height: calc(100vh - {{navHeaderHeightRpx + 110}}rpx);"
   bindscroll="onListScroll"
   scroll-top="{{scrollTop[currentTab] || 0}}"
+  refresher-enabled="{{true}}" 
+  refresher-threshold="100"   
+  refresher-default-style="black"  
+  bindrefresherrefresh="onPullRefresh"  
+  bindrefresherrestore="onRefresherRestore" 
 >
-  <!-- 有数据时渲染列表 -->
-  <view class="dynamic-item" wx:for="{{dynamicList[currentTab]}}" wx:key="id">
-    <!-- 后续可补充动态项具体内容，如头像、昵称、动态文本等 -->
+  <!-- 首屏骨架屏 -->
+  <view class="skeleton-list" wx:if="{{isSkeletonLoading[currentTab]}}">
+    <view class="skeleton-item" wx:for="{{[1,2]}}" wx:key="index">
+      <view class="skeleton-userinfo">
+        <view class="skeleton-avatar"></view>
+        <text class="skeleton-nickname"></text>
+      </view>
+      <view class="skeleton-desc"></view>
+      <view class="skeleton-content"></view>
+    </view>
   </view>
 
-  <!-- 空态提示（无数据或无网） -->
-  <view class="empty-state" wx:if="{{dynamicList[currentTab].length === 0}}">
+  <!-- 动态列表 -->
+  <view class="dynamic-item-list" wx:else>
+    <view wx:for="{{dynamicList[currentTab]}}" wx:key="id">
+      <!-- 组件引用：确保组件已注册 -->
+      <moment-list
+        moment="{{item}}"
+        show-cp-tag="{{currentTab === 'inCircle'}}"
+        bind:like="handleMomentLike"
+        bind:comment="handleMomentComment"
+        bind:share="handleMomentShare"
+      ></moment-list>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{isLoading[currentTab] && dynamicList[currentTab].length > 0}}">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 空态提示：修复表达式语法错误 -->
+  <view class="empty-state" wx:if="{{!isSkeletonLoading[currentTab] && dynamicList[currentTab].length === 0}}">
     <image src="../../assets/image/empty.png" mode="aspectFit" class="empty-icon"></image>
-    <text class="empty-text">{{hasNetwork ? '暂无相关动态~' : '网络异常，请检查网络后重试'}}</text>
+    <!-- 修正：将嵌套三元表达式写在单行，避免解析错误 -->
+    <text class="empty-text">{{hasNetwork ? (currentTab === 'inCircle' ? '暂无CP好友动态~ 快去建立CP关系吧' : '暂无推荐动态~ 发布你的第一条动态吧') : '网络异常，请检查网络后重试'}}</text>
     <button class="refresh-btn" wx:if="!hasNetwork" bindtap="refreshList">重新加载</button>
+    <button class="guide-btn" wx:if="{{hasNetwork && currentTab === 'inCircle'}}" bindtap="gotoBuildCP">建立CP关系</button>
+    <button class="guide-btn" wx:if="{{hasNetwork && currentTab === 'outCircle'}}" bindtap="gotoPublish">发布动态</button>
   </view>
 </scroll-view>

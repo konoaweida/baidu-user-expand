@@ -145,27 +145,105 @@
 /* 动态列表样式 */
 .dynamic-list {
   width: 100%;
-  padding: 32rpx 36rpx;
   box-sizing: border-box;
   background-color: #F3F3F3;
 }
 
-.dynamic-item {
-  padding: 24rpx 0;
-  border-bottom: 2rpx solid #f5f5f5;
+.dynamic-item-list {
+  padding-bottom: calc(132rpx + env(safe-area-inset-bottom));
 }
 
-.dynamic-content {
-  font-size: 32rpx;
-  color: rgba(5, 2, 11, 1);
-  line-height: 48rpx;
-  margin-bottom: 16rpx;
+/* 单个骨架屏项 */
+.skeleton-item {
+  width: 718rpx;
+  background-color: #FFFFFF;
+  margin: 32rpx auto 0;
+  padding: 24rpx 16rpx 18rpx;
+  border-radius: 16rpx;
+  box-sizing: border-box;
 }
 
-.dynamic-meta {
-  font-size: 24rpx;
-  color: rgba(158, 158, 158, 1);
-  line-height: 36rpx;
+/* 用户信息区 */
+.skeleton-userinfo {
+  display: flex;
+  align-items: center;
+  margin-left: 36rpx;
+  margin-bottom: 4rpx;
+  gap: 20rpx;
+  width: 100%;
+  height: 76rpx;
+}
+
+/* 头像骨架（添加动画） */
+.skeleton-avatar {
+  background-color: #e5e5e5;
+  border-radius: 50%;
+  height: 76rpx;
+  width: 76rpx;
+  animation: skeleton-loading 1.5s infinite; /* 绑定动画 */
+}
+
+/* 昵称骨架（添加动画） */
+.skeleton-nickname {
+  height: 48rpx;
+  width: 20%;
+  background-color: #e5e5e5;
+  animation: skeleton-loading 1.5s infinite; /* 绑定动画 */
+  animation-delay: 0.3s; /* 延迟动画，让多个元素错开动效 */
+}
+
+/* 文字内容骨架（添加动画） */
+.skeleton-desc {
+  width: 616rpx;
+  height: 42rpx;  
+  margin-left: 34rpx;
+  margin-bottom: 14rpx;
+  background-color: #e5e5e5;
+  animation: skeleton-loading 1.5s infinite; /* 绑定动画 */
+  animation-delay: 0.3s; /* 延迟动画，增强层次感 */
+}
+
+/* 图片骨架（添加动画） */
+.skeleton-content {
+  position: relative; 
+  width: 100%; 
+  height: 428rpx; 
+  border-radius: 16rpx; 
+  background-color: #e5e5e5;
+  animation: skeleton-loading 1.5s infinite; /* 绑定动画 */
+  animation-delay: 0.3s; /* 延迟动画 */
+}
+
+/* 加载动画定义（呼吸效果） */
+@keyframes skeleton-loading {
+  0% { opacity: 0.5; } /* 初始透明度 */
+  50% { opacity: 0.8; } /* 中间透明度（变亮） */
+  100% { opacity: 0.5; } /* 结束透明度（变暗） */
+}
+
+/* 加载更多样式 */
+.load-more {
+  display: flex;
+  justify-content: center;
+  padding: 20rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 引导按钮样式 */
+.guide-btn {
+  margin-top: 20rpx;
+  width: 240rpx;
+  height: 72rpx;
+  background: #fff;
+  color: #7a4fd6;
+  border: 2rpx solid #7a4fd6;
+  font-size: 28rpx;
+  border-radius: 36rpx;
+}
+
+.guide-btn::after {
+  border: none;
 }
 
 /* 空态样式 */
