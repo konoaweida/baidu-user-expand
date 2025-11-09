@@ -2,12 +2,11 @@
 .moment-list {
   width: 718rpx;
   background-color: #FFFFFF;
-  margin: 0 auto;
+  margin: 32rpx auto 0;
   padding: 24rpx 16rpx 18rpx;
   border-radius: 16rpx;
   box-sizing: border-box;
   overflow: hidden; /* 裁剪超出卡片的内容 */
-  /* 移除父容器的 position:relative！避免干扰子容器定位 */
 }
 
 .moment-userinfo {

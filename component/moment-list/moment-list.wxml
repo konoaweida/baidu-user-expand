@@ -1,17 +1,17 @@
 <view class="moment-list">
   <!-- 1. 用户信息区 -->
-  <view class="moment-userinfo" wx:if="{{showUserInfo}}">
+  <view class="moment-userinfo">
     <view class="userinfo-avatar">
-      <image class="avatar" src="{{avatarUrl || '/assets/image/微信图片_20250906204507_794_8.jpg'}}"></image>
+      <image class="avatar" src="{{moment.avatar || '/assets/image/微信图片_20250906204507_794_8.jpg'}}"></image>
     </view>
-    <text class="userinfo-nickname">{{nickName || '未知用户'}}</text>
+    <text class="userinfo-nickname">{{value.nickname || '未知用户'}}</text>
   </view>
 
   <!-- 2. 文字简介区 -->
   <text 
     class="moment-desc" 
     wx:if="{{showDesc}}"
-  >{{desc || '文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍'}}</text>
+  >{{moment.content || '文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍文字介绍'}}</text>
                             
   <!-- 关键：新增共同父容器（定位参考） -->
   <view class="image-container" style="height: {{showImage ? '428rpx' : '96rpx'}}">
@@ -19,11 +19,9 @@
     <image 
       wx:if="{{showImage}}"
       class="moment-image" 
-      src="{{imageUrl || ''}}" 
+      src="{{moment.images[0] || '/assets/image/微信图片_20250906204507_794_8.jpg'}}" 
       mode="aspectFill"  
     ></image>
-    <!-- 按钮容器占位 -->
-    <!-- <view class="action-placeholder" wx:else="{{!showImage}}" style="position: relative;"></view> -->
     <!-- 4. .moment-actions 容器（现在参考父容器定位） -->
     <view class="moment-actions">
      <view class="item comment" bindtap="handleComment"></view>
