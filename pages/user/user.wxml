@@ -9,9 +9,12 @@
       alt="用户背景图"
     />
   </view>
-
   <!-- 用户信息容器 -->
   <view class="user-layout">
+    <!-- 设置按钮 -->
+    <view class="user-setting">
+      <image class="setting-image" src="../../assets/image/user/设置.png" alt="设置" mode="aspectFill"/>
+    </view>
     <view class="user-info">
       <!-- 用户头部信息 -->
       <view class="user-header">
@@ -23,6 +26,15 @@
             mode="aspectFill"
             alt="用户头像"
           />
+      <!-- 性别图标 - 绝对定位在头像右下角 -->
+      <view class="gender-container">
+        <image 
+          class="gender-icon" 
+          src="{{user.gender === 1 ? '../../assets/image/user/图标男.png' : '../../assets/image/user/图标女.png'}}" 
+          mode="aspectFill"
+          alt="性别图标"
+        />
+      </view>
         </view>
         <!-- 人脉cp -->
         <view class="user-cp"><view class="cp-text">{{user.cpRelationCount || 150}}</view>人脉cp链</view>
@@ -31,7 +43,10 @@
           <view class="user-name">{{user.nickName || '未知用户'}}</view>
           <view class="user-ip">IP:{{user.city || '未知'}}</view>
         </view>
-        <view class="user-relationship" bindtap="handleOpenRelation">{{user.mutualCp ? '已互相CP' : '建立关系'}}</view>
+        <view class="edit-btn">
+          <image src='../../assets/image/user/编辑.png' mode='aspectFill' class='edit-icon'></image>
+          <text class="edit-text">编辑资料</text>
+        </view>
       </view>
       <!-- 用户描述 -->
       <view class="user-desc">{{user.signature || '暂无个性签名暂无个性签名暂无个性签名暂无个性签名暂无个性签名暂无个性签名'}}</view>

@@ -28,6 +28,15 @@
               mode="aspectFill"
               alt="用户头像"
             />
+          <!-- 性别图标 - 绝对定位在头像右下角 -->
+          <view class="gender-container">
+            <image 
+              class="gender-icon" 
+              src="{{user.gender === 1 ? '../../assets/image/user/图标男.png' : '../../assets/image/user/图标女.png'}}" 
+              mode="aspectFill"
+              alt="性别图标"
+            />
+          </view>
           </view>
           <!-- 人脉cp -->
           <view class="user-cp">

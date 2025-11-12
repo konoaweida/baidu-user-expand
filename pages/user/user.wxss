@@ -24,7 +24,25 @@
   margin-top: -166rpx;
   border-radius: 100rpx 100rpx 0 0;
 }
-
+/* 设置按钮 */
+.user-setting {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -54rpx;
+  right: 72rpx;
+  transform: translateY(-100%);
+  background: rgba(184, 184, 184, 0.45);
+}
+.setting-image {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+}
 /* 用户信息区域 */
 .user-info {
   height: 250rpx;
@@ -73,17 +91,36 @@
   text-align: center;
   vertical-align: top;
 }
-/* 建立关系 - 绝对定位在右侧 */
-.user-relationship {
+/* 编辑资料 - 绝对定位在右侧 */
+.edit-btn {
   position: absolute;
-  right: 42rpx; /* 与容器padding一致 */
+  right: 74rpx; /* 与容器padding一致 */
   top: 50%;
   transform: translateY(-50%);
-  height: 60rpx;
+  width: 96rpx;
+  height: 76rpx;
   white-space: nowrap;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
-
+.edit-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-bottom: 8rpx;
+}
+.edit-text {
+  width: 96rpx;
+  height: 36rpx;
+  font-size: 24rpx;
+  font-weight: 400;
+  letter-spacing: 0rpx;
+  line-height: 36rpx;
+  color: rgba(5, 2, 11, 1);
+  text-align: left;
+}
 /* 用户名称IP - 保持flex居中 */
 .user-nameip { 
   text-align: center; 
@@ -135,15 +172,34 @@
   transform: translateX(-50%);
   width: 172rpx;
   height: 172rpx;
-  overflow: hidden;
-  border: 4rpx solid #fff;
+  border: 8rpx solid #fff;
   border-radius: 50%;
 }
 .avatar-image {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
+}
+/* 新增性别图标容器 */
+.gender-container {
+  position: absolute;
+  bottom: -4%;
+  right: -10%;
+  width: 42rpx;
+  height: 42rpx;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid #fff;
 }
 
+.gender-icon {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
 .user-body {
   padding: 0 32rpx calc(env(safe-area-inset-bottom) + 130rpx);
 }
