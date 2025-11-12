@@ -240,7 +240,9 @@ Page({
       }
 
       // 步骤2：缓存不存在时，调用接口获取数据
-      const { code, data } = await request.post('/api/recommend/list');     
+      const { code, data } = await request.post('/api/recommend/list');  
+      console.log(data);
+         
       if (code === 200) {        
         const userIds = Array.isArray(data.userIds) ? data.userIds : [];    
         wx.setStorageSync('recommendList', userIds);      

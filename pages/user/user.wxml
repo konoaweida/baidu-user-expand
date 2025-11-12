@@ -25,7 +25,7 @@
           />
         </view>
         <!-- 人脉cp -->
-        <view class="user-cp"><view class="cp-text">{{user.cpRelationCount || 0}}</view>人脉cp链</view>
+        <view class="user-cp"><view class="cp-text">{{user.cpRelationCount || 150}}</view>人脉cp链</view>
         <!-- 用户名称 -->
         <view class="user-nameip">
           <view class="user-name">{{user.nickName || '未知用户'}}</view>
@@ -34,7 +34,7 @@
         <view class="user-relationship" bindtap="handleOpenRelation">{{user.mutualCp ? '已互相CP' : '建立关系'}}</view>
       </view>
       <!-- 用户描述 -->
-      <view class="user-desc">{{user.signature || '暂无个性签名'}}</view>
+      <view class="user-desc">{{user.signature || '暂无个性签名暂无个性签名暂无个性签名暂无个性签名暂无个性签名暂无个性签名'}}</view>
     </view>
   </view>
 </view>
@@ -50,26 +50,26 @@
   <!-- 功能图标区 -->
   <view class="function-list">
     <view class="function-item">
-      <image class="icon" src=""></image>
+      <image class="icon" src="../../assets/image/user/礼品.png"></image>
       <text class="text">礼品中心</text>
-      <image class="add-btn" src=""></image>
+      <image class="add-btn" src="../../assets/image/user/加号.png"></image>
     </view>
     <view class="function-item">
-      <image class="icon v-icon red" src=""></image>
+      <image class="icon" src="../../assets/image/user/套餐1.png"></image>
       <text class="text">订阅套餐</text>
-      <image class="add-btn" src=""></image>
+      <image class="add-btn" src="../../assets/image/user/加号.png"></image>
     </view>
     <view class="function-item">
-      <image class="icon v-icon green" src=""></image>
+      <image class="icon" src="../../assets/image/user/套餐2.png"></image>
       <text class="text">订阅套餐</text>
-      <image class="add-btn" src=""></image>
+      <image class="add-btn" src="../../assets/image/user/加号.png"></image>
     </view>
   </view>
 
   <!-- 优惠提示卡片 -->
   <view class="discount-card">
     <view class="card-header">
-      <image class="sail-icon" src=""></image>
+      <image class="sail-icon" src="../../assets/image/user/摆渡.png"></image>
       <text class="title">摆渡</text>
     </view>
     <view class="info-box">
@@ -81,7 +81,7 @@
       <text class="countdown">优惠倒计时 00:29:03</text>
     </view>
     <view class="btns">
-      <button class="upgrade" size="mini">升级</button>
+      <view class="upgrade">升级</view>
       <text class="view-all">查看所有高级功能</text>
     </view>
   </view>

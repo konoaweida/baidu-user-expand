@@ -33,7 +33,7 @@
 
 /* 用户信息区域 */
 .user-info {
-  height: 260rpx;
+  height: 250rpx;
   border-top-left-radius: 100rpx;
   border-top-right-radius: 100rpx;
 }
@@ -43,7 +43,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 160rpx;
+  height: 180rpx;
   /* padding: 52rpx 42rpx 0; */
   position: relative;
 }
@@ -69,11 +69,15 @@
   text-align: left;
 }
 .cp-text {
-  width: 48rpx;
+  width: 100%;
   height: 42rpx;
   font-size: 28rpx;
   font-weight: 500;
+  letter-spacing: 0rpx;
   line-height: 40.54rpx;
+  color: rgba(5, 2, 11, 1);
+  text-align: center;
+  vertical-align: top;
 }
 /* 建立关系 - 绝对定位在右侧 */
 .user-relationship {
@@ -96,6 +100,7 @@
 .user-name { 
   width: 136rpx;
   height: 48rpx;
+  margin-bottom: 4rpx;
   font-size: 32rpx;
   font-weight: 500;
   letter-spacing: 0rpx;
@@ -116,12 +121,16 @@
 
 /* 用户描述 */
 .user-desc {
-  padding: 10rpx 76rpx;
-  margin-top: 12rpx;
+  height: 70rpx;
+  margin-top: 8rpx;
+  padding: 0 76rpx;
   font-size: 24rpx;
-  color: #05020B;
+  font-weight: 400;
+  letter-spacing: 0rpx;
+  line-height: 34.76rpx;
+  color: rgba(5, 2, 11, 1);
   text-align: center;
-  font-family: "Source Han Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  vertical-align: center;
 }
 
 /* 头像样式 */

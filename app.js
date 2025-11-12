@@ -44,17 +44,17 @@ App({
   /**
    * 清空所有 Token & 时间
    */
-  clearAllToken() {
-    this.globalData.token = '';
-    this.globalData.refreshToken = '';
-    this.globalData.tokenExpireTime = 0;
-    this.globalData.refreshTokenExpireTime = 0;
+  // clearAllToken() {
+  //   this.globalData.token = '';
+  //   this.globalData.refreshToken = '';
+  //   this.globalData.tokenExpireTime = 0;
+  //   this.globalData.refreshTokenExpireTime = 0;
 
-    wx.removeStorageSync('token');
-    wx.removeStorageSync('refreshToken');
-    wx.removeStorageSync('tokenExpireTime');
-    wx.removeStorageSync('refreshTokenExpireTime');
-  },
+  //   wx.removeStorageSync('token');
+  //   wx.removeStorageSync('refreshToken');
+  //   wx.removeStorageSync('tokenExpireTime');
+  //   wx.removeStorageSync('refreshTokenExpireTime');
+  // },
 
   /**
    * 全局变量

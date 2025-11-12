@@ -24,11 +24,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/socialMine/socialMine",
-          "pathName": "pages/socialMine/socialMine",
+          "name": "pages/user/user",
+          "pathName": "pages/user/user",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "pages/socialMine/socialMine",
+          "pathName": "pages/socialMine/socialMine",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "pages/circles/circles",
