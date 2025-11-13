@@ -13,7 +13,8 @@
       "root": "pkgA",
       "pages": [
         "pages/filter/filter",
-        "pages/infoList/infoList"
+        "pages/infoList/infoList",
+        "pages/dynamicDetail/dynamicDetail"
       ]
     },
     {

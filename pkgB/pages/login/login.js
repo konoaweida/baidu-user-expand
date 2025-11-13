@@ -66,7 +66,8 @@ Page({
     if (errMsg === 'getPhoneNumber:ok' && code) {
       wx.showLoading({ title: '登录中...' });
       wx.request({
-        url: 'http://1.95.53.183:8095/bd-client/api/auth/wx-phone', 
+        // url: 'http://1.95.53.183:8095/bd-client/api/auth/wx-phone', 
+        url: 'http://192.168.0.106:8099/bd-client/api/auth/wx-phone', 
         method: 'POST',
         data: { 
           phoneCode: code,        // 手机号快速验证的code

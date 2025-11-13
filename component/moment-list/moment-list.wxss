@@ -98,7 +98,9 @@
 .item {
   width: 48rpx;
   height: 48rpx;
-  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .item.comment {

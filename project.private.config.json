@@ -24,11 +24,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/user/user",
-          "pathName": "pages/user/user",
+          "name": "pkgA/pages/dynamicDetail/dynamicDetail",
+          "pathName": "pkgA/pages/dynamicDetail/dynamicDetail",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "pages/user/user",
+          "pathName": "pages/user/user",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "pages/socialMine/socialMine",

@@ -25,9 +25,15 @@
     ></image>
     <!-- 4. .moment-actions 容器（现在参考父容器定位） -->
     <view class="moment-actions">
-     <view class="item comment" bindtap="handleComment"></view>
-     <view class="item like" bindtap="handleLike"></view>
-     <view class="item share" bindtap="handleShare"></view>
+     <view class="item comment" bindtap="handleComment">
+      <image src="../../assets/image/circles/图标-评论.png" mode="aspectFill" style="width: 100%; height: 100%"></image>
+     </view>
+     <view class="item like" bindtap="handleLike">
+      <image src="../../assets/image/circles/图标-喜欢.png" mode="aspectFill" style="width: 100%; height: 100%"></image>
+     </view>
+     <view class="item share" bindtap="handleShare">
+      <image src="../../assets/image/circles/图标-分享.svg" mode="aspectFill" style="width: 100%; height: 100%"></image>
+     </view>
     </view>
   </view>
 </view>

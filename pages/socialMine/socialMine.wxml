@@ -2,10 +2,10 @@
 <text>pages/socialMine/socialMine.wxml</text>
 <button bindtap="onTap">点击</button>
 <moment-list></moment-list>
-<web-view 
+<!-- <web-view 
   id="webview"
   src="https://www.douyin.com/"
   bindmessage="onReceiveWebMessage" 
   bindload="onWebLoadSuccess"       
   binderror="onWebLoadError">        
-</web-view>
+</web-view> -->
