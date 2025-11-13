@@ -35,7 +35,11 @@ Component({
     needDefaultBack: {
       type: Boolean,
       value: true
-    }
+    },
+    transparentBg: {
+      type: Boolean,
+      value: false
+    },
   },
 
   /**

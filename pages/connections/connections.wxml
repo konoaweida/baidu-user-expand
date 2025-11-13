@@ -2,6 +2,7 @@
   <navigation-header  
     showPlaceholder="{{false}}"
     showBackButton="{{true}}"
+    transparentBg="{{true}}"
   ></navigation-header>
 
   <view class="user-profile-root">
