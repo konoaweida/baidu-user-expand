@@ -4,7 +4,7 @@ exports.canIUseGetUserProfile = exports.canIUseCanvas2d = exports.canIUseNextTic
 var systemInfo;
 function getSystemInfoSync() {
     if (systemInfo == null) {
-        systemInfo = wx.getWindowInfo();
+        systemInfo = wx.getSystemInfoSync();
     }
     return systemInfo;
 }

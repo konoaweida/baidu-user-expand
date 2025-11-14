@@ -1,3 +1,7 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "navigation-header": "../../../component/navigation-header/navigation-header",
+     "t-swiper": "tdesign-miniprogram/swiper/swiper"
+  },
+  "navigationStyle": "custom"
 }

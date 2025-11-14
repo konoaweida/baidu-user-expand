@@ -1,2 +1,25 @@
 <!--pkgA/pages/dynamicDetail/dynamicDetail.wxml-->
-<text>pkgA/pages/dynamicDetail/dynamicDetail.wxml</text>
+<navigation-header  
+  showPlaceholder="{{false}}"
+  showBackButton="{{true}}"
+  backColor="{{1}}"
+  transparentBg="{{true}}"
+></navigation-header>
+<t-swiper
+  height="594rpx"
+  current="{{current}}"
+  autoplay="{{autoplay}}"
+  duration="{{duration}}"
+  interval="{{interval}}"
+  list="{{swiperList}}"
+  bind:click="onTap"
+  bind:change="onChange"
+  bind:image-load="onImageLoad"
+  t-class="banner-swiper"
+>
+</t-swiper>
+
+<!-- 其他页面内容 -->
+<view class="content">
+  <!-- 页面内容 -->
+</view>

@@ -1,1 +1,20 @@
 /* pkgA/pages/dynamicDetail/dynamicDetail.wxss */
+.content {
+  width: 750rpx;
+  height: 594rpx;
+  background-color: #fff;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+}
+.banner-swiper {
+  --td-swiper-radius: 0%;
+  --td-swiper-nav-dot-size: 8rpx;
+  --td-swiper-nav-dots-bar-active-width: 8rpx;
+}
+.t-swiper-nav__dots-item.t-swiper-nav__dots-item--horizontal {
+  margin-left: 4rpx;
+  margin-right: 4rpx;
+}
+.t-swiper-nav.t-swiper-nav--horizontal.t-swiper-nav__dots.t-swiper-nav--bottom {
+  bottom: 48rpx;
+}
