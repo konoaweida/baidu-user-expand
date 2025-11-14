@@ -13,7 +13,7 @@ Component({
         likeCount: 0,
         commentCount: 0,
         shareCount: 0,
-        isLiked: false,
+        isLiked: true,
         cpRelation: false
       }
     },
@@ -23,7 +23,6 @@ Component({
     showDesc: true,
     showImage: true
   },
-
   // 新增：监听moment变化，动态更新showDesc和showImage
   // observers: {
   //   'moment.content': function(content) {
@@ -38,14 +37,14 @@ Component({
   //   }
   // },
 
-  // // 初始化时计算一次（确保默认值正确）
-  // attached() {
-  //   const { content, images } = this.properties.moment;
-  //   this.setData({
-  //     showDesc: typeof content === 'string' && content.trim().length > 0,
-  //     showImage: Array.isArray(images) && images.length > 0
-  //   });
-  // },
+  // 初始化时计算显示状态（建议开启）
+  attached() {
+    const { content, images } = this.properties.moment;
+    this.setData({
+      showDesc: typeof content === 'string' && content.trim().length > 0,
+      showImage: Array.isArray(images) && images.length > 0
+    });
+  },
   methods: {
     // 修改：从moment对象获取时间
     formatCreateTime(time) {

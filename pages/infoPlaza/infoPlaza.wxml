@@ -39,7 +39,7 @@
   >圈内</view>
 </view>
 
-<!-- 动态列表容器 -->
+<!-- 动态列表容器（修复刷新状态绑定） -->
 <scroll-view
   class="dynamic-list"
   scroll-y
@@ -54,6 +54,7 @@
   refresher-default-style="black"  
   bindrefresherrefresh="onPullRefresh"  
   bindrefresherrestore="onRefresherRestore" 
+  refresher-triggered="{{isRefreshing[currentTab]}}" 
 >
   <!-- 首屏骨架屏 -->
   <view class="skeleton-list" wx:if="{{isSkeletonLoading[currentTab]}}">
@@ -86,10 +87,9 @@
     <text>加载中...</text>
   </view>
 
-  <!-- 空态提示：修复表达式语法错误 -->
+  <!-- 空态提示 -->
   <view class="empty-state" wx:if="{{!isSkeletonLoading[currentTab] && dynamicList[currentTab].length === 0}}">
     <image src="../../assets/image/empty.png" mode="aspectFit" class="empty-icon"></image>
-    <!-- 修正：将嵌套三元表达式写在单行，避免解析错误 -->
     <text class="empty-text">{{hasNetwork ? (currentTab === 'inCircle' ? '暂无CP好友动态~ 快去建立CP关系吧' : '暂无推荐动态~ 发布你的第一条动态吧') : '网络异常，请检查网络后重试'}}</text>
     <button class="refresh-btn" wx:if="!hasNetwork" bindtap="refreshList">重新加载</button>
     <button class="guide-btn" wx:if="{{hasNetwork && currentTab === 'inCircle'}}" bindtap="gotoBuildCP">建立CP关系</button>

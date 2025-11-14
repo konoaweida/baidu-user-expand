@@ -74,13 +74,14 @@ Page({
   onTap() {
     const token = wx.getStorageSync('token')
     wx.request({
-      url: 'http://192.168.0.106:8099/bd-client/api/graph/province/11',
+      url: 'http://192.168.0.116:8099/bd-client/api/graph/province/13',
       method: 'GET',
       header: {
         'Authorization': token 
       },
       data: {
-        userId: '1'
+        userId: '1',
+        provinceId: '13'
       },
       success: (res) => {
         console.log('成功：', res);

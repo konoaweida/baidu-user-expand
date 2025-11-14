@@ -28,10 +28,10 @@
      <view class="item comment" bindtap="handleComment">
       <image src="../../assets/image/circles/图标-评论.png" mode="aspectFill" style="width: 100%; height: 100%"></image>
      </view>
-     <view class="item like" bindtap="handleLike">
-      <image src="../../assets/image/circles/图标-喜欢.png" mode="aspectFill" style="width: 100%; height: 100%"></image>
+     <view class="item like {{moment.isLiked ? 'liked' : 'unliked'}}" bindtap="handleLike">
+      <image src="{{moment.isLiked ? '../../assets/image/circles/画板 1.png' : '../../assets/image/circles/图标-喜欢.png'}}" mode="aspectFill" style="width: 100%; height: 100%"></image>
      </view>
-     <view class="item share" bindtap="handleShare">
+     <view class="item" bindtap="handleShare">
       <image src="../../assets/image/circles/图标-分享.svg" mode="aspectFill" style="width: 100%; height: 100%"></image>
      </view>
     </view>
