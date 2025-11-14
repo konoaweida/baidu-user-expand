@@ -5,6 +5,9 @@
       <image lazy-load class="avatar" src="{{moment.avatar || '/assets/image/微信图片_20250906204507_794_8.jpg'}}"></image>
     </view>
     <text class="userinfo-nickname">{{value.nickname || '未知用户'}}</text>
+    <view wx:if="{{isInCircle}}" class="cpRelation">
+      <text class="cpRelation-text">家人</text>
+    </view>
   </view>
 
   <!-- 2. 文字简介区 -->

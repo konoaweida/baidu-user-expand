@@ -1,6 +1,10 @@
 const util = require('../../utils/util.js');
 Component({
   properties: {
+    isInCircle: {
+      type: Boolean,
+      value: false // 默认圈外
+    },
     moment: { 
       type: Object,
       value: {  
@@ -14,7 +18,7 @@ Component({
         commentCount: 0,
         shareCount: 0,
         isLiked: true,
-        cpRelation: false
+        cpRelation: ''
       }
     },
     showCpTag: { type: Boolean, value: false } // 保留单独控制标签显示的属性

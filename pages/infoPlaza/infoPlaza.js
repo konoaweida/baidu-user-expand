@@ -1,6 +1,7 @@
 const util = require('../../utils/util.js');
 Page({
   data: {
+    searchPlaceholder: '圈外搜索',
     navHeaderHeightRpx: 172,
     currentTab: 'outCircle',
     dynamicList: {
@@ -108,7 +109,7 @@ Page({
           likeCount: 189,
           commentCount: 94,
           shareCount: 76,
-          isLiked: true,
+          isLiked: true, 
           cpRelation: false
         },
         {
@@ -205,9 +206,13 @@ Page({
           tab: targetTab === 'inCircle' ? 'inner' : 'outer'
         });
 
+        // 关键：根据目标 Tab 更新搜索框占位符
+        const newPlaceholder = targetTab === 'inCircle' ? '圈内搜索' : '圈外搜索';
+
         this.setData({
           currentTab: targetTab,
-          tempScrollTop: this.data.scrollTop[targetTab] || 0
+          tempScrollTop: this.data.scrollTop[targetTab] || 0,
+          searchPlaceholder: newPlaceholder // 同步更新占位符
         });
 
         const targetList = dynamicList[targetTab];
@@ -216,7 +221,6 @@ Page({
           this.setData({ [`isSkeletonLoading.${targetTab}`]: true });
           this.loadDynamicList(targetTab, true);
         }else {
-          // 已有加载记录，直接关闭骨架屏（防止本地数据已存在但骨架屏未关）
           this.setData({ [`isSkeletonLoading.${targetTab}`]: false });
         }
       });

@@ -5,7 +5,7 @@
       <image class="search-icon" src="../../assets/image/路径 7.png" mode="aspectFit"></image>
       <input 
         class="search-input" 
-        placeholder="圈外搜索" 
+        placeholder="{{searchPlaceholder}}" 
         placeholder-class="search-placeholder"
         bindinput="onSearchInput" 
         bindfocus="onFocus"   
@@ -74,7 +74,7 @@
       <!-- 组件引用：确保组件已注册 -->
       <moment-list
         moment="{{item}}"
-        show-cp-tag="{{currentTab === 'inCircle'}}"
+        is-in-circle="{{currentTab === 'inCircle'}}"
         bind:like="handleMomentLike"
         bind:comment="handleMomentComment"
         bind:share="handleMomentShare"
